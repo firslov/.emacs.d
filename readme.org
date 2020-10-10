@@ -1,4 +1,8 @@
 #+STARTUP: content
+* install
+  #+BEGIN_SRC shell
+    git clone --depth=1 git@github.com:firslov/.emacs.d.git
+  #+END_SRC
 * packages
 ** resources
    #+BEGIN_SRC emacs-lisp
