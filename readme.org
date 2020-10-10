@@ -171,7 +171,7 @@
        ;; init fullscreen
        (add-to-list 'default-frame-alist '(fullscreen . maximized))
        ;; UI
-       (menu-bar-mode 0)
+       (menu-bar-mode t)
        ;; 快速打开blog文件
        (defun open-blog()
 	 (interactive)
@@ -220,11 +220,6 @@
 	 (neotree-dir "~/site/"))
        ;; 将函数 open-blog 绑定到 <f9> 键上
        ;; (global-set-key (kbd "<f9>") 'open-blog)
-       ;; neotree list config-dir
-       (defun nconf()
-	 (interactive)
-	 (neotree-dir conf_dir)
-	 (other-window -1))
        ;; refresh startup function
        (defun show-startup-page()
 	 (interactive)
@@ -300,6 +295,11 @@
       (org-babel-load-file (concat conf_dir "readme.org")))
     ;; 将函数 load-init-file 绑定到 <f1> 0 键上
     (global-set-key (kbd "<f1> 0") 'load-init)
+    ;; neotree list config-dir
+    (defun nconf()
+      (interactive)
+      (neotree-dir conf_dir)
+      (other-window -1))
     ;; format the buffer
     (defun indent-buffer()
       (interactive)
