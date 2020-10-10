@@ -18,6 +18,13 @@
 ** others
    #+BEGIN_SRC emacs-lisp
      ;; Add Packages
+     ;; recent file
+     (use-package recentf
+       :bind ("C-x C-r" . recentf-open-files)
+       :config
+       (progn
+	 (recentf-mode 1)
+	 (setq recentf-max-menu-item 10)))
      (use-package which-key
        :ensure t
        :config (which-key-mode))
@@ -202,8 +209,7 @@
 * user-config
   #+BEGIN_SRC emacs-lisp
     ;; Personal minor-mode: blog-mode
-    ;; Personal function: blog nconf show-startup-page open-init-file open-init-sys load-init indent-buffer
-    ;; Personal key-bingding: <f1><f2><f3><f4><f5><f12> / C-x C-r / C-s M-n M-p / M-C-7 M-C-8 M-C-9 / C-.
+    ;; Personal function: blog nconf show-startup-page open-init-file load-init indent-buffer
     (use-package init-site)
     ;; 启动页面
     ;; (setq initial-buffer-choice (concat org-directory "note.org"))
@@ -221,13 +227,6 @@
     (prefer-coding-system 'gbk)
     ;; 设置写入文件编码
     (setq default-buffer-file-coding-system 'gbk)
-    ;; recent file
-    (use-package recentf
-      :config
-      (recentf-mode 1)
-      (setq recentf-max-menu-item 10))
-    ;; open recent files
-    (global-set-key (kbd "C-x C-r") 'recentf-open-files)
     ;; disable backup
     (setq make-backup-files nil)
     ;; disable auto-save
