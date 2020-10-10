@@ -1,0 +1,344 @@
+#+STARTUP: overview
+* packages
+** resources
+   #+BEGIN_SRC emacs-lisp
+  (when (>= emacs-major-version 24)
+    (require 'package)
+    (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+			     ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+    (package-initialize))
+   #+END_SRC
+** use-package
+   #+BEGIN_SRC emacs-lisp
+  ;; Add use-package
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+   #+END_SRC
+** others
+   #+BEGIN_SRC emacs-lisp
+     ;; Add Packages
+     (use-package which-key
+       :ensure t
+       :config (which-key-mode))
+     (use-package all-the-icons
+       :ensure t)
+     (use-package neotree
+       :ensure t
+       :config (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+     (use-package org-download
+       :ensure t
+       :defer t
+       :config
+       (progn
+	 ;; Drag-and-drop to `dired`
+	 (add-hook 'dired-mode-hook 'org-download-enable)
+	 (setq-default org-download-image-dir "./src")
+	 (setq org-download-display-inline-images nil)))
+     (use-package highlight-parentheses
+       :ensure t
+       :config
+       (progn
+	 (define-globalized-minor-mode global-highlight-parentheses-mode
+	   highlight-parentheses-mode
+	   (lambda ()
+	     (highlight-parentheses-mode t)))
+	 (global-highlight-parentheses-mode t)))
+     (use-package youdao-dictionary
+       :ensure t
+       :defer t
+       :config
+       ;; enable cache
+       (setq url-automatic-caching t))
+     (use-package counsel
+       :ensure t)
+     (use-package swiper
+       :ensure t
+       :bind (("C-s" . swiper)
+	      ("M-n" . next-error)
+	      ("M-p" . previous-error)
+	      ("C-c C-r" . ivy-resume)
+	      ("M-x" . counsel-M-x)
+	      ("C-x C-f" . counsel-find-file)
+	      ("<f1> f" . counsel-describe-function)
+	      ("<f1> v" . counsel-describe-variable)
+	      ("<f1> o" . counsel-describe-symbol)
+	      ("<f1> l" . counsel-find-library)
+	      ("C-c g" . counsel-git)
+	      ("C-c j" . counsel-git-grep))
+       :config
+       (progn
+	 (ivy-mode 1)
+	 (setq ivy-use-virtual-buffers t)
+	 (setq enable-recursive-minibuffers t)
+	 (setq ivy-use-virtual-buffers t)
+	 (setq enable-recursive-minibuffers t)))
+     (use-package doom-themes
+       :ensure t)
+     (use-package doom-modeline
+       :ensure t
+       :config (doom-modeline-mode 1))
+     (use-package exec-path-from-shell
+       :ensure t)
+     (use-package restart-emacs
+       :ensure t)
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+     (use-package ace-window
+       :ensure t
+       :init
+       (progn
+	 (global-set-key [remap other-window] 'ace-window)
+	 (custom-set-faces
+	  '(aw-leading-char-face
+	    ((t (:inderit ace-jump-face-foreground :height 3.0)))))))
+     (use-package company
+       :ensure t
+       :init
+       (add-hook 'after-init-hook 'global-company-mode))
+     (use-package diminish
+       :ensure t
+       :diminish (ivy-mode eldoc-mode which-key-mode))
+     ;; ....................................
+     ;; package end
+     ;; ....................................
+   #+END_SRC
+* diff-sys
+** entry
+   #+BEGIN_SRC emacs-lisp
+    (push "~/.emacs.d/lisp/" load-path)
+    (push "e:/emacs/.emacs.d/lisp/" load-path)
+   #+END_SRC
+** window-nt
+   #+BEGIN_SRC emacs-lisp
+     (when (eq system-type 'windows-nt)
+       (setq conf_dir "e:/emacs/.emacs.d/"
+	     org-directory "e:/org/"
+	     init-file (concat conf_dir "lisp/init-main.el")
+	     init-sys (concat conf_dir "lisp/windows-nt.el"))
+       ;; init fullscreen
+       (add-to-list 'default-frame-alist '(fullscreen . maximized))
+       ;; UI
+       (menu-bar-mode 0)
+       ;; 快速打开blog文件
+       (defun open-blog()
+	 (interactive)
+	 (find-file "e:/emacs/site/org/index.org")
+	 (blog-mode)
+	 (neotree-dir "e:/emacs/site/")
+	 (use-package init-site))
+       ;; 将函数 open-blog 绑定到 <f9> 键上
+       ;; (global-set-key (kbd "<f9>") 'open-blog)
+       ;; refresh startup function
+       (defun show-startup-page()
+	 (interactive)
+	 (org-agenda-list)
+	 (org-agenda-day-view)
+	 (neotree-dir "e:/org/"))
+       (add-hook 'window-setup-hook 'show-startup-page)
+       (setq display-buffer-alist
+	     '(("\\*e?shell\\*"
+		(display-buffer-in-side-window)
+		(window-height . 0.2)
+		(side . bottom)
+		(slot . -1))
+	       ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+		(display-buffer-in-side-window)
+		(window-height . 0.25)
+		(side . bottom)
+		(slot . 0))
+	       ))
+       )
+   #+END_SRC
+** darwin
+   #+BEGIN_SRC emacs-lisp
+     (when (eq system-type 'darwin)
+       (setq conf_dir "~/.emacs.d/"
+	     org-directory "~/Documents/emacs/"
+	     init-file (concat conf_dir "lisp/init-main.el")
+	     init-sys (concat conf_dir "lisp/darwin.el"))
+       ;; font
+       (set-default-font "MesloLGLDZ Nerd Font 15") 
+       ;; init fullscreen
+       (add-to-list 'default-frame-alist '(fullscreen . maximized))
+       ;; 快速打开blog文件
+       (defun blog()
+	 (interactive)
+	 (find-file "~/site/org/index.org")
+	 (blog-mode)
+	 (neotree-dir "~/site/"))
+       ;; 将函数 open-blog 绑定到 <f9> 键上
+       ;; (global-set-key (kbd "<f9>") 'open-blog)
+       ;; neotree list config-dir
+       (defun nconf()
+	 (interactive)
+	 (neotree-dir conf_dir)
+	 (other-window -1))
+       ;; refresh startup function
+       (defun show-startup-page()
+	 (interactive)
+	 (org-agenda-list)
+	 (org-agenda-day-view)
+	 (neotree-dir "~/Documents/emacs/")
+	 (other-window -1))
+       ;;(add-hook 'window-setup-hook 'show-startup-page)
+       (global-set-key (kbd "C-.") 'show-startup-page)
+       (setq display-buffer-alist
+	     '(("\\*e?shell\\*"
+		(display-buffer-in-side-window)
+		(window-height . 0.3)
+		(side . bottom)
+		(slot . -1))
+	       ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+		(display-buffer-in-side-window)
+		(window-height . 0.3)
+		(side . bottom)
+		(slot . 0))
+	       ))
+       )
+   #+END_SRC
+* user-config
+  #+BEGIN_SRC emacs-lisp
+    ;; Personal minor-mode: blog-mode
+    ;; Personal function: blog nconf show-startup-page open-init-file open-init-sys load-init indent-buffer
+    ;; Personal key-bingding: <f1><f2><f3><f4><f5><f12> / C-x C-r / C-s M-n M-p / M-C-7 M-C-8 M-C-9 / C-.
+    (use-package init-site)
+    ;; 启动页面
+    ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+    ;; 关闭欢迎界面
+    (setq inhibit-splash-screen t)
+    ;; fonts problem
+    (setq inhibit-compacting-font-caches t)
+    ;; disable alert voice
+    (setq ring-bell-function 'ignore)
+    ;; UI
+    (tool-bar-mode 0)
+    (scroll-bar-mode 0)
+    (setq-default cursor-type 'bar)
+    ;; 设置默认读入文件编码
+    (prefer-coding-system 'gbk)
+    ;; 设置写入文件编码
+    (setq default-buffer-file-coding-system 'gbk)
+    ;; recent file
+    (use-package recentf
+      :config
+      (recentf-mode 1)
+      (setq recentf-max-menu-item 10))
+    ;; open recent files
+    (global-set-key (kbd "C-x C-r") 'recentf-open-files)
+    ;; disable backup
+    (setq make-backup-files nil)
+    ;; disable auto-save
+    (setq auto-save-default nil)
+    ;; yes-or-no y-or-n
+    (fset 'yes-or-no-p 'y-or-n-p)
+    ;; select input delete
+    (delete-selection-mode 1)
+    ;; highlight current line
+    (global-hl-line-mode 1)
+    ;; autoload change out of emacs
+    (global-auto-revert-mode 1)
+    ;; highlight in org-mode
+    (setq org-src-fontify-natively t)
+    ;; 自动换行
+    (toggle-truncate-lines 1)
+    ;; save all buffers
+    (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
+    ;; 绑定 <f5> 键上
+    (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
+    ;; 快速打开配置文件
+    (defun open-init-file()
+      (interactive)
+      (find-file (concat conf_dir "config.org")))
+    ;; 将函数 open-init-file 绑定到 <f1> 1 键上
+    (global-set-key (kbd "<f1> 1") 'open-init-file)
+    ;; 快速加载配置文件
+    (defun load-init()
+      (interactive)
+      (org-babel-load-file (concat conf_dir "config.org")))
+    ;; 将函数 load-init-file 绑定到 <f1> 0 键上
+    (global-set-key (kbd "<f1> 0") 'load-init)
+    ;; format the buffer
+    (defun indent-buffer()
+      (interactive)
+      (indent-region (point-min) (point-max)))
+    ;; 将函数 indent-buffer 绑定到 <f4> 键上
+    (global-set-key (kbd "<f4>") 'indent-buffer)
+    ;; blog mode
+    (define-minor-mode blog-mode
+      "Toggle blog mode."
+      :global nil
+      :lighter "Blog")
+    ;; ....................................
+    ;; transparency
+    ;; ....................................
+    ;; @purcell
+    (defun sanityinc/adjust-opacity (frame incr)
+      "Adjust the background opacity of FRAME by increment INCR."
+      (unless (display-graphic-p frame)
+	(error "Cannot adjust opacity of this frame"))
+      (let* ((oldalpha (or (frame-parameter frame 'alpha) 100))
+	     (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
+	     (newalpha (+ incr oldalpha)))
+	(when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
+	  (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
+    (global-set-key (kbd "M-C-8") (lambda ()
+				    (interactive)
+				    (sanityinc/adjust-opacity nil -2)))
+    (global-set-key (kbd "M-C-9") (lambda ()
+				    (interactive)
+				    (sanityinc/adjust-opacity nil 2)))
+    (global-set-key (kbd "M-C-7") (lambda ()
+				    (interactive)
+				    (modify-frame-parameters nil `((alpha . 100)))))
+    ;; ....................................
+    ;; transparency end
+    ;; ....................................
+  #+END_SRC
+* org
+  #+BEGIN_SRC emacs-lisp
+    ;; org variables
+    (setq org-agenda-files (list (concat org-directory "todo.org"))
+	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
+	  ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
+	  org-agenda-show-future-repeats nil
+	  org-deadline-warning-days 30
+	  org-agenda-window-setup nil
+	  org-M-RET-may-split-line '((headline . nil))
+	  org-agenda-time-grid '((daily today require-timed)
+				 (600 800 1000 1200 1400 1600 1800 2000 2200)
+				 "......" "----------------")
+	  org-capture-templates
+	  `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
+	     "* %?")
+	    ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+	     "* %U\n%?")
+	    ;; ("t" "Todo(deadline)" entry (file ,(concat org-directory "todo.org"))
+	    ;; "* TODO %? %^G\nDEADLINE:%^t")
+	    ;; ("d" "Daily" entry (file ,(concat org-directory "todo.org"))
+	    ;; "* DAILY %? %^G\nSCHEDULED:%^t")
+	    ("a" "Arrangement" entry (file ,(concat org-directory "todo.org"))
+	     "* %? %^T")
+	    ("t" "Todo")
+	    ("tt" "Todo without time" entry (file ,(concat org-directory "todo.org"))
+	     "* TODO %?")
+	    ("ts" "Todo with SCHEDULED" entry (file ,(concat org-directory "todo.org"))
+	     "* TODO %?\nSCHEDULED:%^t")
+	    ("td" "Todo with DEADLINE" entry (file ,(concat org-directory "todo.org"))
+	     "* TODO %?\nDEADLINE:%^t"))
+	  ;;org-refile-targets
+	  ;; `((,(concat org-directory "note.org") :maxlevel . 2))
+	  ;; `((,(concat org-directory "read.org") :maxlevel . 1)
+	  ;; (,(concat org-directory "learn.org") :maxlevel . 1)
+	  ;; (,(concat org-directory "emacs.org") :level . 1))
+	  org-todo-keywords
+	  '((sequence "TODO(t)" "CANCELED(c)" "|" "DONE(d)"))
+	  org-todo-keyword-faces
+	  '(("DAILY" . "green")
+	    ("CANCELED" . "grey")))
+    ;; set key
+    (define-key global-map "\C-cc" 'org-capture)
+    (define-key global-map "\M-q" 'org-agenda)
+  #+END_SRC
