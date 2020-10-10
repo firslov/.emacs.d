@@ -1,7 +1,7 @@
 ;; cl - Common Lisp Extension
 (require 'cl)
 (require 'org)
-(org-babel-load-file "~/.emacs.d/config.org")
+(org-babel-load-file "~/.emacs.d/readme.org")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
