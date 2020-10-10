@@ -114,9 +114,6 @@
        :ensure t
        :diminish (ivy-mode eldoc-mode which-key-mode))
      (use-package init-site)
-     ;; ....................................
-     ;; package end
-     ;; ....................................
    #+END_SRC
 * diff-sys
 ** window-nt
