@@ -8,6 +8,11 @@
 			     ("melpa" . "http://elpa.emacs-china.org/melpa/")))
     (package-initialize))
    #+END_SRC
+** entry
+   #+BEGIN_SRC emacs-lisp
+     (push "~/.emacs.d/lisp/" load-path)
+     (push "e:/emacs/.emacs.d/lisp/" load-path)
+   #+END_SRC
 ** use-package
    #+BEGIN_SRC emacs-lisp
   ;; Add use-package
@@ -108,16 +113,12 @@
      (use-package diminish
        :ensure t
        :diminish (ivy-mode eldoc-mode which-key-mode))
+     (use-package init-site)
      ;; ....................................
      ;; package end
      ;; ....................................
    #+END_SRC
 * diff-sys
-** entry
-   #+BEGIN_SRC emacs-lisp
-    (push "~/.emacs.d/lisp/" load-path)
-    (push "e:/emacs/.emacs.d/lisp/" load-path)
-   #+END_SRC
 ** window-nt
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
@@ -134,8 +135,7 @@
 	 (interactive)
 	 (find-file "e:/emacs/site/org/index.org")
 	 (blog-mode)
-	 (neotree-dir "e:/emacs/site/")
-	 (use-package init-site))
+	 (neotree-dir "e:/emacs/site/"))
        ;; 将函数 open-blog 绑定到 <f9> 键上
        ;; (global-set-key (kbd "<f9>") 'open-blog)
        ;; refresh startup function
@@ -210,7 +210,6 @@
   #+BEGIN_SRC emacs-lisp
     ;; Personal minor-mode: blog-mode
     ;; Personal function: blog nconf show-startup-page open-init-file load-init indent-buffer
-    (use-package init-site)
     ;; 启动页面
     ;; (setq initial-buffer-choice (concat org-directory "note.org"))
     ;; 关闭欢迎界面
