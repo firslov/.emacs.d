@@ -102,7 +102,9 @@
 	:ensure t)
       (use-package doom-modeline
 	:ensure t
-	:config (doom-modeline-mode 1))
+	:config
+	(if (eq system-type 'darwin)
+	    (doom-modeline-mode 1)))
     #+END_SRC
 *** company
     #+BEGIN_SRC emacs-lisp
