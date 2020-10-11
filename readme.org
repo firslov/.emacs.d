@@ -14,8 +14,10 @@
    #+END_SRC
 ** entry
    #+BEGIN_SRC emacs-lisp
-     (push "~/.emacs.d/lisp/" load-path)
-     (push "e:/emacs/.emacs.d/lisp/" load-path)
+     (let ((sys system-type))
+       (cond
+	((eq sys 'darwin)) (add-to-list 'load-path "~/.emacs.d/lisp/")
+	((eq sys 'windows-nt)) (add-to-list 'load-path "e:/emacs/.emacs.d/lisp/")))
    #+END_SRC
 ** use-package
    #+BEGIN_SRC emacs-lisp
@@ -27,8 +29,8 @@
 ** others
 *** magit
     #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t)
+      (use-package magit
+	:ensure t)
     #+END_SRC
 *** which-key
     #+BEGIN_SRC emacs-lisp
@@ -165,7 +167,7 @@
       (use-package diminish
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
-      (use-package init-site)
+      ;; (use-package init-site)
     #+END_SRC
 * diff-sys
 ** window-nt
@@ -218,7 +220,7 @@
        ;; font
        (set-default-font "MesloLGLDZ Nerd Font 15") 
        ;; init fullscreen
-       (add-to-list 'default-frame-alist '(fullscreen . maximized))
+       ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
        ;; 快速打开blog文件
        (defun blog()
 	 (interactive)
