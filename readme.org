@@ -6,11 +6,11 @@
 * packages
 ** resources
    #+BEGIN_SRC emacs-lisp
-  (when (>= emacs-major-version 24)
-    (require 'package)
-    (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-			     ("melpa" . "http://elpa.emacs-china.org/melpa/")))
-    (package-initialize))
+     (when (>= emacs-major-version 24)
+       (require 'package)
+       (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+				("melpa" . "http://elpa.emacs-china.org/melpa/")))
+       (package-initialize))
    #+END_SRC
 ** entry
    #+BEGIN_SRC emacs-lisp
@@ -109,13 +109,12 @@
 	:ensure t)
       (use-package doom-modeline
 	:ensure t
-	:config
-	(if (eq system-type 'darwin)
-	    (doom-modeline-mode 1)))
+	:hook (after-init . doom-modeline-mode)
+	:config (setq doom-modeline-buffer-file-name-style 'auto))
     #+END_SRC
 *** company
     #+BEGIN_SRC emacs-lisp
-(use-package company
+      (use-package company
 	:ensure t
 	:init
 	(add-hook 'after-init-hook 'global-company-mode))
