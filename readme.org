@@ -264,76 +264,86 @@
        )
    #+END_SRC
 * user-config
-  #+BEGIN_SRC emacs-lisp
-    ;; Personal minor-mode: blog-mode
-    ;; Personal function: blog nconf show-startup-page open-init-file load-init indent-buffer
-    ;; 启动页面
-    ;; (setq initial-buffer-choice (concat org-directory "note.org"))
-    ;; 关闭欢迎界面
-    (setq inhibit-splash-screen t)
-    ;; fonts problem
-    (setq inhibit-compacting-font-caches t)
-    ;; disable alert voice
-    (setq ring-bell-function 'ignore)
-    ;; UI
-    (tool-bar-mode 0)
-    (scroll-bar-mode 0)
-    (setq-default cursor-type 'bar)
-    ;; 设置默认读入文件编码
-    (prefer-coding-system 'gbk)
-    ;; 设置写入文件编码
-    (setq default-buffer-file-coding-system 'gbk)
-    ;; disable backup
-    (setq make-backup-files nil)
-    ;; disable auto-save
-    (setq auto-save-default nil)
-    ;; yes-or-no y-or-n
-    (fset 'yes-or-no-p 'y-or-n-p)
-    ;; select input delete
-    (delete-selection-mode 1)
-    ;; highlight current line
-    (global-hl-line-mode 1)
-    ;; autoload change out of emacs
-    (global-auto-revert-mode 1)
-    ;; highlight in org-mode
-    (setq org-src-fontify-natively t)
-    ;; 自动换行
-    (toggle-truncate-lines 1)
-    ;; save all buffers
-    (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
-    ;; 绑定 <f5> 键上
-    (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
-    ;; 快速打开配置文件
-    (defun open-init-file()
-      (interactive)
-      (find-file (concat conf_dir "readme.org")))
-    ;; 将函数 open-init-file 绑定到 <f1> 1 键上
-    (global-set-key (kbd "<f1> 1") 'open-init-file)
-    ;; 快速加载配置文件
-    (defun load-init()
-      (interactive)
-      (org-babel-load-file (concat conf_dir "readme.org")))
-    ;; 将函数 load-init-file 绑定到 <f1> 0 键上
-    (global-set-key (kbd "<f1> 0") 'load-init)
-    ;; neotree list config-dir
-    (defun nconf()
-      (interactive)
-      (neotree-dir conf_dir)
-      (other-window -1))
-    ;; format the buffer
-    (defun indent-buffer()
-      (interactive)
-      (indent-region (point-min) (point-max)))
-    ;; 将函数 indent-buffer 绑定到 <f8> 键上
-    (global-set-key (kbd "<f8>") 'indent-buffer)
-    ;; blog mode
-    (define-minor-mode blog-mode
-      "Toggle blog mode."
-      :global nil
-      :lighter "Blog")
-    ;; ....................................
-    ;; transparency
-    ;; ....................................
+** config
+   #+BEGIN_SRC emacs-lisp
+  ;; 启动页面
+  ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+  ;; 关闭欢迎界面
+  (setq inhibit-splash-screen t)
+  ;; fonts problem
+  (setq inhibit-compacting-font-caches t)
+  ;; disable alert voice
+  (setq ring-bell-function 'ignore)
+  ;; UI
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0)
+  (setq-default cursor-type 'bar)
+  ;; 设置默认读入文件编码
+  (prefer-coding-system 'gbk)
+  ;; 设置写入文件编码
+  (setq default-buffer-file-coding-system 'gbk)
+  ;; disable backup
+  (setq make-backup-files nil)
+  ;; disable auto-save
+  (setq auto-save-default nil)
+  ;; yes-or-no y-or-n
+  (fset 'yes-or-no-p 'y-or-n-p)
+  ;; select input delete
+  (delete-selection-mode 1)
+  ;; highlight current line
+  (global-hl-line-mode 1)
+  ;; autoload change out of emacs
+  (global-auto-revert-mode 1)
+  ;; highlight in org-mode
+  (setq org-src-fontify-natively t)
+  ;; 自动换行
+  (toggle-truncate-lines 1)
+   #+END_SRC
+** key-bind
+   #+BEGIN_SRC emacs-lisp
+  ;; save all buffers
+  (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
+  ;; 绑定 <f5> 键上
+  (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
+  ;; ibuffer
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+   #+END_SRC
+** function
+   #+BEGIN_SRC emacs-lisp
+  ;; 快速打开配置文件
+  (defun open-init-file()
+    (interactive)
+    (find-file (concat conf_dir "readme.org")))
+  ;; 将函数 open-init-file 绑定到 <f1> 1 键上
+  (global-set-key (kbd "<f1> 1") 'open-init-file)
+  ;; 快速加载配置文件
+  (defun load-init()
+    (interactive)
+    (org-babel-load-file (concat conf_dir "readme.org")))
+  ;; 将函数 load-init-file 绑定到 <f1> 0 键上
+  (global-set-key (kbd "<f1> 0") 'load-init)
+  ;; neotree list config-dir
+  (defun nconf()
+    (interactive)
+    (neotree-dir conf_dir)
+    (other-window -1))
+  ;; format the buffer
+  (defun indent-buffer()
+    (interactive)
+    (indent-region (point-min) (point-max)))
+  ;; 将函数 indent-buffer 绑定到 <f8> 键上
+  (global-set-key (kbd "<f8>") 'indent-buffer)
+   #+END_SRC
+** mode
+   #+BEGIN_SRC emacs-lisp
+  ;; blog mode
+  (define-minor-mode blog-mode
+    "Toggle blog mode."
+    :global nil
+    :lighter "Blog")
+   #+END_SRC
+** transparency
+   #+BEGIN_SRC emacs-lisp
     ;; @purcell
     (defun sanityinc/adjust-opacity (frame incr)
       "Adjust the background opacity of FRAME by increment INCR."
@@ -353,10 +363,7 @@
     (global-set-key (kbd "M-C-7") (lambda ()
 				    (interactive)
 				    (modify-frame-parameters nil `((alpha . 100)))))
-    ;; ....................................
-    ;; transparency end
-    ;; ....................................
-  #+END_SRC
+   #+END_SRC
 * org
   #+BEGIN_SRC emacs-lisp
     ;; org variables
