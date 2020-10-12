@@ -16,8 +16,8 @@
    #+BEGIN_SRC emacs-lisp
      (let ((sys system-type))
        (cond
-	((eq sys 'darwin)) (add-to-list 'load-path "~/.emacs.d/lisp/")
-	((eq sys 'windows-nt)) (add-to-list 'load-path "e:/emacs/.emacs.d/lisp/")))
+	((eq sys 'darwin) (add-to-list 'load-path "~/.emacs.d/lisp/"))
+	((eq sys 'windows-nt) (add-to-list 'load-path "e:/emacs/.emacs.d/lisp/"))))
    #+END_SRC
 ** use-package
    #+BEGIN_SRC emacs-lisp
