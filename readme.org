@@ -50,23 +50,21 @@
 	:ensure t
 	;; :defer t
 	:config
-	(progn
-	  ;; Drag-and-drop to `dired`
-	  (add-hook 'dired-mode-hook 'org-download-enable)
-	  (setq-default org-download-image-dir "./src")
-	  (setq org-download-display-inline-images nil)))
+	;; Drag-and-drop to `dired`
+	(add-hook 'dired-mode-hook 'org-download-enable)
+	(setq-default org-download-image-dir "./src")
+	(setq org-download-display-inline-images nil))
     #+END_SRC
 *** highlight-parentheses
     #+BEGIN_SRC emacs-lisp
       (use-package highlight-parentheses
 	:ensure t
 	:config
-	(progn
-	  (define-globalized-minor-mode global-highlight-parentheses-mode
-	    highlight-parentheses-mode
-	    (lambda ()
-	      (highlight-parentheses-mode t)))
-	  (global-highlight-parentheses-mode t)))
+	(define-globalized-minor-mode global-highlight-parentheses-mode
+	  highlight-parentheses-mode
+	  (lambda ()
+	    (highlight-parentheses-mode t)))
+	(global-highlight-parentheses-mode t))
     #+END_SRC
 *** youdao-dictionary
     #+BEGIN_SRC emacs-lisp
@@ -83,7 +81,8 @@
 	:ensure t)
       (use-package swiper
 	:ensure t
-	:bind (("C-s" . swiper)
+	:bind (
+	       ("C-s" . swiper)
 	       ("M-n" . next-error)
 	       ("M-p" . previous-error)
 	       ("C-c C-r" . ivy-resume)
@@ -94,14 +93,14 @@
 	       ("<f1> o" . counsel-describe-symbol)
 	       ("<f1> l" . counsel-find-library)
 	       ("C-c g" . counsel-git)
-	       ("C-c j" . counsel-git-grep))
+	       ("C-c j" . counsel-git-grep)
+	       )
 	:config
-	(progn
-	  (ivy-mode 1)
-	  (setq ivy-use-virtual-buffers t)
-	  (setq enable-recursive-minibuffers t)
-	  (setq ivy-use-virtual-buffers t)
-	  (setq enable-recursive-minibuffers t)))
+	(ivy-mode 1)
+	(setq ivy-use-virtual-buffers t)
+	(setq enable-recursive-minibuffers t)
+	(setq ivy-use-virtual-buffers t)
+	(setq enable-recursive-minibuffers t))
     #+END_SRC
 *** doom
     #+BEGIN_SRC emacs-lisp
@@ -109,8 +108,15 @@
 	:ensure t)
       (use-package doom-modeline
 	:ensure t
-	:hook (after-init . doom-modeline-mode)
-	:config (setq doom-modeline-buffer-file-name-style 'auto))
+	:hook (emacs-startup . doom-modeline-mode)
+	:config
+	(setq
+	 ;; inhibit-compacting-font-caches t
+	 ;; doom-modeline-height 1
+	 doom-modeline-buffer-file-name-style 'auto
+	 ;; doom-modeline-icon nil
+	 ;; doom-modeline-project-detection 'project
+	 ))
     #+END_SRC
 *** company
     #+BEGIN_SRC emacs-lisp
@@ -124,10 +130,9 @@
       (use-package yasnippet
 	:ensure t
 	:config
-	(progn
-	  (setq yas-snippet-dirs
-		'("~/.emacs.d/snippets"))
-	  (yas-global-mode 1)))
+	(setq yas-snippet-dirs
+	      '("~/.emacs.d/snippets"))
+	(yas-global-mode 1))
     #+END_SRC
 *** undo-tree
     #+BEGIN_SRC emacs-lisp
@@ -135,14 +140,22 @@
 	:ensure t
 	:init (global-undo-tree-mode))
     #+END_SRC
+*** projectile
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile
+	:ensure t
+	:config
+	(projectile-mode +1)
+	(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+	(setq projectile-completion-system 'ivy))
+    #+END_SRC
 *** misc packages
     #+BEGIN_SRC emacs-lisp
       (use-package recentf
 	:bind ("C-x C-r" . recentf-open-files)
 	:config
-	(progn
-	  (recentf-mode 1)
-	  (setq recentf-max-menu-item 10)))
+	(recentf-mode 1)
+	(setq recentf-max-menu-item 10))
       (use-package all-the-icons
 	:ensure t) 
       (use-package exec-path-from-shell
@@ -158,11 +171,10 @@
       (use-package ace-window
 	:ensure t
 	:init
-	(progn
-	  (global-set-key [remap other-window] 'ace-window)
-	  (custom-set-faces
-	   '(aw-leading-char-face
-	     ((t (:inderit ace-jump-face-foreground :height 3.0)))))))
+	(global-set-key [remap other-window] 'ace-window)
+	(custom-set-faces
+	 '(aw-leading-char-face
+	   ((t (:inderit ace-jump-face-foreground :height 3.0))))))
       (use-package diminish
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
