@@ -266,38 +266,42 @@
 * user-config
 ** config
    #+BEGIN_SRC emacs-lisp
-  ;; 启动页面
-  ;; (setq initial-buffer-choice (concat org-directory "note.org"))
-  ;; 关闭欢迎界面
-  (setq inhibit-splash-screen t)
-  ;; fonts problem
-  (setq inhibit-compacting-font-caches t)
-  ;; disable alert voice
-  (setq ring-bell-function 'ignore)
-  ;; UI
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0)
-  (setq-default cursor-type 'bar)
-  ;; 设置默认读入文件编码
-  (prefer-coding-system 'gbk)
-  ;; 设置写入文件编码
-  (setq default-buffer-file-coding-system 'gbk)
-  ;; disable backup
-  (setq make-backup-files nil)
-  ;; disable auto-save
-  (setq auto-save-default nil)
-  ;; yes-or-no y-or-n
-  (fset 'yes-or-no-p 'y-or-n-p)
-  ;; select input delete
-  (delete-selection-mode 1)
-  ;; highlight current line
-  (global-hl-line-mode 1)
-  ;; autoload change out of emacs
-  (global-auto-revert-mode 1)
-  ;; highlight in org-mode
-  (setq org-src-fontify-natively t)
-  ;; 自动换行
-  (toggle-truncate-lines 1)
+     ;; 启动页面
+     ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+     ;; 窗口启动位置大小
+     (set-frame-position (selected-frame) 160 80)
+     (set-frame-width (selected-frame) 120)
+     (set-frame-height (selected-frame) 30)
+     ;; 关闭欢迎界面
+     (setq inhibit-splash-screen t)
+     ;; fonts problem
+     (setq inhibit-compacting-font-caches t)
+     ;; disable alert voice
+     (setq ring-bell-function 'ignore)
+     ;; UI
+     (tool-bar-mode 0)
+     (scroll-bar-mode 0)
+     (setq-default cursor-type 'bar)
+     ;; 设置默认读入文件编码
+     (prefer-coding-system 'gbk)
+     ;; 设置写入文件编码
+     (setq default-buffer-file-coding-system 'gbk)
+     ;; disable backup
+     (setq make-backup-files nil)
+     ;; disable auto-save
+     (setq auto-save-default nil)
+     ;; yes-or-no y-or-n
+     (fset 'yes-or-no-p 'y-or-n-p)
+     ;; select input delete
+     (delete-selection-mode 1)
+     ;; highlight current line
+     (global-hl-line-mode 1)
+     ;; autoload change out of emacs
+     (global-auto-revert-mode 1)
+     ;; highlight in org-mode
+     (setq org-src-fontify-natively t)
+     ;; 自动换行
+     (toggle-truncate-lines 1)
    #+END_SRC
 ** key-bind
    #+BEGIN_SRC emacs-lisp
