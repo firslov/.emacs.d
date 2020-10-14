@@ -388,9 +388,15 @@
        "scroll up half the page"
        (interactive)
        (scroll-up (/ (window-body-height) 2)))
-
      (global-set-key "\M-n" 'scroll-half-page-up)
      (global-set-key "\M-p" 'scroll-half-page-down)
+
+     (defun init-my-frame ()
+       ;; 窗口启动位置大小
+       (set-frame-position (selected-frame) 160 80)
+       (set-frame-width (selected-frame) 120)
+       (set-frame-height (selected-frame) 30))
+     (add-hook 'after-init-hook 'init-my-frame)
    #+END_SRC
 ** mode
    #+BEGIN_SRC emacs-lisp
@@ -467,11 +473,4 @@
     (define-key global-map "\C-cc" 'org-capture)
     (define-key global-map "\M-q" 'org-agenda)
   #+END_SRC
-* finally
-** set-window-size
-   #+BEGIN_SRC emacs-lisp
-  ;; 窗口启动位置大小
-  (set-frame-position (selected-frame) 160 80)
-  (set-frame-width (selected-frame) 120)
-  (set-frame-height (selected-frame) 30)
-   #+END_SRC
+
