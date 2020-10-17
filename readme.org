@@ -158,6 +158,7 @@
 	:config
 	(projectile-mode +1)
 	(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+	(setq projectile-indexing-method 'native)
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
 *** misc packages
@@ -233,23 +234,19 @@
 	     init-sys (concat conf_dir "lisp/windows-nt.el"))
        ;; init fullscreen
        (add-to-list 'default-frame-alist '(fullscreen . maximized))
-       ;; UI
-       (menu-bar-mode t)
        ;; 快速打开blog文件
        (defun open-blog()
 	 (interactive)
 	 (find-file "e:/emacs/site/org/index.org")
 	 (blog-mode)
 	 (neotree-dir "e:/emacs/site/"))
-       ;; 将函数 open-blog 绑定到 <f9> 键上
-       ;; (global-set-key (kbd "<f9>") 'open-blog)
        ;; refresh startup function
        (defun show-startup-page()
 	 (interactive)
 	 (org-agenda-list)
 	 (org-agenda-day-view)
 	 (neotree-dir "e:/org/"))
-       (add-hook 'window-setup-hook 'show-startup-page)
+       ;; (add-hook 'window-setup-hook 'show-startup-page)
        (setq display-buffer-alist
 	     '(("\\*e?shell\\*"
 		(display-buffer-in-side-window)
@@ -268,30 +265,25 @@
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'darwin)
        (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/Documents/emacs/"
+	     org-directory "~/Documents/org/"
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
        ;; font
        (set-default-font "MesloLGLDZ Nerd Font 15") 
-       ;; init fullscreen
-       ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
        ;; 快速打开blog文件
        (defun blog()
 	 (interactive)
 	 (find-file "~/site/org/index.org")
 	 (blog-mode)
 	 (neotree-dir "~/site/"))
-       ;; 将函数 open-blog 绑定到 <f9> 键上
-       ;; (global-set-key (kbd "<f9>") 'open-blog)
        ;; refresh startup function
        (defun show-startup-page()
 	 (interactive)
 	 (org-agenda-list)
 	 (org-agenda-day-view)
-	 (neotree-dir "~/Documents/emacs/")
+	 (neotree-dir "~/Documents/org/")
 	 (other-window -1))
        ;;(add-hook 'window-setup-hook 'show-startup-page)
-       (global-set-key (kbd "C-.") 'show-startup-page)
        (setq display-buffer-alist
 	     '(("\\*e?shell\\*"
 		(display-buffer-in-side-window)
@@ -322,6 +314,7 @@
      ;; UI
      (tool-bar-mode 0)
      (scroll-bar-mode 0)
+     (menu-bar-mode t)
      (setq-default cursor-type 'bar)
      ;; 设置默认读入文件编码
      (prefer-coding-system 'gbk)
@@ -348,12 +341,23 @@
    #+END_SRC
 ** key-bind
    #+BEGIN_SRC emacs-lisp
-  ;; save all buffers
-  (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
-  ;; 绑定 <f5> 键上
-  (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
-  ;; ibuffer
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+     ;; save all buffers
+     (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
+     ;; 绑定 <f5> 键上
+     (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
+     ;; ibuffer
+     (global-set-key (kbd "C-x C-b") 'ibuffer)
+     ;; show startup page
+     (global-set-key (kbd "C-.") 'show-startup-page)
+     ;; 将函数 load-init-file 绑定到 <f1> 0 键上
+     (global-set-key (kbd "<f1> 0") 'load-init)
+     ;; 将函数 open-init-file 绑定到 <f1> 1 键上
+     (global-set-key (kbd "<f1> 1") 'open-init-file)
+     ;; 将函数 indent-buffer 绑定到 <f8> 键上
+     (global-set-key (kbd "<f8>") 'indent-buffer)
+     ;; 上下翻半页
+     (global-set-key "\M-n" 'scroll-half-page-up)
+     (global-set-key "\M-p" 'scroll-half-page-down)
    #+END_SRC
 ** function
    #+BEGIN_SRC emacs-lisp
@@ -361,14 +365,10 @@
      (defun open-init-file()
        (interactive)
        (find-file (concat conf_dir "readme.org")))
-     ;; 将函数 open-init-file 绑定到 <f1> 1 键上
-     (global-set-key (kbd "<f1> 1") 'open-init-file)
      ;; 快速加载配置文件
      (defun load-init()
        (interactive)
        (org-babel-load-file (concat conf_dir "readme.org")))
-     ;; 将函数 load-init-file 绑定到 <f1> 0 键上
-     (global-set-key (kbd "<f1> 0") 'load-init)
      ;; neotree list config-dir
      (defun nconf()
        (interactive)
@@ -378,23 +378,17 @@
      (defun indent-buffer()
        (interactive)
        (indent-region (point-min) (point-max)))
-     ;; 将函数 indent-buffer 绑定到 <f8> 键上
-     (global-set-key (kbd "<f8>") 'indent-buffer)
      ;; 翻页
      (defun scroll-half-page-down ()
        "scroll down half the page"
        (interactive)
        (scroll-down (/ (window-body-height) 2)))
-
      (defun scroll-half-page-up ()
        "scroll up half the page"
        (interactive)
        (scroll-up (/ (window-body-height) 2)))
-     (global-set-key "\M-n" 'scroll-half-page-up)
-     (global-set-key "\M-p" 'scroll-half-page-down)
-
+     ;; 窗口启动位置大小
      (defun init-my-frame ()
-       ;; 窗口启动位置大小
        (set-frame-position (selected-frame) 160 80)
        (set-frame-width (selected-frame) 120)
        (set-frame-height (selected-frame) 30))
@@ -441,7 +435,7 @@
 	  org-agenda-window-setup nil
 	  org-M-RET-may-split-line '((headline . nil))
 	  org-agenda-time-grid '((daily today require-timed)
-				 (600 800 1000 1200 1400 1600 1800 2000 2200)
+				 (1000 1400 1600 2000 2200)
 				 "......" "----------------")
 	  org-capture-templates
 	  `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
@@ -461,7 +455,7 @@
 	     "* TODO %?\nSCHEDULED:%^t")
 	    ("td" "Todo with DEADLINE" entry (file ,(concat org-directory "todo.org"))
 	     "* TODO %?\nDEADLINE:%^t"))
-	  ;;org-refile-targets
+	  ;; org-refile-targets
 	  ;; `((,(concat org-directory "note.org") :maxlevel . 2))
 	  ;; `((,(concat org-directory "read.org") :maxlevel . 1)
 	  ;; (,(concat org-directory "learn.org") :maxlevel . 1)
