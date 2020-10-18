@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: blog
+# key: <blg
+# --
+#+TITLE: $0
+#+AUTHOR: 
+#+SETUPFILE: theme-readtheorg-local.setup

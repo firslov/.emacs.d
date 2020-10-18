@@ -283,7 +283,7 @@
 	 (org-agenda-day-view)
 	 (neotree-dir "~/Documents/org/")
 	 (other-window -1))
-       ;;(add-hook 'window-setup-hook 'show-startup-page)
+       ;; (add-hook 'window-setup-hook 'show-startup-page)
        (setq display-buffer-alist
 	     '(("\\*e?shell\\*"
 		(display-buffer-in-side-window)
@@ -427,7 +427,7 @@
 * org
   #+BEGIN_SRC emacs-lisp
     ;; org variables
-    (setq org-agenda-files (list (concat org-directory "todo.org"))
+    (setq org-agenda-files (list (concat org-directory "inbox.org"))
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
 	  ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
 	  org-agenda-show-future-repeats nil
@@ -438,22 +438,18 @@
 				 (1000 1400 1600 2000 2200)
 				 "......" "----------------")
 	  org-capture-templates
-	  `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
+	  `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
 	     "* %?")
 	    ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
 	     "* %U\n%?")
-	    ;; ("t" "Todo(deadline)" entry (file ,(concat org-directory "todo.org"))
-	    ;; "* TODO %? %^G\nDEADLINE:%^t")
-	    ;; ("d" "Daily" entry (file ,(concat org-directory "todo.org"))
-	    ;; "* DAILY %? %^G\nSCHEDULED:%^t")
-	    ("a" "Arrangement" entry (file ,(concat org-directory "todo.org"))
+	    ("a" "Arrangement" entry (file+headline ,(concat org-directory "todo.org") "Arrangement:")
 	     "* %? %^T")
 	    ("t" "Todo")
-	    ("tt" "Todo without time" entry (file ,(concat org-directory "todo.org"))
+	    ("tt" "Todo without time" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
 	     "* TODO %?")
-	    ("ts" "Todo with SCHEDULED" entry (file ,(concat org-directory "todo.org"))
+	    ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
 	     "* TODO %?\nSCHEDULED:%^t")
-	    ("td" "Todo with DEADLINE" entry (file ,(concat org-directory "todo.org"))
+	    ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
 	     "* TODO %?\nDEADLINE:%^t"))
 	  ;; org-refile-targets
 	  ;; `((,(concat org-directory "note.org") :maxlevel . 2))
