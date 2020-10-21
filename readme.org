@@ -12,13 +12,6 @@
 				("melpa" . "http://elpa.emacs-china.org/melpa/")))
        (package-initialize))
    #+END_SRC
-** entry
-   #+BEGIN_SRC emacs-lisp
-     (let ((sys system-type))
-       (cond
-	((eq sys 'darwin) (add-to-list 'load-path "~/.emacs.d/lisp/"))
-	((eq sys 'windows-nt) (add-to-list 'load-path "e:/emacs/.emacs.d/lisp/"))))
-   #+END_SRC
 ** use-package
    #+BEGIN_SRC emacs-lisp
   ;; Add use-package
@@ -115,19 +108,19 @@
     #+END_SRC
 *** doom
     #+BEGIN_SRC emacs-lisp
-      (use-package doom-themes
-	:ensure t)
-      (use-package doom-modeline
-	:ensure t
-	:hook (emacs-startup . doom-modeline-mode)
-	:config
-	(setq
-	 ;; inhibit-compacting-font-caches t
-	 ;; doom-modeline-height 1
-	 doom-modeline-buffer-file-name-style 'auto
-	 ;; doom-modeline-icon nil
-	 ;; doom-modeline-project-detection 'project
-	 ))
+      ;; (use-package doom-themes
+      ;;   :ensure t)
+      ;; (use-package doom-modeline
+      ;;   :ensure t
+      ;;   :hook (emacs-startup . doom-modeline-mode)
+      ;;   :config
+      ;;   (setq
+      ;;    ;; inhibit-compacting-font-caches t
+      ;;    ;; doom-modeline-height 1
+      ;;    doom-modeline-buffer-file-name-style 'auto
+      ;;    ;; doom-modeline-icon nil
+      ;;    ;; doom-modeline-project-detection 'project
+      ;;    ))
     #+END_SRC
 *** company
     #+BEGIN_SRC emacs-lisp
@@ -268,6 +261,8 @@
 	     org-directory "~/Documents/org/"
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
+       (add-to-list `load-path (expand-file-name "~/.emacs.d/lisp/awesome-tray"))
+       (add-to-list `load-path (expand-file-name "~/.emacs.d/lisp/lazycat-theme"))
        ;; font
        (set-default-font "MesloLGLDZ Nerd Font 15") 
        ;; 快速打开blog文件
@@ -292,12 +287,34 @@
 		(slot . -1))
 	       ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
 		(display-buffer-in-side-window)
-		(window-height . 0.3)
-		(side . bottom)
-		(slot . 0))
+		(window-width . 0.5)
+		(side . right)
+		(slot . 1))
 	       ))
        )
    #+END_SRC
+*** awesome
+**** awesome-theme
+     #+BEGIN_SRC emacs-lisp
+  (use-package lazycat-theme
+    :load-path "~/.emacs.d/lisp/lazycat-theme")
+     #+END_SRC
+**** awesome-tray
+     #+BEGIN_SRC emacs-lisp
+       (use-package awesome-tray
+	 :load-path "~/.emacs.d/lisp/awesome-tray"
+	 :config
+	 (awesome-tray-mode 1)
+	 (setq awesome-tray-active-modules '("location" "parent-dir" "mode-name" "git" "date"))
+	 (lazycat-theme-load-dark))
+     #+END_SRC
+**** awesome-tab
+     #+BEGIN_SRC emacs-lisp
+   (use-package awesome-tab
+     :load-path "~/.emacs.d/lisp/awesome-tab"
+     :config
+     (awesome-tab-mode t))
+     #+END_SRC
 * user-config
 ** config
    #+BEGIN_SRC emacs-lisp
@@ -315,7 +332,19 @@
      (tool-bar-mode 0)
      (scroll-bar-mode 0)
      (menu-bar-mode t)
+     ;; Highlight the "()"
+     (show-paren-mode t)
+     ;; Auto complete the "()"
+     (electric-pair-mode t)
+     ;; Set the electric-pair-mode's pair keywords
+     (setq electric-pair-pairs
+	   '((?\" . ?\")
+	     (?\( . ?\))
+	     (?\< . ?\>)
+	     (?\{ . ?\})))
      (setq-default cursor-type 'bar)
+     ;; Save the point position
+     (save-place-mode t)
      ;; 设置默认读入文件编码
      (prefer-coding-system 'gbk)
      ;; 设置写入文件编码
@@ -393,6 +422,13 @@
        (set-frame-width (selected-frame) 120)
        (set-frame-height (selected-frame) 30))
      (add-hook 'after-init-hook 'init-my-frame)
+     ;; set alpha
+     (defun set-alpha (var)
+       "Set the backgroud alpha by VAR."
+       (interactive "sAlpha or not(y-or-n): ")
+       (pcase var
+	 ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
+	 ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
    #+END_SRC
 ** mode
    #+BEGIN_SRC emacs-lisp
@@ -442,14 +478,14 @@
 	     "* %?")
 	    ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
 	     "* %U\n%?")
-	    ("a" "Arrangement" entry (file+headline ,(concat org-directory "todo.org") "Arrangement:")
+	    ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
 	     "* %? %^T")
 	    ("t" "Todo")
-	    ("tt" "Todo without time" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
+	    ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	     "* TODO %?")
-	    ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
+	    ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	     "* TODO %?\nSCHEDULED:%^t")
-	    ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "todo.org") "Todo:")
+	    ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	     "* TODO %?\nDEADLINE:%^t"))
 	  ;; org-refile-targets
 	  ;; `((,(concat org-directory "note.org") :maxlevel . 2))
