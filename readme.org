@@ -261,8 +261,6 @@
 	     org-directory "~/Documents/org/"
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
-       (add-to-list `load-path (expand-file-name "~/.emacs.d/lisp/awesome-tray"))
-       (add-to-list `load-path (expand-file-name "~/.emacs.d/lisp/lazycat-theme"))
        ;; font
        (set-default-font "MesloLGLDZ Nerd Font 15") 
        ;; 快速打开blog文件
