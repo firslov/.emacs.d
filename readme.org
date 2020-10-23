@@ -279,18 +279,18 @@
 	 (neotree-dir "~/Documents/org/")
 	 (other-window -1))
        ;; (add-hook 'window-setup-hook 'show-startup-page)
-       ;; (setq display-buffer-alist
-       ;; 	'(("\\*e?shell\\*"
-       ;; 	   (display-buffer-in-side-window)
-       ;; 	   (window-height . 0.3)
-       ;; 	   (side . bottom)
-       ;; 	   (slot . -1))
-       ;; 	  ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-       ;; 	   (display-buffer-in-side-window)
-       ;; 	   (window-width . 0.5)
-       ;; 	   (side . right)
-       ;; 	   (slot . 1))
-       ;; 	  ))
+       (setq display-buffer-alist
+	     '(("\\*e?shell\\*"
+		(display-buffer-in-side-window)
+		(window-height . 0.3)
+		(side . bottom)
+		(slot . -1))
+	       ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+		(display-buffer-in-side-window)
+		(window-width . 0.5)
+		(side . right)
+		(slot . 1))
+	       ))
        )
    #+END_SRC
 *** awesome
