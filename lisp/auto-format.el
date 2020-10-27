@@ -7,18 +7,15 @@
   :type 'integer
   :group 'auto-format)
 
-(defcustom auto-format-mode-list '(org-mode lisp-interaction-mode python-mode)
+(defcustom auto-format-mode-list '(org-mode lisp-interaction-mode python-mode emacs-lisp-mode)
   "This the mode list of which uses auto-format."
   :type 'list
   :group 'auto-format)
 
 (defun auto-format-buffer ()
   (interactive)
-  (if (let* ((boo nil))
-	(dolist (md auto-format-mode-list)
-	  (setq boo (or boo (derived-mode-p md))))
-	boo)
-      (with-temp-message "" (indent-region (point-min) (point-max))))
+  (when (member major-mode auto-format-mode-list)
+    (with-temp-message "" (indent-region (point-min) (point-max))))
   )
 
 (defun auto-format-enable ()
