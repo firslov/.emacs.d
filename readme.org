@@ -181,6 +181,23 @@
 	:diminish (ivy-mode eldoc-mode which-key-mode))
       (use-package org-equation-live-preview
 	:load-path "~/.emacs.d/lisp/org-equation-live-preview/")
+      (use-package learn-timer
+	:load-path "~/.emacs.d/lisp/learn-timer/"
+	:after awesome-tray
+	:config
+	(add-to-list 'awesome-tray-active-modules "timer" 'append)
+	(add-to-list 'awesome-tray-active-modules "todo" 'append)
+	)
+      (use-package auto-save
+	:load-path "~/.emacs.d/lisp/"
+	:config
+	(auto-save-enable)              ;; 开启自动保存功能
+	(setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
+	)
+      (use-package auto-format
+	:load-path "~/.emacs.d/lisp/"
+	:hook (org-mode)
+	:config (auto-format-enable))
       ;; (use-package init-site)
     #+END_SRC
 ** python
@@ -303,9 +320,9 @@
      #+BEGIN_SRC emacs-lisp
        (use-package awesome-tray
 	 :load-path "~/.emacs.d/lisp/awesome-tray"
+	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
 	 :config
 	 (awesome-tray-mode 1)
-	 (setq awesome-tray-active-modules '("location" "parent-dir" "mode-name" "git" "date"))
 	 (lazycat-theme-load-dark))
      #+END_SRC
 **** awesome-tab
@@ -464,6 +481,7 @@
   #+BEGIN_SRC emacs-lisp
     ;; org variables
     (setq org-agenda-files (list (concat org-directory "inbox.org"))
+	  lt-todo-files org-agenda-files
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
 	  ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
 	  org-agenda-show-future-repeats nil

@@ -195,7 +195,7 @@
           )))
 
 (defun save-and-publish-website()
-    "Save all buffers and publish."
+  "Save all buffers and publish."
   (interactive)
   (when (yes-or-no-p "Really save and publish current project?")
     (save-some-buffers t)
@@ -209,7 +209,7 @@
   (message "Copy statics done."))
 
 (defun save-and-publish-file ()
-    "Save current buffer and publish."
+  "Save current buffer and publish."
   (interactive)
   (save-buffer t)
   (org-publish-current-file t))
