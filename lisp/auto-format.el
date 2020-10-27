@@ -14,7 +14,7 @@
 
 (defun auto-format-buffer ()
   (interactive)
-  (when (member major-mode auto-format-mode-list)
+  (when (and (buffer-modified-p) (member major-mode auto-format-mode-list))
     (with-temp-message "" (indent-region (point-min) (point-max))))
   )
 

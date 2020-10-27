@@ -154,6 +154,78 @@
 	(setq projectile-indexing-method 'native)
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
+*** phd
+    #+BEGIN_SRC emacs-lisp
+      (when (display-graphic-p)
+	(use-package pdf-view
+	  :ensure pdf-tools
+	  :diminish (pdf-view-midnight-minor-mode pdf-view-printer-minor-mode)
+	  :defines pdf-annot-activate-created-annotations
+	  :functions my-pdf-view-set-midnight-colors
+	  :commands pdf-view-midnight-minor-mode
+	  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+	  :magic ("%PDF" . pdf-view-mode)
+	  :hook (after-load-theme . my-pdf-view-set-dark-theme)
+	  :bind (:map pdf-view-mode-map
+		      ("C-s" . isearch-forward))
+	  :init
+	  ;; (setq pdf-view-incompatible-modes '('linum-mode))
+	  (setq pdf-annot-activate-created-annotations t)
+
+	  (defun my-pdf-view-set-midnight-colors ()
+	    "Set pdf-view midnight colors."
+	    (setq pdf-view-midnight-colors
+		  `(,(face-foreground 'default) . ,(face-background 'default))))
+
+	  (defun my-pdf-view-set-dark-theme ()
+	    "Set pdf-view midnight theme as color theme."
+	    (my-pdf-view-set-midnight-colors)
+	    (dolist (buf (buffer-list))
+	      (with-current-buffer buf
+		(when (eq major-mode 'pdf-view-mode)
+		  (pdf-view-midnight-minor-mode (if pdf-view-midnight-minor-mode 1 -1))))))
+	  :config
+	  ;; WORKAROUND: Fix compilation errors on macOS.
+	  ;; @see https://github.com/politza/pdf-tools/issues/480
+	  (pdf-tools-install t nil t t)
+
+	  (my-pdf-view-set-midnight-colors)
+
+	  ;; FIXME: Support retina
+	  ;; @see https://emacs-china.org/t/pdf-tools-mac-retina-display/10243/
+	  ;; and https://github.com/politza/pdf-tools/pull/501/
+	  (setq pdf-view-use-scaling t
+		pdf-view-use-imagemagick nil)
+	  (with-no-warnings
+	    (defun pdf-view-use-scaling-p ()
+	      "Return t if scaling should be used."
+	      (and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
+		       (memq (pdf-view-image-type)
+			     '(imagemagick image-io)))
+		   pdf-view-use-scaling))
+	    (defun pdf-view-create-page (page &optional window)
+	      "Create an image of PAGE for display on WINDOW."
+	      (let* ((size (pdf-view-desired-image-size page window))
+		     (width (if (not (pdf-view-use-scaling-p))
+				(car size)
+			      (* 2 (car size))))
+		     (data (pdf-cache-renderpage
+			    page width width))
+		     (hotspots (pdf-view-apply-hotspot-functions
+				window page size)))
+		(pdf-view-create-image data
+				       :width width
+				       :scale (if (pdf-view-use-scaling-p) 0.5 1)
+				       :map hotspots
+				       :pointer 'arrow))))
+
+	  ;; Recover last viewed position
+	  (use-package pdf-view-restore
+	    :hook (pdf-view-mode . pdf-view-restore-mode)
+	    :init (setq pdf-view-restore-filename
+			(locate-user-emacs-file ".pdf-view-restore")))))
+
+    #+END_SRC
 *** misc packages
     #+BEGIN_SRC emacs-lisp
       (use-package recentf
@@ -196,7 +268,6 @@
 	)
       (use-package auto-format
 	:load-path "~/.emacs.d/lisp/"
-	:hook (org-mode)
 	:config (auto-format-enable))
       ;; (use-package init-site)
     #+END_SRC
@@ -342,7 +413,7 @@
      ;; fonts problem
      (setq inhibit-compacting-font-caches t)
      ;; Enable line numbers globally
-     (global-linum-mode t)
+     (global-linum-mode nil)
      ;; disable alert voice
      (setq ring-bell-function 'ignore)
      ;; UI
@@ -480,6 +551,7 @@
 * org
   #+BEGIN_SRC emacs-lisp
     ;; org variables
+    ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
     (setq org-agenda-files (list (concat org-directory "inbox.org"))
 	  lt-todo-files org-agenda-files
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
