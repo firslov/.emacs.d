@@ -216,10 +216,10 @@
 		     (hotspots (pdf-view-apply-hotspot-functions
 				window page size)))
 		(pdf-view-create-image data
-		  :width width
-		  :scale (if (pdf-view-use-scaling-p) 0.5 1)
-		  :map hotspots
-		  :pointer 'arrow))))
+				       :width width
+				       :scale (if (pdf-view-use-scaling-p) 0.5 1)
+				       :map hotspots
+				       :pointer 'arrow))))
 
 	  ;; Recover last viewed position
 	  (use-package pdf-view-restore
@@ -227,6 +227,8 @@
 	    :init (setq pdf-view-restore-filename
 			(locate-user-emacs-file ".pdf-view-restore")))))
 
+      (use-package interleave
+	:ensure t)
     #+END_SRC
 *** awesome
 **** awesome-theme
@@ -290,9 +292,9 @@
 	(auto-save-enable)              ;; 开启自动保存功能
 	(setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
 	)
-      (use-package auto-format
+      (use-package auto-indent
 	:load-path "~/.emacs.d/lisp/"
-	:config (auto-format-enable))
+	:config (auto-indent-enable))
       ;; (use-package init-site)
     #+END_SRC
 ** python
@@ -476,6 +478,8 @@
      (global-set-key (kbd "<f1> 0") 'load-init)
      ;; 将函数 open-init-file 绑定到 <f1> 1 键上
      (global-set-key (kbd "<f1> 1") 'open-init-file)
+     ;; 将函数 open-articles 绑定到<f1> 2 键上
+     (global-set-key (kbd "<f1> 2") 'open-articles)
      ;; 将函数 indent-buffer 绑定到 <f8> 键上
      (global-set-key (kbd "<f8>") 'indent-buffer)
      ;; 上下翻半页
@@ -492,6 +496,10 @@
      (defun load-init()
        (interactive)
        (org-babel-load-file (concat conf_dir "readme.org")))
+     ;; 快速打开articles
+     (defun open-articles()
+       (interactive)
+       (find-file "~/Documents/org/Archive.org"))
      ;; neotree list config-dir
      (defun nconf()
        (interactive)
