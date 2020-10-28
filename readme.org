@@ -156,6 +156,8 @@
     #+END_SRC
 *** phd
     #+BEGIN_SRC emacs-lisp
+      (use-package phd
+	:load-path "~/.emacs.d/lisp/")
       (when (display-graphic-p)
 	(use-package pdf-view
 	  :ensure pdf-tools
@@ -169,7 +171,7 @@
 	  :bind (:map pdf-view-mode-map
 		      ("C-s" . isearch-forward))
 	  :init
-	  ;; (setq pdf-view-incompatible-modes '('linum-mode))
+	  (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-view))
 	  (setq pdf-annot-activate-created-annotations t)
 
 	  (defun my-pdf-view-set-midnight-colors ()
@@ -214,10 +216,10 @@
 		     (hotspots (pdf-view-apply-hotspot-functions
 				window page size)))
 		(pdf-view-create-image data
-				       :width width
-				       :scale (if (pdf-view-use-scaling-p) 0.5 1)
-				       :map hotspots
-				       :pointer 'arrow))))
+		  :width width
+		  :scale (if (pdf-view-use-scaling-p) 0.5 1)
+		  :map hotspots
+		  :pointer 'arrow))))
 
 	  ;; Recover last viewed position
 	  (use-package pdf-view-restore
@@ -226,6 +228,28 @@
 			(locate-user-emacs-file ".pdf-view-restore")))))
 
     #+END_SRC
+*** awesome
+**** awesome-theme
+     #+BEGIN_SRC emacs-lisp
+       (use-package lazycat-theme
+	 :load-path "~/.emacs.d/lisp/lazycat-theme-master")
+     #+END_SRC
+**** awesome-tray
+     #+BEGIN_SRC emacs-lisp
+       (use-package awesome-tray
+	 :load-path "~/.emacs.d/lisp/awesome-tray"
+	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+	 :config
+	 (awesome-tray-mode 1)
+	 (lazycat-theme-load-dark))
+     #+END_SRC
+**** awesome-tab
+     #+BEGIN_SRC emacs-lisp
+       (use-package awesome-tab
+	 :load-path "~/.emacs.d/lisp/awesome-tab"
+	 :config
+	 (awesome-tab-mode t))
+     #+END_SRC
 *** misc packages
     #+BEGIN_SRC emacs-lisp
       (use-package recentf
@@ -352,7 +376,8 @@
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
        ;; font
-       (set-default-font "MesloLGLDZ Nerd Font 15") 
+       ;; (set-default-font "MesloLGLDZ Nerd Font 15")
+       (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
        ;; 快速打开blog文件
        (defun blog()
 	 (interactive)
@@ -381,39 +406,20 @@
 	       ))
        )
    #+END_SRC
-*** awesome
-**** awesome-theme
-     #+BEGIN_SRC emacs-lisp
-  (use-package lazycat-theme
-    :load-path "~/.emacs.d/lisp/lazycat-theme")
-     #+END_SRC
-**** awesome-tray
-     #+BEGIN_SRC emacs-lisp
-       (use-package awesome-tray
-	 :load-path "~/.emacs.d/lisp/awesome-tray"
-	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
-	 :config
-	 (awesome-tray-mode 1)
-	 (lazycat-theme-load-dark))
-     #+END_SRC
-**** awesome-tab
-     #+BEGIN_SRC emacs-lisp
-   (use-package awesome-tab
-     :load-path "~/.emacs.d/lisp/awesome-tab"
-     :config
-     (awesome-tab-mode t))
-     #+END_SRC
 * user-config
 ** config
    #+BEGIN_SRC emacs-lisp
      ;; 启动页面
      ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+     ;; 强制左右分屏
+     (setq split-height-threshold nil)
+     (setq split-width-threshold 0)
      ;; 关闭欢迎界面
      (setq inhibit-splash-screen t)
      ;; fonts problem
      (setq inhibit-compacting-font-caches t)
      ;; Enable line numbers globally
-     (global-linum-mode nil)
+     ;; (global-linum-mode nil)
      ;; disable alert voice
      (setq ring-bell-function 'ignore)
      ;; UI
@@ -552,6 +558,7 @@
   #+BEGIN_SRC emacs-lisp
     ;; org variables
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
+    (add-hook 'org-mode-hook 'linum-mode)
     (setq org-agenda-files (list (concat org-directory "inbox.org"))
 	  lt-todo-files org-agenda-files
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
