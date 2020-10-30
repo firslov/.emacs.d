@@ -480,6 +480,8 @@
      (global-set-key (kbd "<f1> 1") 'open-init-file)
      ;; 将函数 open-articles 绑定到<f1> 2 键上
      (global-set-key (kbd "<f1> 2") 'open-articles)
+     ;; 将函数 org-todo 绑定到<f1> 3 键上
+     (global-set-key (kbd "<f1> 3") 'org-todo-list)
      ;; 将函数 indent-buffer 绑定到 <f8> 键上
      (global-set-key (kbd "<f8>") 'indent-buffer)
      ;; 上下翻半页
@@ -566,6 +568,7 @@
   #+BEGIN_SRC emacs-lisp
     ;; org variables
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
+    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
     (add-hook 'org-mode-hook 'linum-mode)
     (setq org-agenda-files (list (concat org-directory "inbox.org"))
 	  lt-todo-files org-agenda-files
