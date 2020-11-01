@@ -277,8 +277,8 @@
       (use-package diminish
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
-    ;;  (use-package org-equation-live-preview
-	;;:load-path "~/.emacs.d/lisp/org-equation-live-preview/")
+      (use-package org-equation-live-preview
+	:load-path "~/.emacs.d/lisp/org-equation-live-preview/")
       (use-package learn-timer
 	:load-path "~/.emacs.d/lisp/learn-timer/"
 	:after awesome-tray
@@ -415,6 +415,9 @@
      (setq split-width-threshold 0)
      ;; πÿ±’ª∂”≠ΩÁ√Ê
      (setq inhibit-splash-screen t)
+     ;; font
+     ;; (set-default-font "MesloLGLDZ Nerd Font 15")
+     ;; (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
      ;; fonts problem
      (setq inhibit-compacting-font-caches t)
      ;; Enable line numbers globally
