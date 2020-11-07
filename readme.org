@@ -163,6 +163,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package esup
 	:ensure t
+	:defer t
 	;; To use MELPA Stable use ":pin mepla-stable",
 	:pin melpa
 	:commands (esup))
@@ -298,7 +299,7 @@
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
       (use-package org-equation-live-preview
-	:load-path "~/.emacs.d/lisp/org-equation-live-preview/")
+	:defer t)
       (use-package learn-timer
 	:load-path "~/.emacs.d/lisp/learn-timer/"
 	:after awesome-tray
@@ -396,7 +397,7 @@
    #+BEGIN_SRC emacs-lisp
      (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
        (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/Documents/org/"
+	     org-directory "~/org/"
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
        ;; 快速打开blog文件
