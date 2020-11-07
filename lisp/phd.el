@@ -11,7 +11,10 @@
   :group 'phd)
 
 ;; work with interleave-mode
+
+;;;###autoload
 (defun mv-articles ()
+  "Move articles from downloads to archive."
   (interactive)
   (let* ((unread-articles (cdr (cdr (directory-files unread-dir)))))
     (when unread-articles

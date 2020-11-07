@@ -1,23 +1,28 @@
 #+STARTUP: content
 * install
-  #+BEGIN_SRC shell
+  #+BEGIN_SRC shell :tangle no
     git clone --depth=1 git@github.com:firslov/.emacs.d.git
   #+END_SRC
 * packages
 ** resources
    #+BEGIN_SRC emacs-lisp
+     ;; cl - Common Lisp Extension
+     (require 'cl-lib)
      (when (>= emacs-major-version 24)
        (require 'package)
        (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
 				("melpa" . "http://elpa.emacs-china.org/melpa/")))
        (package-initialize))
+     (add-to-list 'load-path "~/.emacs.d/lisp")
+     (require 'org)
+     (require 'auto-load)
    #+END_SRC
 ** use-package
    #+BEGIN_SRC emacs-lisp
-  ;; Add use-package
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+     ;; Add use-package
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
    #+END_SRC
 ** packages
 *** exec
@@ -52,7 +57,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package org-download
 	:ensure t
-	;; :defer t
+	:defer t
 	:config
 	;; Drag-and-drop to `dired`
 	(add-hook 'dired-mode-hook 'org-download-enable)
@@ -154,10 +159,18 @@
 	(setq projectile-indexing-method 'native)
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
+*** esup
+    #+BEGIN_SRC emacs-lisp
+      (use-package esup
+	:ensure t
+	;; To use MELPA Stable use ":pin mepla-stable",
+	:pin melpa
+	:commands (esup))
+    #+END_SRC
 *** phd
     #+BEGIN_SRC emacs-lisp
       (use-package phd
-	:load-path "~/.emacs.d/lisp/")
+	:defer t)
       (when (display-graphic-p)
 	(use-package pdf-view
 	  :ensure pdf-tools
@@ -226,9 +239,12 @@
 	    :hook (pdf-view-mode . pdf-view-restore-mode)
 	    :init (setq pdf-view-restore-filename
 			(locate-user-emacs-file ".pdf-view-restore")))))
-
       (use-package interleave
-	:ensure t)
+	:defer t
+	:ensure t
+	:config
+	(setq interleave-split-direction 'horizontal)
+	(setq interleave-split-lines 9))
     #+END_SRC
 *** awesome
 **** awesome-theme
@@ -262,7 +278,11 @@
       (use-package all-the-icons
 	:ensure t) 
       (use-package restart-emacs
-	:ensure t)
+	:ensure t
+	:init
+	(defun b-restart-emacs (f)
+	  (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
+	(advice-add #'restart-emacs :before #'b-restart-emacs))
       (use-package org-bullets
 	:ensure t
 	:config
@@ -287,13 +307,11 @@
 	(add-to-list 'awesome-tray-active-modules "todo" 'append)
 	)
       (use-package auto-save
-	:load-path "~/.emacs.d/lisp/"
 	:config
 	(auto-save-enable)              ;; 开启自动保存功能
 	(setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
 	)
       (use-package auto-indent
-	:load-path "~/.emacs.d/lisp/"
 	:config (auto-indent-enable))
       ;; (use-package init-site)
     #+END_SRC
@@ -302,6 +320,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package elpy
 	:ensure t
+	:defer t
 	:config
 	(elpy-enable)
 	;; Use IPython for REPL
@@ -315,6 +334,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8
 	:ensure t
+	:defer t
 	:config
 	(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 	(setq py-autopep8-options '("--max-line-length=100")))
@@ -323,6 +343,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
 	:ensure t
+	:defer t
 	:config
 	(global-flycheck-mode)
 	(setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
@@ -330,8 +351,9 @@
     #+END_SRC
 *** ein
     #+BEGIN_SRC emacs-lisp
-  (use-package ein
-    :ensure t)
+      (use-package ein
+	:ensure t
+	:defer t)
     #+END_SRC
 * diff-sys
 ** window-nt
@@ -416,8 +438,7 @@
      ;; 关闭欢迎界面
      (setq inhibit-splash-screen t)
      ;; font
-     ;; (set-default-font "MesloLGLDZ Nerd Font 15")
-     ;; (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+     (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
      ;; fonts problem
      (setq inhibit-compacting-font-caches t)
      ;; Enable line numbers globally
@@ -536,33 +557,33 @@
    #+END_SRC
 ** mode
    #+BEGIN_SRC emacs-lisp
-  ;; blog mode
-  (define-minor-mode blog-mode
-    "Toggle blog mode."
-    :global nil
-    :lighter "Blog")
+     ;; blog mode
+     (define-minor-mode blog-mode
+       "Toggle blog mode."
+       :global nil
+       :lighter "Blog")
    #+END_SRC
 ** transparency
    #+BEGIN_SRC emacs-lisp
-    ;; @purcell
-    (defun sanityinc/adjust-opacity (frame incr)
-      "Adjust the background opacity of FRAME by increment INCR."
-      (unless (display-graphic-p frame)
-	(error "Cannot adjust opacity of this frame"))
-      (let* ((oldalpha (or (frame-parameter frame 'alpha) 100))
-	     (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
-	     (newalpha (+ incr oldalpha)))
-	(when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
-	  (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
-    (global-set-key (kbd "M-C-8") (lambda ()
-				    (interactive)
-				    (sanityinc/adjust-opacity nil -2)))
-    (global-set-key (kbd "M-C-9") (lambda ()
-				    (interactive)
-				    (sanityinc/adjust-opacity nil 2)))
-    (global-set-key (kbd "M-C-7") (lambda ()
-				    (interactive)
-				    (modify-frame-parameters nil `((alpha . 100)))))
+     ;; @purcell
+     (defun sanityinc/adjust-opacity (frame incr)
+       "Adjust the background opacity of FRAME by increment INCR."
+       (unless (display-graphic-p frame)
+	 (error "Cannot adjust opacity of this frame"))
+       (let* ((oldalpha (or (frame-parameter frame 'alpha) 100))
+	      (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
+	      (newalpha (+ incr oldalpha)))
+	 (when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
+	   (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
+     (global-set-key (kbd "M-C-8") (lambda ()
+				     (interactive)
+				     (sanityinc/adjust-opacity nil -2)))
+     (global-set-key (kbd "M-C-9") (lambda ()
+				     (interactive)
+				     (sanityinc/adjust-opacity nil 2)))
+     (global-set-key (kbd "M-C-7") (lambda ()
+				     (interactive)
+				     (modify-frame-parameters nil `((alpha . 100)))))
    #+END_SRC
 * org
   #+BEGIN_SRC emacs-lisp
@@ -609,4 +630,3 @@
     (define-key global-map "\C-cc" 'org-capture)
     (define-key global-map "\M-q" 'org-agenda)
   #+END_SRC
-
