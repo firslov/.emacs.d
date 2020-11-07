@@ -1,3 +1,5 @@
+;; Cal init time
+(benchmark-init/activate)
 ;; cl - Common Lisp Extension
 (require 'cl-lib)
 (when (>= emacs-major-version 24)
@@ -22,7 +24,9 @@
     (exec-path-from-shell-initialize)))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :defer t
+  :bind ("C-x g" . magit-status))
 
 (use-package which-key
   :ensure t
@@ -122,11 +126,11 @@
   (setq projectile-indexing-method 'native)
   (setq projectile-completion-system 'ivy))
 
-(use-package esup
+(use-package benchmark-init
   :ensure t
-  ;; To use MELPA Stable use ":pin mepla-stable",
-  :pin melpa
-  :commands (esup))
+  :init
+  :hook
+  (after-init . benchmark-init/deactivate))
 
 (use-package phd
   :defer t)
@@ -229,6 +233,7 @@
   :ensure t) 
 (use-package restart-emacs
   :ensure t
+  :defer t
   :init
   (defun b-restart-emacs (f)
     (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
@@ -239,6 +244,7 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 (use-package ace-window
   :ensure t
+  :defer t
   :config
   (global-set-key [remap other-window] 'ace-window)
   (custom-set-faces
@@ -248,7 +254,7 @@
   :ensure t
   :diminish (ivy-mode eldoc-mode which-key-mode))
 (use-package org-equation-live-preview
-  :load-path "~/.emacs.d/lisp/org-equation-live-preview/")
+  :defer t)
 (use-package learn-timer
   :load-path "~/.emacs.d/lisp/learn-timer/"
   :after awesome-tray
@@ -332,7 +338,7 @@
 
 (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/Documents/org/"
+	org-directory "~/org/"
 	init-file (concat conf_dir "lisp/init-main.el")
 	init-sys (concat conf_dir "lisp/darwin.el"))
   ;; 快速打开blog文件

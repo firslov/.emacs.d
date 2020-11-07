@@ -6,6 +6,8 @@
 * packages
 ** resources
    #+BEGIN_SRC emacs-lisp
+     ;; Cal init time
+     (benchmark-init/activate)
      ;; cl - Common Lisp Extension
      (require 'cl-lib)
      (when (>= emacs-major-version 24)
@@ -37,7 +39,9 @@
 *** magit
     #+BEGIN_SRC emacs-lisp
       (use-package magit
-	:ensure t)
+	:ensure t
+	:defer t
+	:bind ("C-x g" . magit-status))
     #+END_SRC
 *** which-key
     #+BEGIN_SRC emacs-lisp
@@ -159,14 +163,13 @@
 	(setq projectile-indexing-method 'native)
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
-*** esup
+*** benchmark-init
     #+BEGIN_SRC emacs-lisp
-      (use-package esup
+      (use-package benchmark-init
 	:ensure t
-	:defer t
-	;; To use MELPA Stable use ":pin mepla-stable",
-	:pin melpa
-	:commands (esup))
+	:init
+	:hook
+	(after-init . benchmark-init/deactivate))
     #+END_SRC
 *** phd
     #+BEGIN_SRC emacs-lisp
@@ -280,6 +283,7 @@
 	:ensure t) 
       (use-package restart-emacs
 	:ensure t
+	:defer t
 	:init
 	(defun b-restart-emacs (f)
 	  (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
@@ -290,6 +294,7 @@
 	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
       (use-package ace-window
 	:ensure t
+	:defer t
 	:config
 	(global-set-key [remap other-window] 'ace-window)
 	(custom-set-faces
