@@ -1,5 +1,3 @@
-;; Cal init time
-(benchmark-init/activate)
 ;; cl - Common Lisp Extension
 (require 'cl-lib)
 (when (>= emacs-major-version 24)
@@ -8,14 +6,31 @@
 			   ("melpa" . "http://elpa.emacs-china.org/melpa/")))
   (package-initialize))
 (add-to-list 'load-path "~/.emacs.d/lisp")
-(require 'org)
-(require 'auto-load)
 
 ;; Add use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+(use-package org
+  :ensure t)
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+(use-package auto-load)
+(use-package recentf
+  :bind ("C-x C-r" . recentf-open-files)
+  :defer 1
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-menu-item 10))
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -126,12 +141,6 @@
   (setq projectile-indexing-method 'native)
   (setq projectile-completion-system 'ivy))
 
-(use-package benchmark-init
-  :ensure t
-  :init
-  :hook
-  (after-init . benchmark-init/deactivate))
-
 (use-package phd
   :defer t)
 (when (display-graphic-p)
@@ -224,11 +233,6 @@
   :config
   (awesome-tab-mode t))
 
-(use-package recentf
-  :bind ("C-x C-r" . recentf-open-files)
-  :config
-  (recentf-mode 1)
-  (setq recentf-max-menu-item 10))
 (use-package all-the-icons
   :ensure t) 
 (use-package restart-emacs
@@ -238,10 +242,6 @@
   (defun b-restart-emacs (f)
     (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
   (advice-add #'restart-emacs :before #'b-restart-emacs))
-(use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 (use-package ace-window
   :ensure t
   :defer t
