@@ -309,64 +309,22 @@
 	init-sys (concat conf_dir "lisp/windows-nt.el"))
   ;; init fullscreen
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  ;; 快速打开blog文件
-  (defun open-blog()
-    (interactive)
-    (find-file "e:/emacs/site/org/index.org")
-    (blog-mode)
-    (neotree-dir "e:/emacs/site/"))
-  ;; refresh startup function
-  (defun show-startup-page()
-    (interactive)
-    (org-agenda-list)
-    (org-agenda-day-view)
-    (neotree-dir "e:/org/"))
-  ;; (add-hook 'window-setup-hook 'show-startup-page)
-  (setq display-buffer-alist
-	'(("\\*e?shell\\*"
-	   (display-buffer-in-side-window)
-	   (window-height . 0.2)
-	   (side . bottom)
-	   (slot . -1))
-	  ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-	   (display-buffer-in-side-window)
-	   (window-height . 0.25)
-	   (side . bottom)
-	   (slot . 0))
-	  ))
   )
 
-(when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
+(when (eq system-type 'darwin)
   (setq conf_dir "~/.emacs.d/"
 	org-directory "~/org/"
 	init-file (concat conf_dir "lisp/init-main.el")
 	init-sys (concat conf_dir "lisp/darwin.el"))
-  ;; 快速打开blog文件
-  (defun blog()
-    (interactive)
-    (find-file "~/site/org/index.org")
-    (blog-mode)
-    (neotree-dir "~/site/"))
-  ;; refresh startup function
-  (defun show-startup-page()
-    (interactive)
-    (org-agenda-list)
-    (org-agenda-day-view)
-    (neotree-dir "~/Documents/org/")
-    (other-window -1))
-  ;; (add-hook 'window-setup-hook 'show-startup-page)
-  (setq display-buffer-alist
-	'(("\\*e?shell\\*"
-	   (display-buffer-in-side-window)
-	   (window-height . 0.3)
-	   (side . bottom)
-	   (slot . -1))
-	  ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-	   (display-buffer-in-side-window)
-	   (window-width . 0.5)
-	   (side . right)
-	   (slot . 1))
-	  ))
+  ;; font
+  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+  )
+
+(when (eq system-type 'gnu/linux)
+  (setq conf_dir "~/.emacs.d/"
+	org-directory "~/org/"
+	init-file (concat conf_dir "lisp/init-main.el")
+	init-sys (concat conf_dir "lisp/darwin.el"))
   )
 
 ;; 启动页面
@@ -376,8 +334,6 @@
 (setq split-width-threshold 0)
 ;; 关闭欢迎界面
 (setq inhibit-splash-screen t)
-;; font
-(set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
 ;; fonts problem
 (setq inhibit-compacting-font-caches t)
 ;; Enable line numbers globally
@@ -423,6 +379,19 @@
 (toggle-truncate-lines 1)
 ;; emacs guess indent
 (setq python-indent-guess-indent-offset nil)
+;; display buffer alist
+(setq display-buffer-alist
+      '(("\\*e?shell\\*"
+	 (display-buffer-in-side-window)
+	 (window-height . 0.3)
+	 (side . bottom)
+	 (slot . -1))
+	("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+	 (display-buffer-in-side-window)
+	 (window-width . 0.5)
+	 (side . right)
+	 (slot . 1))
+	))
 
 ;; save all buffers
 (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
@@ -489,6 +458,20 @@
   (pcase var
     ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
     ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
+;; 快速打开blog文件
+(defun blog()
+  (interactive)
+  (find-file "~/site/org/index.org")
+  (blog-mode)
+  (neotree-dir "~/site/"))
+;; refresh startup function
+(defun show-startup-page()
+  (interactive)
+  (org-agenda-list)
+  (org-agenda-day-view)
+  (neotree-dir "~/Documents/org/")
+  (other-window -1))
+;; (add-hook 'window-setup-hook 'show-startup-page)
 
 ;; blog mode
 (define-minor-mode blog-mode
@@ -558,3 +541,21 @@
 ;; set key
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\M-q" 'org-agenda)
+
+(when (eq system-type 'gnu/linux)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons interleave pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
+   '(show-paren-mode t)
+   '(tool-bar-mode nil))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
+   '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
