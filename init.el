@@ -300,7 +300,8 @@
 
 (use-package ein
   :ensure t
-  :defer t)
+  ;;:defer t
+  )
 
 (when (eq system-type 'windows-nt)
   (setq conf_dir "e:/emacs/.emacs.d/"
@@ -318,6 +319,10 @@
 	init-sys (concat conf_dir "lisp/darwin.el"))
   ;; font
   (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+  ;; env
+  (setenv "PATHONPATH" "/opt/anaconda3/bin")
+  (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
+  (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
   )
 
 (when (eq system-type 'gnu/linux)
@@ -559,3 +564,16 @@
    ;; If there is more than one, they won't work right.
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(youdao-dictionary which-key use-package undo-tree restart-emacs py-autopep8 projectile pdf-view-restore org-download org-bullets org neotree magit interleave highlight-parentheses flycheck esup elpy ein diminish counsel company-tabnine benchmark-init all-the-icons ace-window)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

@@ -362,7 +362,8 @@
     #+BEGIN_SRC emacs-lisp
       (use-package ein
 	:ensure t
-	:defer t)
+	:defer t
+	)
     #+END_SRC
 * diff-sys
 ** window-nt
@@ -385,6 +386,10 @@
 	     init-sys (concat conf_dir "lisp/darwin.el"))
        ;; font
        (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+       ;; env
+       (setenv "PATHONPATH" "/opt/anaconda3/bin")
+       (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
+       (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
        )
    #+END_SRC
 ** linux
