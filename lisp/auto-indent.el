@@ -20,7 +20,11 @@
 
 (defun auto-indent-enable ()
   (interactive)
-  (run-with-idle-timer auto-indent-idle t #'auto-indent-buffer)
+  (run-with-idle-timer auto-indent-idle t #'auto-indent-buffer))
+
+(defun auto-indent-disable ()
+  (interactive)
+  (cancel-function-timers #'auto-indent-buffer)
   )
 
 (provide 'auto-indent)

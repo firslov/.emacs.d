@@ -23,7 +23,7 @@
 	  (eshell-command (format "mv %s %s" (concat unread-dir article) (concat archive-dir article)))
 	  (save-excursion
 	    (goto-line (+ 1 (org-find-exact-headline-in-buffer "Unread")))
-	    (insert (format "** %s\n   :PROPERTIES:\n   :INTERLEAVE_PDF: %s\n   :END:\n" article (concat archive-dir article)))))
+	    (insert (format "** [[%s][%s]]\n" (concat archive-dir article) article))))
 	))))
 
 ;; (defun mv-articles ()

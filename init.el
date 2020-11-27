@@ -53,14 +53,25 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (setq projectile-switch-project-action 'neotree-projectile-action))
 
+(use-package org-sidebar
+  :ensure t
+  :after (general)
+  :config
+  (leader-def :infix "o"
+	      "b" 'org-sidebar-backlinks))
 (use-package org-download
   :ensure t
-  :defer t
   :config
   ;; Drag-and-drop to `dired`
   (add-hook 'dired-mode-hook 'org-download-enable)
   (setq-default org-download-image-dir "./src")
   (setq org-download-display-inline-images nil))
+(use-package org-z
+  :ensure helm-rg
+  :ensure helm-org-rifle
+  :load-path "~/.emacs.d/git-repo/org-z"
+  :config
+  (org-z-mode 1))
 
 (use-package highlight-parentheses
   :ensure t
@@ -211,25 +222,28 @@
       :hook (pdf-view-mode . pdf-view-restore-mode)
       :init (setq pdf-view-restore-filename
 		  (locate-user-emacs-file ".pdf-view-restore")))))
-(use-package interleave
-  :defer t
-  :ensure t
-  :config
-  (setq interleave-split-direction 'horizontal)
-  (setq interleave-split-lines 9))
+;; (use-package interleave
+;;   :defer t
+;;   :ensure t
+;;   :config
+;;   (setq interleave-split-direction 'horizontal)
+;;   (setq interleave-split-lines 9))
+(use-package shengci
+  :ensure f
+  :load-path "~/.emacs.d/git-repo/shengci.el")
 
 (use-package lazycat-theme
-  :load-path "~/.emacs.d/lisp/lazycat-theme-master")
+  :load-path "~/.emacs.d/git-repo/lazycat-theme")
 
 (use-package awesome-tray
-  :load-path "~/.emacs.d/lisp/awesome-tray"
+  :load-path "~/.emacs.d/git-repo/awesome-tray"
   :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
   :config
   (awesome-tray-mode 1)
   (lazycat-theme-load-dark))
 
 (use-package awesome-tab
-  :load-path "~/.emacs.d/lisp/awesome-tab"
+  :load-path "~/.emacs.d/git-repo/awesome-tab"
   :config
   (awesome-tab-mode t))
 
@@ -254,6 +268,7 @@
   :ensure t
   :diminish (ivy-mode eldoc-mode which-key-mode))
 (use-package org-equation-live-preview
+  :load-path "~/.emacs.d/git-repo/org-equation-live-preview"
   :defer t)
 (use-package learn-timer
   :load-path "~/.emacs.d/lisp/learn-timer/"
@@ -269,7 +284,18 @@
   )
 (use-package auto-indent
   :config (auto-indent-enable))
-;; (use-package init-site)
+(use-package posframe
+  :config
+  (defun call-a-posframe ()
+    (interactive)
+    (defvar my-posframe-buffer " *my-posframe-buffer*")
+    (with-current-buffer (get-buffer-create my-posframe-buffer)
+      (erase-buffer)
+      (insert "Hello world"))
+    (when (posframe-workable-p)
+      (posframe-show my-posframe-buffer
+		     :position (point))))
+  )
 
 (use-package elpy
   :ensure t
@@ -300,7 +326,6 @@
 
 (use-package ein
   :ensure t
-  ;;:defer t
   )
 
 (when (eq system-type 'windows-nt)
@@ -323,6 +348,7 @@
   (setenv "PATHONPATH" "/opt/anaconda3/bin")
   (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
   (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
+  (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter")
   )
 
 (when (eq system-type 'gnu/linux)
@@ -357,7 +383,7 @@
 (setq electric-pair-pairs
       '((?\" . ?\")
 	(?\( . ?\))
-	(?\< . ?\>)
+	;;(?\< . ?\>)
 	(?\{ . ?\})))
 (setq-default cursor-type 'bar)
 ;; Save the point position
@@ -400,8 +426,9 @@
 
 ;; save all buffers
 (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
-;; 绑定 <f5> 键上
-(global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
+;; 绑定 <f5> <f6> 键上
+(global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
+(global-set-key (kbd "<f6>") 'youdao-dictionary-play-voice-at-point)
 ;; ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; show startup page
@@ -419,6 +446,8 @@
 ;; 上下翻半页
 (global-set-key "\M-n" 'scroll-half-page-up)
 (global-set-key "\M-p" 'scroll-half-page-down)
+;; 生词记录
+(global-set-key (kbd "<f7>") 'shengci-capture-word-and-save)
 
 ;; 快速打开配置文件
 (defun open-init-file()
@@ -521,9 +550,9 @@
 			     "......" "----------------")
       org-capture-templates
       `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
-	 "* %?")
+	 "* %?" :unnarrowed t)
 	("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	 "* %U\n%?")
+	 "* %U\n%?" :unnarrowed t)
 	("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
 	 "* %? %^T")
 	("t" "Todo")
@@ -554,7 +583,7 @@
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
    '(package-selected-packages
-     '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons interleave pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
+     '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
    '(show-paren-mode t)
    '(tool-bar-mode nil))
   (custom-set-faces
@@ -564,16 +593,3 @@
    ;; If there is more than one, they won't work right.
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(youdao-dictionary which-key use-package undo-tree restart-emacs py-autopep8 projectile pdf-view-restore org-download org-bullets org neotree magit interleave highlight-parentheses flycheck esup elpy ein diminish counsel company-tabnine benchmark-init all-the-icons ace-window)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

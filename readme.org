@@ -8,6 +8,9 @@
   #+END_SRC
 * packages
 ** resources
+   :PROPERTIES:
+   :ID:       97340501-662B-413F-B3B8-678BDDB9144C
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; cl - Common Lisp Extension
      (require 'cl-lib)
@@ -19,6 +22,9 @@
      (add-to-list 'load-path "~/.emacs.d/lisp")
    #+END_SRC
 ** use-package
+   :PROPERTIES:
+   :ID:       1717CB71-0345-4C43-BEF0-212714F90FAB
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; Add use-package
      (unless (package-installed-p 'use-package)
@@ -27,6 +33,9 @@
    #+END_SRC
 ** packages
 *** benchmark-init
+    :PROPERTIES:
+    :ID:       AE42AC82-2940-4C64-9275-9743896542D2
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package benchmark-init
 	:ensure t
@@ -35,6 +44,9 @@
 	(add-hook 'after-init-hook 'benchmark-init/deactivate))
     #+END_SRC
 *** early-packages
+    :PROPERTIES:
+    :ID:       0D34073A-4A54-4BF9-B0FB-42D3D24AB909
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package org
 	:ensure t)
@@ -57,6 +69,9 @@
 	  (exec-path-from-shell-initialize)))
     #+END_SRC
 *** magit
+    :PROPERTIES:
+    :ID:       04816A3E-C8F4-49E3-B841-40C2F49307D9
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package magit
 	:ensure t
@@ -64,12 +79,18 @@
 	:bind ("C-x g" . magit-status))
     #+END_SRC
 *** which-key
+    :PROPERTIES:
+    :ID:       C69066D7-855C-4534-A1B6-336CE914C12A
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package which-key
 	:ensure t
 	:config (which-key-mode))
     #+END_SRC
 *** neotree
+    :PROPERTIES:
+    :ID:       776E7BB9-3EA2-46E9-8924-7312793A6BD9
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package neotree
 	:ensure t
@@ -77,18 +98,35 @@
 	(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 	(setq projectile-switch-project-action 'neotree-projectile-action))
     #+END_SRC
-*** org-download
+*** org
+    :PROPERTIES:
+    :ID:       48B39155-CD67-4AF6-9ACF-AFD54F80D111
+    :END:
     #+BEGIN_SRC emacs-lisp
+      (use-package org-sidebar
+	:ensure t
+	:after (general)
+	:config
+	(leader-def :infix "o"
+		    "b" 'org-sidebar-backlinks))
       (use-package org-download
 	:ensure t
-	:defer t
 	:config
 	;; Drag-and-drop to `dired`
 	(add-hook 'dired-mode-hook 'org-download-enable)
 	(setq-default org-download-image-dir "./src")
 	(setq org-download-display-inline-images nil))
+      (use-package org-z
+	:ensure helm-rg
+	:ensure helm-org-rifle
+	:load-path "~/.emacs.d/git-repo/org-z"
+	:config
+	(org-z-mode 1))
     #+END_SRC
 *** highlight-parentheses
+    :PROPERTIES:
+    :ID:       2329836B-C428-4971-876F-51B013A0D0F1
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package highlight-parentheses
 	:ensure t
@@ -100,6 +138,9 @@
 	(global-highlight-parentheses-mode t))
     #+END_SRC
 *** youdao-dictionary
+    :PROPERTIES:
+    :ID:       AD65F58C-B73A-46FD-A415-C1793491265B
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package youdao-dictionary
 	:ensure t
@@ -109,6 +150,9 @@
 	(setq url-automatic-caching t))
     #+END_SRC
 *** swiper
+    :PROPERTIES:
+    :ID:       0FF8B4DF-C402-461B-B7F0-7D29DC729012
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package counsel
 	:ensure t)
@@ -136,6 +180,9 @@
 	(setq enable-recursive-minibuffers t))
     #+END_SRC
 *** doom
+    :PROPERTIES:
+    :ID:       85AE1630-1E1D-44AD-93EB-726DEFBD6216
+    :END:
     #+BEGIN_SRC emacs-lisp
       ;; (use-package doom-themes
       ;;   :ensure t)
@@ -152,6 +199,9 @@
       ;;    ))
     #+END_SRC
 *** company
+    :PROPERTIES:
+    :ID:       D18BD5DD-0999-4B41-8377-F3400B53BC24
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package company
 	:ensure t
@@ -159,6 +209,9 @@
 	(add-hook 'after-init-hook 'global-company-mode))
     #+END_SRC
 *** yasnippet
+    :PROPERTIES:
+    :ID:       B84EBBF6-E3CB-43A3-B85F-8BD8C9BB4775
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
 	:ensure t
@@ -168,12 +221,18 @@
 	(yas-global-mode 1))
     #+END_SRC
 *** undo-tree
+    :PROPERTIES:
+    :ID:       314D4536-11DE-4A8C-8E90-FAFF26B9F988
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package undo-tree
 	:ensure t
 	:config (global-undo-tree-mode))
     #+END_SRC
 *** projectile
+    :PROPERTIES:
+    :ID:       65CB8CCD-B584-4AAA-8BAD-E5E12CD8DAFE
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
 	:ensure t
@@ -184,6 +243,9 @@
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
 *** phd
+    :PROPERTIES:
+    :ID:       AD26ABAB-EB75-4F76-A0D4-655AE01FCF82
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package phd
 	:defer t)
@@ -255,36 +317,51 @@
 	    :hook (pdf-view-mode . pdf-view-restore-mode)
 	    :init (setq pdf-view-restore-filename
 			(locate-user-emacs-file ".pdf-view-restore")))))
-      (use-package interleave
-	:defer t
-	:ensure t
-	:config
-	(setq interleave-split-direction 'horizontal)
-	(setq interleave-split-lines 9))
+      ;; (use-package interleave
+      ;;   :defer t
+      ;;   :ensure t
+      ;;   :config
+      ;;   (setq interleave-split-direction 'horizontal)
+      ;;   (setq interleave-split-lines 9))
+      (use-package shengci
+	:ensure f
+	:load-path "~/.emacs.d/git-repo/shengci.el")
     #+END_SRC
 *** awesome
-**** awesome-theme
+**** lazycat-theme
+     :PROPERTIES:
+     :ID:       E8AD9286-3D39-41A1-AFAC-F6C7C7287E9A
+     :END:
      #+BEGIN_SRC emacs-lisp
        (use-package lazycat-theme
-	 :load-path "~/.emacs.d/lisp/lazycat-theme-master")
+	 :load-path "~/.emacs.d/git-repo/lazycat-theme")
      #+END_SRC
 **** awesome-tray
+     :PROPERTIES:
+     :ID:       B0802DE7-EDDF-491E-9795-6A3559A19E80
+     :END:
      #+BEGIN_SRC emacs-lisp
        (use-package awesome-tray
-	 :load-path "~/.emacs.d/lisp/awesome-tray"
+	 :load-path "~/.emacs.d/git-repo/awesome-tray"
 	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
 	 :config
 	 (awesome-tray-mode 1)
 	 (lazycat-theme-load-dark))
      #+END_SRC
 **** awesome-tab
+     :PROPERTIES:
+     :ID:       1EB14998-A29C-47E0-937F-3A7C8C145D4D
+     :END:
      #+BEGIN_SRC emacs-lisp
        (use-package awesome-tab
-	 :load-path "~/.emacs.d/lisp/awesome-tab"
+	 :load-path "~/.emacs.d/git-repo/awesome-tab"
 	 :config
 	 (awesome-tab-mode t))
      #+END_SRC
 *** misc packages
+    :PROPERTIES:
+    :ID:       AC8F6590-5AAB-4D29-8CA8-89B296C1781F
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package all-the-icons
 	:ensure t) 
@@ -307,6 +384,7 @@
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
       (use-package org-equation-live-preview
+	:load-path "~/.emacs.d/git-repo/org-equation-live-preview"
 	:defer t)
       (use-package learn-timer
 	:load-path "~/.emacs.d/lisp/learn-timer/"
@@ -322,10 +400,24 @@
 	)
       (use-package auto-indent
 	:config (auto-indent-enable))
-      ;; (use-package init-site)
+      (use-package posframe
+	:config
+	(defun call-a-posframe ()
+	  (interactive)
+	  (defvar my-posframe-buffer " *my-posframe-buffer*")
+	  (with-current-buffer (get-buffer-create my-posframe-buffer)
+	    (erase-buffer)
+	    (insert "Hello world"))
+	  (when (posframe-workable-p)
+	    (posframe-show my-posframe-buffer
+			   :position (point))))
+	)
     #+END_SRC
 ** python
 *** elpy
+    :PROPERTIES:
+    :ID:       379380BA-9AED-4702-8359-2A86D6912D5E
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package elpy
 	:ensure t
@@ -340,6 +432,9 @@
 		     "jupyter"))
     #+END_SRC
 *** py-autopep8
+    :PROPERTIES:
+    :ID:       E7151DC5-C1C8-4ACF-8F12-D5FEBF03718B
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8
 	:ensure t
@@ -349,6 +444,9 @@
 	(setq py-autopep8-options '("--max-line-length=100")))
     #+END_SRC
 *** flycheck
+    :PROPERTIES:
+    :ID:       DAA2F427-8B0C-414F-9388-8E42E6582340
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
 	:ensure t
@@ -359,14 +457,19 @@
 	(add-hook 'elpy-mode-hook 'flycheck-mode))
     #+END_SRC
 *** ein
+    :PROPERTIES:
+    :ID:       84DA2846-4C20-4C64-8634-3EA4F68EBBE4
+    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package ein
 	:ensure t
-	:defer t
 	)
     #+END_SRC
 * diff-sys
 ** window-nt
+   :PROPERTIES:
+   :ID:       B3D646C1-74F3-411A-9C5E-B4FC23FD1786
+   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
        (setq conf_dir "e:/emacs/.emacs.d/"
@@ -378,6 +481,9 @@
        )
    #+END_SRC
 ** darwin
+   :PROPERTIES:
+   :ID:       C12DCED6-8288-4305-BC4D-DCBA114FA0DD
+   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'darwin)
        (setq conf_dir "~/.emacs.d/"
@@ -390,9 +496,13 @@
        (setenv "PATHONPATH" "/opt/anaconda3/bin")
        (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
        (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
+       (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter")
        )
    #+END_SRC
 ** linux
+   :PROPERTIES:
+   :ID:       B3893371-65D2-447B-AC36-988CB4AB095B
+   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'gnu/linux)
        (setq conf_dir "~/.emacs.d/"
@@ -403,6 +513,9 @@
    #+END_SRC
 * user-config
 ** config
+   :PROPERTIES:
+   :ID:       ECE09DC4-1553-4728-A40F-448A66828EE6
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; 启动页面
      ;; (setq initial-buffer-choice (concat org-directory "note.org"))
@@ -429,7 +542,7 @@
      (setq electric-pair-pairs
 	   '((?\" . ?\")
 	     (?\( . ?\))
-	     (?\< . ?\>)
+	     ;;(?\< . ?\>)
 	     (?\{ . ?\})))
      (setq-default cursor-type 'bar)
      ;; Save the point position
@@ -471,11 +584,15 @@
 	     ))
    #+END_SRC
 ** key-bind
+   :PROPERTIES:
+   :ID:       CA293065-0957-498D-9EAC-03F8C60671B3
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; save all buffers
      (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
-     ;; 绑定 <f5> 键上
-     (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point)
+     ;; 绑定 <f5> <f6> 键上
+     (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
+     (global-set-key (kbd "<f6>") 'youdao-dictionary-play-voice-at-point)
      ;; ibuffer
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      ;; show startup page
@@ -493,8 +610,13 @@
      ;; 上下翻半页
      (global-set-key "\M-n" 'scroll-half-page-up)
      (global-set-key "\M-p" 'scroll-half-page-down)
+     ;; 生词记录
+     (global-set-key (kbd "<f7>") 'shengci-capture-word-and-save)
    #+END_SRC
 ** function
+   :PROPERTIES:
+   :ID:       1F58FF75-918F-442D-91EE-9400D579496E
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; 快速打开配置文件
      (defun open-init-file()
@@ -555,6 +677,9 @@
      ;; (add-hook 'window-setup-hook 'show-startup-page)
    #+END_SRC
 ** mode
+   :PROPERTIES:
+   :ID:       EAA724BA-845A-4F9A-A85B-2AA5013AA389
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; blog mode
      (define-minor-mode blog-mode
@@ -563,6 +688,9 @@
        :lighter "Blog")
    #+END_SRC
 ** transparency
+   :PROPERTIES:
+   :ID:       66A9995E-1BAC-4B9D-BB88-911C7617B155
+   :END:
    #+BEGIN_SRC emacs-lisp
      ;; @purcell
      (defun sanityinc/adjust-opacity (frame incr)
@@ -585,6 +713,9 @@
 				     (modify-frame-parameters nil `((alpha . 100)))))
    #+END_SRC
 * org
+  :PROPERTIES:
+  :ID:       F9CC5F16-51C4-41E7-8428-AFDB43446F05
+  :END:
   #+BEGIN_SRC emacs-lisp
     ;; org variables
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
@@ -603,9 +734,9 @@
 				 "......" "----------------")
 	  org-capture-templates
 	  `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
-	     "* %?")
+	     "* %?" :unnarrowed t)
 	    ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	     "* %U\n%?")
+	     "* %U\n%?" :unnarrowed t)
 	    ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
 	     "* %? %^T")
 	    ("t" "Todo")
@@ -630,6 +761,9 @@
     (define-key global-map "\M-q" 'org-agenda)
   #+END_SRC
 * custom
+  :PROPERTIES:
+  :ID:       6B095511-4190-40D0-BE90-9539CE6BE0AA
+  :END:
   #+BEGIN_SRC emacs-lisp
     (when (eq system-type 'gnu/linux)
       (custom-set-variables
@@ -638,7 +772,7 @@
        ;; Your init file should contain only one such instance.
        ;; If there is more than one, they won't work right.
        '(package-selected-packages
-	 '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons interleave pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
+	 '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
        '(show-paren-mode t)
        '(tool-bar-mode nil))
       (custom-set-faces
