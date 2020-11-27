@@ -9,7 +9,7 @@
 * packages
 ** resources
    :PROPERTIES:
-   :ID:       97340501-662B-413F-B3B8-678BDDB9144C
+   :ID:       69070DCD-B376-4B22-B4A5-F069610B5041
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; cl - Common Lisp Extension
@@ -23,7 +23,7 @@
    #+END_SRC
 ** use-package
    :PROPERTIES:
-   :ID:       1717CB71-0345-4C43-BEF0-212714F90FAB
+   :ID:       89578CBF-346E-4CB7-AC9C-422CDDA32675
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; Add use-package
@@ -34,7 +34,7 @@
 ** packages
 *** benchmark-init
     :PROPERTIES:
-    :ID:       AE42AC82-2940-4C64-9275-9743896542D2
+    :ID:       9DB3F095-CD19-4777-A81A-E64CB90FA651
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package benchmark-init
@@ -45,7 +45,7 @@
     #+END_SRC
 *** early-packages
     :PROPERTIES:
-    :ID:       0D34073A-4A54-4BF9-B0FB-42D3D24AB909
+    :ID:       D61416B5-0386-4B86-BD1E-128C1A0DBCD0
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package org
@@ -70,7 +70,7 @@
     #+END_SRC
 *** magit
     :PROPERTIES:
-    :ID:       04816A3E-C8F4-49E3-B841-40C2F49307D9
+    :ID:       E26451F2-7393-4E8F-8608-F195408225C1
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package magit
@@ -80,7 +80,7 @@
     #+END_SRC
 *** which-key
     :PROPERTIES:
-    :ID:       C69066D7-855C-4534-A1B6-336CE914C12A
+    :ID:       CE3A4C0E-7674-4690-8FD3-80A65A344F2A
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package which-key
@@ -89,7 +89,7 @@
     #+END_SRC
 *** neotree
     :PROPERTIES:
-    :ID:       776E7BB9-3EA2-46E9-8924-7312793A6BD9
+    :ID:       7ADA21E5-CA9E-4282-A008-51B10770E0A0
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package neotree
@@ -100,7 +100,7 @@
     #+END_SRC
 *** org
     :PROPERTIES:
-    :ID:       48B39155-CD67-4AF6-9ACF-AFD54F80D111
+    :ID:       CF4709D3-91DD-413F-B18F-E21600AEA79E
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package org-sidebar
@@ -117,15 +117,15 @@
 	(setq-default org-download-image-dir "./src")
 	(setq org-download-display-inline-images nil))
       (use-package org-z
-	:ensure helm-rg
-	:ensure helm-org-rifle
+	;;  :ensure helm-rg
+	;;  :ensure helm-org-rifle
 	:load-path "~/.emacs.d/git-repo/org-z"
 	:config
 	(org-z-mode 1))
     #+END_SRC
 *** highlight-parentheses
     :PROPERTIES:
-    :ID:       2329836B-C428-4971-876F-51B013A0D0F1
+    :ID:       61B4E9F9-6CCC-4895-9B83-0B120B77807B
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package highlight-parentheses
@@ -139,7 +139,7 @@
     #+END_SRC
 *** youdao-dictionary
     :PROPERTIES:
-    :ID:       AD65F58C-B73A-46FD-A415-C1793491265B
+    :ID:       45650184-8113-4B50-AD28-48F1C7903B6E
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package youdao-dictionary
@@ -151,7 +151,7 @@
     #+END_SRC
 *** swiper
     :PROPERTIES:
-    :ID:       0FF8B4DF-C402-461B-B7F0-7D29DC729012
+    :ID:       0C3C6E71-294C-41BC-8BED-77C51D599D2E
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package counsel
@@ -181,7 +181,7 @@
     #+END_SRC
 *** doom
     :PROPERTIES:
-    :ID:       85AE1630-1E1D-44AD-93EB-726DEFBD6216
+    :ID:       5A90E704-BD95-4676-B7CE-32E275EF13A4
     :END:
     #+BEGIN_SRC emacs-lisp
       ;; (use-package doom-themes
@@ -200,7 +200,7 @@
     #+END_SRC
 *** company
     :PROPERTIES:
-    :ID:       D18BD5DD-0999-4B41-8377-F3400B53BC24
+    :ID:       9159D5C6-3E00-40E9-ACA5-6F74244914B9
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package company
@@ -210,7 +210,7 @@
     #+END_SRC
 *** yasnippet
     :PROPERTIES:
-    :ID:       B84EBBF6-E3CB-43A3-B85F-8BD8C9BB4775
+    :ID:       8DCE8180-E1E3-4E4C-9E95-F6E75E0E704A
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
@@ -222,7 +222,7 @@
     #+END_SRC
 *** undo-tree
     :PROPERTIES:
-    :ID:       314D4536-11DE-4A8C-8E90-FAFF26B9F988
+    :ID:       32A7B5D9-7FDE-4688-81A0-53F9D19193C9
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package undo-tree
@@ -231,7 +231,7 @@
     #+END_SRC
 *** projectile
     :PROPERTIES:
-    :ID:       65CB8CCD-B584-4AAA-8BAD-E5E12CD8DAFE
+    :ID:       B5ED7DAE-A4B6-41B1-BB8B-AD0052FEB261
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
@@ -244,7 +244,7 @@
     #+END_SRC
 *** phd
     :PROPERTIES:
-    :ID:       AD26ABAB-EB75-4F76-A0D4-655AE01FCF82
+    :ID:       DB2B0AE4-EEE9-488F-A55A-739205A30B4E
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package phd
@@ -330,6 +330,8 @@
 *** awesome
 **** lazycat-theme
      :PROPERTIES:
+     :ID:       F0A05047-817F-4CB9-8C67-ABB3B38A10D6
+     :END:
      :ID:       E8AD9286-3D39-41A1-AFAC-F6C7C7287E9A
      :END:
      #+BEGIN_SRC emacs-lisp
@@ -338,7 +340,7 @@
      #+END_SRC
 **** awesome-tray
      :PROPERTIES:
-     :ID:       B0802DE7-EDDF-491E-9795-6A3559A19E80
+     :ID:       3EAF5355-7764-47EB-9CE7-1B02E061C19B
      :END:
      #+BEGIN_SRC emacs-lisp
        (use-package awesome-tray
@@ -350,7 +352,7 @@
      #+END_SRC
 **** awesome-tab
      :PROPERTIES:
-     :ID:       1EB14998-A29C-47E0-937F-3A7C8C145D4D
+     :ID:       5DD3986A-2C70-4B9B-BE32-BED6B973998F
      :END:
      #+BEGIN_SRC emacs-lisp
        (use-package awesome-tab
@@ -360,7 +362,7 @@
      #+END_SRC
 *** misc packages
     :PROPERTIES:
-    :ID:       AC8F6590-5AAB-4D29-8CA8-89B296C1781F
+    :ID:       E9491E99-4228-42B4-9B7D-C54628FB0D53
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package all-the-icons
@@ -416,7 +418,7 @@
 ** python
 *** elpy
     :PROPERTIES:
-    :ID:       379380BA-9AED-4702-8359-2A86D6912D5E
+    :ID:       16B5181C-3C3B-47A0-80E9-DD69E783ECA7
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package elpy
@@ -433,7 +435,7 @@
     #+END_SRC
 *** py-autopep8
     :PROPERTIES:
-    :ID:       E7151DC5-C1C8-4ACF-8F12-D5FEBF03718B
+    :ID:       61A2EBCD-93FD-4B10-AD34-6636B594E629
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8
@@ -445,7 +447,7 @@
     #+END_SRC
 *** flycheck
     :PROPERTIES:
-    :ID:       DAA2F427-8B0C-414F-9388-8E42E6582340
+    :ID:       12534A6A-8332-4EA9-8D36-F125ADFDB2CC
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
@@ -458,7 +460,7 @@
     #+END_SRC
 *** ein
     :PROPERTIES:
-    :ID:       84DA2846-4C20-4C64-8634-3EA4F68EBBE4
+    :ID:       545008C8-68CE-41DC-97CD-A453E0D8F708
     :END:
     #+BEGIN_SRC emacs-lisp
       (use-package ein
@@ -468,7 +470,7 @@
 * diff-sys
 ** window-nt
    :PROPERTIES:
-   :ID:       B3D646C1-74F3-411A-9C5E-B4FC23FD1786
+   :ID:       0784B55B-0DC1-4215-86B3-5EFE76B2EC9D
    :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
@@ -482,7 +484,7 @@
    #+END_SRC
 ** darwin
    :PROPERTIES:
-   :ID:       C12DCED6-8288-4305-BC4D-DCBA114FA0DD
+   :ID:       11F144EE-8FF3-4206-82DE-F1D9BF308706
    :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'darwin)
@@ -501,7 +503,7 @@
    #+END_SRC
 ** linux
    :PROPERTIES:
-   :ID:       B3893371-65D2-447B-AC36-988CB4AB095B
+   :ID:       FDB390CE-678A-41C9-B9A5-B4021A9B12E8
    :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'gnu/linux)
@@ -514,7 +516,7 @@
 * user-config
 ** config
    :PROPERTIES:
-   :ID:       ECE09DC4-1553-4728-A40F-448A66828EE6
+   :ID:       42B639EC-8752-40B0-9460-58F1C4288B24
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; 启动页面
@@ -585,7 +587,7 @@
    #+END_SRC
 ** key-bind
    :PROPERTIES:
-   :ID:       CA293065-0957-498D-9EAC-03F8C60671B3
+   :ID:       EE90F433-DE0F-4B59-9303-7E9E7F33AE57
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; save all buffers
@@ -615,7 +617,7 @@
    #+END_SRC
 ** function
    :PROPERTIES:
-   :ID:       1F58FF75-918F-442D-91EE-9400D579496E
+   :ID:       9BE799A8-2208-4DEF-89CE-84C84FE9E4D1
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; 快速打开配置文件
@@ -678,7 +680,7 @@
    #+END_SRC
 ** mode
    :PROPERTIES:
-   :ID:       EAA724BA-845A-4F9A-A85B-2AA5013AA389
+   :ID:       04F84E6D-E3AD-486B-8D9F-B8A1A3E16536
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; blog mode
@@ -689,7 +691,7 @@
    #+END_SRC
 ** transparency
    :PROPERTIES:
-   :ID:       66A9995E-1BAC-4B9D-BB88-911C7617B155
+   :ID:       5C230C14-48EB-4C03-BA20-D924F2FC28BD
    :END:
    #+BEGIN_SRC emacs-lisp
      ;; @purcell
@@ -714,7 +716,7 @@
    #+END_SRC
 * org
   :PROPERTIES:
-  :ID:       F9CC5F16-51C4-41E7-8428-AFDB43446F05
+  :ID:       E98ACE32-BB8A-4510-89EE-E33DDEE2BE60
   :END:
   #+BEGIN_SRC emacs-lisp
     ;; org variables
@@ -762,7 +764,7 @@
   #+END_SRC
 * custom
   :PROPERTIES:
-  :ID:       6B095511-4190-40D0-BE90-9539CE6BE0AA
+  :ID:       B62D78B1-5C3D-486C-87D3-FDFFAD59B2C3
   :END:
   #+BEGIN_SRC emacs-lisp
     (when (eq system-type 'gnu/linux)

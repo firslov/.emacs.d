@@ -67,8 +67,8 @@
   (setq-default org-download-image-dir "./src")
   (setq org-download-display-inline-images nil))
 (use-package org-z
-  :ensure helm-rg
-  :ensure helm-org-rifle
+  ;;  :ensure helm-rg
+  ;;  :ensure helm-org-rifle
   :load-path "~/.emacs.d/git-repo/org-z"
   :config
   (org-z-mode 1))
