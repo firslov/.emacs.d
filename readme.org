@@ -360,7 +360,7 @@
 	 :config
 	 (awesome-tab-mode t))
      #+END_SRC
-*** misc packages
+*** COMMENT misc packages
     :PROPERTIES:
     :ID:       E9491E99-4228-42B4-9B7D-C54628FB0D53
     :END:
@@ -403,6 +403,7 @@
       (use-package auto-indent
 	:config (auto-indent-enable))
       (use-package posframe
+	:ensure t
 	:config
 	(defun call-a-posframe ()
 	  (interactive)
