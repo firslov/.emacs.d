@@ -66,12 +66,20 @@
   (add-hook 'dired-mode-hook 'org-download-enable)
   (setq-default org-download-image-dir "./src")
   (setq org-download-display-inline-images nil))
+(use-package helm-org-rifle
+  :ensure t)
+(use-package helm-rg
+  :ensure t)
 (use-package org-z
   ;;  :ensure helm-rg
   ;;  :ensure helm-org-rifle
   :load-path "~/.emacs.d/git-repo/org-z"
   :config
   (org-z-mode 1))
+(use-package valign
+  :load-path "~/.emacs.d/git-repo/valign"
+  :config
+  (add-hook 'org-mode-hook #'valign-mode))
 
 (use-package highlight-parentheses
   :ensure t
@@ -151,6 +159,15 @@
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (setq projectile-indexing-method 'native)
   (setq projectile-completion-system 'ivy))
+
+(use-package deft
+  :ensure t
+  :bind ("<f1> 4" . deft)
+  :commands (deft)
+  :config (setq deft-directory "~/org"
+		deft-extensions '("md" "org")
+		deft-recursive t
+		deft-use-filename-as-title t))
 
 (use-package phd
   :defer t)
@@ -460,7 +477,7 @@
 ;; 快速打开articles
 (defun open-articles()
   (interactive)
-  (find-file "~/Documents/org/Archive.org"))
+  (find-file "~/org/Archive.org"))
 ;; neotree list config-dir
 (defun nconf()
   (interactive)
