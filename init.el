@@ -24,7 +24,8 @@
   :ensure t
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-(use-package auto-load)
+(use-package auto-load
+  :load-path "~/.emacs.d/lisp")
 (use-package recentf
   :bind ("C-x C-r" . recentf-open-files)
   :defer 1
@@ -263,6 +264,59 @@
   :load-path "~/.emacs.d/git-repo/awesome-tab"
   :config
   (awesome-tab-mode t))
+
+(use-package all-the-icons
+  :ensure t) 
+(use-package restart-emacs
+  :ensure t
+  :defer t
+  :init
+  (defun b-restart-emacs (f)
+    (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
+  (advice-add #'restart-emacs :before #'b-restart-emacs))
+(use-package ace-window
+  :ensure t
+  :defer t
+  :config
+  (global-set-key [remap other-window] 'ace-window)
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+(use-package diminish
+  :ensure t
+  :diminish (ivy-mode eldoc-mode which-key-mode))
+(use-package org-equation-live-preview
+  :load-path "~/.emacs.d/git-repo/org-equation-live-preview"
+  :defer t)
+(use-package learn-timer
+  :load-path "~/.emacs.d/lisp"
+  :after awesome-tray
+  :config
+  (add-to-list 'awesome-tray-active-modules "timer" 'append)
+  (add-to-list 'awesome-tray-active-modules "todo" 'append)
+  )
+(use-package auto-save
+  :load-path "~/.emacs.d/lisp"
+  :config
+  (auto-save-enable)              ;; 开启自动保存功能
+  (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
+  )
+(use-package auto-indent
+  :load-path "~/.emacs.d/lisp"
+  :config (auto-indent-enable))
+(use-package posframe
+  :ensure t
+  :config
+  (defun call-a-posframe ()
+    (interactive)
+    (defvar my-posframe-buffer " *my-posframe-buffer*")
+    (with-current-buffer (get-buffer-create my-posframe-buffer)
+      (erase-buffer)
+      (insert "Hello world"))
+    (when (posframe-workable-p)
+      (posframe-show my-posframe-buffer
+		     :position (point))))
+  )
 
 (use-package elpy
   :ensure t
@@ -560,19 +614,3 @@
    ;; If there is more than one, they won't work right.
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
- '(show-paren-mode t)
- '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
- '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0)))))

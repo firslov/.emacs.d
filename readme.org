@@ -383,7 +383,7 @@
 	 :config
 	 (awesome-tab-mode t))
      #+END_SRC
-*** COMMENT misc packages
+*** misc packages
     :PROPERTIES:
     :ID:       E9491E99-4228-42B4-9B7D-C54628FB0D53
     :END:
