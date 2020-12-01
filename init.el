@@ -560,3 +560,19 @@
    ;; If there is more than one, they won't work right.
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
+ '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0)))))

@@ -54,7 +54,8 @@
 	:ensure t
 	:config
 	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-      (use-package auto-load)
+      (use-package auto-load
+	:load-path "~/.emacs.d/lisp")
       (use-package recentf
 	:bind ("C-x C-r" . recentf-open-files)
 	:defer 1
@@ -411,18 +412,20 @@
 	:load-path "~/.emacs.d/git-repo/org-equation-live-preview"
 	:defer t)
       (use-package learn-timer
-	:load-path "~/.emacs.d/lisp/learn-timer/"
+	:load-path "~/.emacs.d/lisp"
 	:after awesome-tray
 	:config
 	(add-to-list 'awesome-tray-active-modules "timer" 'append)
 	(add-to-list 'awesome-tray-active-modules "todo" 'append)
 	)
       (use-package auto-save
+	:load-path "~/.emacs.d/lisp"
 	:config
 	(auto-save-enable)              ;; 开启自动保存功能
 	(setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
 	)
       (use-package auto-indent
+	:load-path "~/.emacs.d/lisp"
 	:config (auto-indent-enable))
       (use-package posframe
 	:ensure t
