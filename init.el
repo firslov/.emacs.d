@@ -54,34 +54,6 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (setq projectile-switch-project-action 'neotree-projectile-action))
 
-(use-package org-sidebar
-  :ensure t
-  :after (general)
-  :config
-  (leader-def :infix "o"
-	      "b" 'org-sidebar-backlinks))
-(use-package org-download
-  :ensure t
-  :config
-  ;; Drag-and-drop to `dired`
-  (add-hook 'dired-mode-hook 'org-download-enable)
-  (setq-default org-download-image-dir "./src")
-  (setq org-download-display-inline-images nil))
-(use-package helm-org-rifle
-  :ensure t)
-(use-package helm-rg
-  :ensure t)
-(use-package org-z
-  ;;  :ensure helm-rg
-  ;;  :ensure helm-org-rifle
-  :load-path "~/.emacs.d/git-repo/org-z"
-  :config
-  (org-z-mode 1))
-(use-package valign
-  :load-path "~/.emacs.d/git-repo/valign"
-  :config
-  (add-hook 'org-mode-hook #'valign-mode))
-
 (use-package highlight-parentheses
   :ensure t
   :config
@@ -123,20 +95,6 @@
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t))
 
-;; (use-package doom-themes
-;;   :ensure t)
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :hook (emacs-startup . doom-modeline-mode)
-;;   :config
-;;   (setq
-;;    ;; inhibit-compacting-font-caches t
-;;    ;; doom-modeline-height 1
-;;    doom-modeline-buffer-file-name-style 'auto
-;;    ;; doom-modeline-icon nil
-;;    ;; doom-modeline-project-detection 'project
-;;    ))
-
 (use-package company
   :ensure t
   :config
@@ -161,14 +119,20 @@
   (setq projectile-indexing-method 'native)
   (setq projectile-completion-system 'ivy))
 
-(use-package deft
-  :ensure t
-  :bind ("<f1> 4" . deft)
-  :commands (deft)
-  :config (setq deft-directory "~/org"
-		deft-extensions '("md" "org")
-		deft-recursive t
-		deft-use-filename-as-title t))
+(use-package lazycat-theme
+  :load-path "~/.emacs.d/git-repo/lazycat-theme")
+
+(use-package awesome-tray
+  :load-path "~/.emacs.d/git-repo/awesome-tray"
+  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+  :config
+  (awesome-tray-mode 1)
+  (lazycat-theme-load-dark))
+
+;; (use-package awesome-tab
+;;   :load-path "~/.emacs.d/git-repo/awesome-tab"
+;;   :config
+;;   (awesome-tab-mode t))
 
 (use-package phd
   :defer t)
@@ -250,20 +214,75 @@
   :ensure f
   :load-path "~/.emacs.d/git-repo/shengci.el")
 
-(use-package lazycat-theme
-  :load-path "~/.emacs.d/git-repo/lazycat-theme")
-
-(use-package awesome-tray
-  :load-path "~/.emacs.d/git-repo/awesome-tray"
-  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/firslov")
+  :bind (:map org-roam-mode-map
+	      (("C-c n l" . org-roam)
+	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n g" . org-roam-graph))
+	      :map org-mode-map
+	      (("C-c n i" . org-roam-insert))
+	      (("C-c n I" . org-roam-insert-immediate)))
   :config
-  (awesome-tray-mode 1)
-  (lazycat-theme-load-dark))
+  (setq org-roam-tag-sources '(prop last-directory)
+	org-roam-capture-templates
+	'(("d" "default" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "${slug}"
+	   :head "#+title: ${title}\n"
+	   :unnarrowed t)
+	  ("t" "tag" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "tag/${slug}"
+	   :head "#+title: ${title}\n"
+	   :unnarrowed t)
+	  ("j" "journal" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "journal/${title}"
+	   :head "#+title: ${title}\n"
+	   :unnarrowed t)))
+  )
 
-(use-package awesome-tab
-  :load-path "~/.emacs.d/git-repo/awesome-tab"
+(use-package org-journal
+  :ensure t
+  :bind ("C-c n j" . org-journal-new-entry)
   :config
-  (awesome-tab-mode t))
+  (setq org-journal-dir "~/firslov/journal"
+	org-journal-date-prefix "#+title: "
+	org-journal-time-prefix "* "
+	org-journal-date-format "%Y-%m-%d"
+	org-journal-file-format "%Y-%m-%d.org"))
+
+(use-package deft
+  :ensure t
+  :bind ("C-c n d" . deft)
+  :commands (deft)
+  :config (setq deft-directory "~/firslov"
+		deft-extensions '("md" "org")
+		;; deft-recursive t
+		deft-use-filename-as-title t))
+
+(use-package org-sidebar
+  :ensure t)
+(use-package org-download
+  :ensure t
+  :config
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  (setq-default org-download-image-dir "./src")
+  (setq org-download-display-inline-images nil))
+;; (use-package helm-org-rifle
+;;   :ensure t)
+;; (use-package helm-rg
+;;   :ensure t)
+(use-package valign
+  :load-path "~/.emacs.d/git-repo/valign"
+  :config
+  (add-hook 'org-mode-hook #'valign-mode))
 
 (use-package all-the-icons
   :ensure t) 
@@ -360,11 +379,11 @@
 
 (when (eq system-type 'darwin)
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/org/"
+	org-directory "~/firslov/"
 	init-file (concat conf_dir "lisp/init-main.el")
 	init-sys (concat conf_dir "lisp/darwin.el"))
   ;; font
-  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 16")
   ;; env
   (setenv "PATHONPATH" "/opt/anaconda3/bin")
   (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
@@ -410,9 +429,9 @@
 ;; Save the point position
 (save-place-mode t)
 ;; 设置默认读入文件编码
-(prefer-coding-system 'gbk)
+;; (prefer-coding-system 'gbk)
 ;; 设置写入文件编码
-(setq default-buffer-file-coding-system 'gbk)
+;; (setq default-buffer-file-coding-system 'gbk)
 ;; disable backup
 (setq make-backup-files nil)
 ;; disable auto-save
@@ -444,6 +463,7 @@
 	 (side . right)
 	 (slot . 1))
 	))
+(add-to-list 'org-link-frame-setup '(file . find-file))
 
 ;; save all buffers
 (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
@@ -502,7 +522,7 @@
   (scroll-up (/ (window-body-height) 2)))
 ;; 窗口启动位置大小
 (defun init-my-frame ()
-  (set-frame-position (selected-frame) 160 80)
+  (set-frame-position (selected-frame) 120 40)
   (set-frame-width (selected-frame) 120)
   (set-frame-height (selected-frame) 30))
 (add-hook 'after-init-hook 'init-my-frame)
@@ -513,26 +533,12 @@
   (pcase var
     ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
     ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
-;; 快速打开blog文件
-(defun blog()
-  (interactive)
-  (find-file "~/site/org/index.org")
-  (blog-mode)
-  (neotree-dir "~/site/"))
 ;; refresh startup function
 (defun show-startup-page()
   (interactive)
   (org-agenda-list)
-  (org-agenda-day-view)
-  (neotree-dir "~/Documents/org/")
-  (other-window -1))
-;; (add-hook 'window-setup-hook 'show-startup-page)
-
-;; blog mode
-(define-minor-mode blog-mode
-  "Toggle blog mode."
-  :global nil
-  :lighter "Blog")
+  (org-agenda-day-view))
+(add-hook 'window-setup-hook 'show-startup-page)
 
 ;; @purcell
 (defun sanityinc/adjust-opacity (frame incr)
@@ -558,7 +564,7 @@
 ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
 (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
 (add-hook 'org-mode-hook 'linum-mode)
-(setq org-agenda-files (list (concat org-directory "inbox.org"))
+(setq org-agenda-files (directory-files-recursively "~/firslov/" "\\.org$")
       lt-todo-files org-agenda-files
       org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
       ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
@@ -570,12 +576,12 @@
 			     (1000 1400 1600 2000 2200)
 			     "......" "----------------")
       org-capture-templates
-      `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
+      `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
 	 "* %?" :unnarrowed t)
-	("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	 "* %U\n%?" :unnarrowed t)
-	("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
-	 "* %? %^T")
+	;; ;; ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+	;; ;;  "* %U\n%?" :unnarrowed t)
+	;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
+	;;  "* %? %^T")
 	("t" "Todo")
 	("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	 "* TODO %?")

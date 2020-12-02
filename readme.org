@@ -8,9 +8,6 @@
   #+END_SRC
 * packages
 ** resources
-   :PROPERTIES:
-   :ID:       69070DCD-B376-4B22-B4A5-F069610B5041
-   :END:
    #+BEGIN_SRC emacs-lisp
      ;; cl - Common Lisp Extension
      (require 'cl-lib)
@@ -22,9 +19,6 @@
      (add-to-list 'load-path "~/.emacs.d/lisp")
    #+END_SRC
 ** use-package
-   :PROPERTIES:
-   :ID:       89578CBF-346E-4CB7-AC9C-422CDDA32675
-   :END:
    #+BEGIN_SRC emacs-lisp
      ;; Add use-package
      (unless (package-installed-p 'use-package)
@@ -33,9 +27,6 @@
    #+END_SRC
 ** packages
 *** benchmark-init
-    :PROPERTIES:
-    :ID:       9DB3F095-CD19-4777-A81A-E64CB90FA651
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package benchmark-init
 	:ensure t
@@ -44,9 +35,6 @@
 	(add-hook 'after-init-hook 'benchmark-init/deactivate))
     #+END_SRC
 *** early-packages
-    :PROPERTIES:
-    :ID:       D61416B5-0386-4B86-BD1E-128C1A0DBCD0
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package org
 	:ensure t)
@@ -70,9 +58,6 @@
 	  (exec-path-from-shell-initialize)))
     #+END_SRC
 *** magit
-    :PROPERTIES:
-    :ID:       E26451F2-7393-4E8F-8608-F195408225C1
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package magit
 	:ensure t
@@ -80,18 +65,12 @@
 	:bind ("C-x g" . magit-status))
     #+END_SRC
 *** which-key
-    :PROPERTIES:
-    :ID:       CE3A4C0E-7674-4690-8FD3-80A65A344F2A
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package which-key
 	:ensure t
 	:config (which-key-mode))
     #+END_SRC
 *** neotree
-    :PROPERTIES:
-    :ID:       7ADA21E5-CA9E-4282-A008-51B10770E0A0
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package neotree
 	:ensure t
@@ -99,43 +78,7 @@
 	(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 	(setq projectile-switch-project-action 'neotree-projectile-action))
     #+END_SRC
-*** org
-    :PROPERTIES:
-    :ID:       CF4709D3-91DD-413F-B18F-E21600AEA79E
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-sidebar
-	:ensure t
-	:after (general)
-	:config
-	(leader-def :infix "o"
-		    "b" 'org-sidebar-backlinks))
-      (use-package org-download
-	:ensure t
-	:config
-	;; Drag-and-drop to `dired`
-	(add-hook 'dired-mode-hook 'org-download-enable)
-	(setq-default org-download-image-dir "./src")
-	(setq org-download-display-inline-images nil))
-      (use-package helm-org-rifle
-	:ensure t)
-      (use-package helm-rg
-	:ensure t)
-      (use-package org-z
-	;;  :ensure helm-rg
-	;;  :ensure helm-org-rifle
-	:load-path "~/.emacs.d/git-repo/org-z"
-	:config
-	(org-z-mode 1))
-      (use-package valign
-	:load-path "~/.emacs.d/git-repo/valign"
-	:config
-	(add-hook 'org-mode-hook #'valign-mode))
-    #+END_SRC
 *** highlight-parentheses
-    :PROPERTIES:
-    :ID:       61B4E9F9-6CCC-4895-9B83-0B120B77807B
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package highlight-parentheses
 	:ensure t
@@ -147,9 +90,6 @@
 	(global-highlight-parentheses-mode t))
     #+END_SRC
 *** youdao-dictionary
-    :PROPERTIES:
-    :ID:       45650184-8113-4B50-AD28-48F1C7903B6E
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package youdao-dictionary
 	:ensure t
@@ -159,9 +99,6 @@
 	(setq url-automatic-caching t))
     #+END_SRC
 *** swiper
-    :PROPERTIES:
-    :ID:       0C3C6E71-294C-41BC-8BED-77C51D599D2E
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package counsel
 	:ensure t)
@@ -188,29 +125,7 @@
 	(setq ivy-use-virtual-buffers t)
 	(setq enable-recursive-minibuffers t))
     #+END_SRC
-*** doom
-    :PROPERTIES:
-    :ID:       5A90E704-BD95-4676-B7CE-32E275EF13A4
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      ;; (use-package doom-themes
-      ;;   :ensure t)
-      ;; (use-package doom-modeline
-      ;;   :ensure t
-      ;;   :hook (emacs-startup . doom-modeline-mode)
-      ;;   :config
-      ;;   (setq
-      ;;    ;; inhibit-compacting-font-caches t
-      ;;    ;; doom-modeline-height 1
-      ;;    doom-modeline-buffer-file-name-style 'auto
-      ;;    ;; doom-modeline-icon nil
-      ;;    ;; doom-modeline-project-detection 'project
-      ;;    ))
-    #+END_SRC
 *** company
-    :PROPERTIES:
-    :ID:       9159D5C6-3E00-40E9-ACA5-6F74244914B9
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package company
 	:ensure t
@@ -218,9 +133,6 @@
 	(add-hook 'after-init-hook 'global-company-mode))
     #+END_SRC
 *** yasnippet
-    :PROPERTIES:
-    :ID:       8DCE8180-E1E3-4E4C-9E95-F6E75E0E704A
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
 	:ensure t
@@ -230,18 +142,12 @@
 	(yas-global-mode 1))
     #+END_SRC
 *** undo-tree
-    :PROPERTIES:
-    :ID:       32A7B5D9-7FDE-4688-81A0-53F9D19193C9
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package undo-tree
 	:ensure t
 	:config (global-undo-tree-mode))
     #+END_SRC
 *** projectile
-    :PROPERTIES:
-    :ID:       B5ED7DAE-A4B6-41B1-BB8B-AD0052FEB261
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
 	:ensure t
@@ -251,24 +157,29 @@
 	(setq projectile-indexing-method 'native)
 	(setq projectile-completion-system 'ivy))
     #+END_SRC
-*** deft
-    :PROPERTIES:
-    :ID:       39B6E2EA-27CE-451F-98FC-7015BF224D64
-    :END:
-    #+BEGIN_SRC emacs-lisp
-      (use-package deft
-	:ensure t
-	:bind ("<f1> 4" . deft)
-	:commands (deft)
-	:config (setq deft-directory "~/org"
-		      deft-extensions '("md" "org")
-		      deft-recursive t
-		      deft-use-filename-as-title t))
-    #+END_SRC
+*** awesome
+**** lazycat-theme
+     #+BEGIN_SRC emacs-lisp
+       (use-package lazycat-theme
+	 :load-path "~/.emacs.d/git-repo/lazycat-theme")
+     #+END_SRC
+**** awesome-tray
+     #+BEGIN_SRC emacs-lisp
+       (use-package awesome-tray
+	 :load-path "~/.emacs.d/git-repo/awesome-tray"
+	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+	 :config
+	 (awesome-tray-mode 1)
+	 (lazycat-theme-load-dark))
+     #+END_SRC
+**** awesome-tab
+     #+BEGIN_SRC emacs-lisp
+       ;; (use-package awesome-tab
+       ;;   :load-path "~/.emacs.d/git-repo/awesome-tab"
+       ;;   :config
+       ;;   (awesome-tab-mode t))
+     #+END_SRC
 *** phd
-    :PROPERTIES:
-    :ID:       DB2B0AE4-EEE9-488F-A55A-739205A30B4E
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package phd
 	:defer t)
@@ -350,43 +261,86 @@
 	:ensure f
 	:load-path "~/.emacs.d/git-repo/shengci.el")
     #+END_SRC
-*** awesome
-**** lazycat-theme
-     :PROPERTIES:
-     :ID:       F0A05047-817F-4CB9-8C67-ABB3B38A10D6
-     :END:
-     :ID:       E8AD9286-3D39-41A1-AFAC-F6C7C7287E9A
-     :END:
+*** all for notes
+**** org-roam
      #+BEGIN_SRC emacs-lisp
-       (use-package lazycat-theme
-	 :load-path "~/.emacs.d/git-repo/lazycat-theme")
-     #+END_SRC
-**** awesome-tray
-     :PROPERTIES:
-     :ID:       3EAF5355-7764-47EB-9CE7-1B02E061C19B
-     :END:
-     #+BEGIN_SRC emacs-lisp
-       (use-package awesome-tray
-	 :load-path "~/.emacs.d/git-repo/awesome-tray"
-	 :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+       (use-package org-roam
+	 :ensure t
+	 :hook
+	 (after-init . org-roam-mode)
+	 :custom
+	 (org-roam-directory "~/firslov")
+	 :bind (:map org-roam-mode-map
+		     (("C-c n l" . org-roam)
+		      ("C-c n f" . org-roam-find-file)
+		      ("C-c n g" . org-roam-graph))
+		     :map org-mode-map
+		     (("C-c n i" . org-roam-insert))
+		     (("C-c n I" . org-roam-insert-immediate)))
 	 :config
-	 (awesome-tray-mode 1)
-	 (lazycat-theme-load-dark))
+	 (setq org-roam-tag-sources '(prop last-directory)
+	       org-roam-capture-templates
+	       '(("d" "default" plain (function org-roam--capture-get-point)
+		  "%?"
+		  :file-name "${slug}"
+		  :head "#+title: ${title}\n"
+		  :unnarrowed t)
+		 ("t" "tag" plain (function org-roam--capture-get-point)
+		  "%?"
+		  :file-name "tag/${slug}"
+		  :head "#+title: ${title}\n"
+		  :unnarrowed t)
+		 ("j" "journal" plain (function org-roam--capture-get-point)
+		  "%?"
+		  :file-name "journal/${title}"
+		  :head "#+title: ${title}\n"
+		  :unnarrowed t)))
+	 )
      #+END_SRC
-**** awesome-tab
-     :PROPERTIES:
-     :ID:       5DD3986A-2C70-4B9B-BE32-BED6B973998F
-     :END:
+**** org-journal
      #+BEGIN_SRC emacs-lisp
-       (use-package awesome-tab
-	 :load-path "~/.emacs.d/git-repo/awesome-tab"
+       (use-package org-journal
+	 :ensure t
+	 :bind ("C-c n j" . org-journal-new-entry)
 	 :config
-	 (awesome-tab-mode t))
+	 (setq org-journal-dir "~/firslov/journal"
+	       org-journal-date-prefix "#+title: "
+	       org-journal-time-prefix "* "
+	       org-journal-date-format "%Y-%m-%d"
+	       org-journal-file-format "%Y-%m-%d.org"))
+     #+END_SRC
+**** deft
+     #+BEGIN_SRC emacs-lisp
+       (use-package deft
+	 :ensure t
+	 :bind ("C-c n d" . deft)
+	 :commands (deft)
+	 :config (setq deft-directory "~/firslov"
+		       deft-extensions '("md" "org")
+		       ;; deft-recursive t
+		       deft-use-filename-as-title t))
+     #+END_SRC
+**** etc
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-sidebar
+	 :ensure t)
+       (use-package org-download
+	 :ensure t
+	 :config
+	 ;; Drag-and-drop to `dired`
+	 (add-hook 'dired-mode-hook 'org-download-enable)
+	 (setq-default org-download-image-dir "./src")
+	 (setq org-download-display-inline-images nil))
+       ;; (use-package helm-org-rifle
+       ;;   :ensure t)
+       ;; (use-package helm-rg
+       ;;   :ensure t)
+       (use-package valign
+	 :load-path "~/.emacs.d/git-repo/valign"
+	 :config
+	 (add-hook 'org-mode-hook #'valign-mode))
      #+END_SRC
 *** misc packages
-    :PROPERTIES:
-    :ID:       E9491E99-4228-42B4-9B7D-C54628FB0D53
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package all-the-icons
 	:ensure t) 
@@ -421,8 +375,8 @@
       (use-package auto-save
 	:load-path "~/.emacs.d/lisp"
 	:config
-	(auto-save-enable)              ;; ¿ªÆô×Ô¶¯±£´æ¹¦ÄÜ
-	(setq auto-save-slient t)       ;; ×Ô¶¯±£´æµÄÊ±ºò¾²ÇÄÇÄµÄ£¬ ²»Òª´òÈÅÎÒ
+	(auto-save-enable)              ;; å¼€å¯è‡ªåŠ¨ä¿å­˜åŠŸèƒ½
+	(setq auto-save-slient t)       ;; è‡ªåŠ¨ä¿å­˜çš„æ—¶å€™é™æ‚„æ‚„çš„ï¼Œ ä¸è¦æ‰“æ‰°æˆ‘
 	)
       (use-package auto-indent
 	:load-path "~/.emacs.d/lisp"
@@ -443,9 +397,6 @@
     #+END_SRC
 ** python
 *** elpy
-    :PROPERTIES:
-    :ID:       16B5181C-3C3B-47A0-80E9-DD69E783ECA7
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package elpy
 	:ensure t
@@ -460,9 +411,6 @@
 		     "jupyter"))
     #+END_SRC
 *** py-autopep8
-    :PROPERTIES:
-    :ID:       61A2EBCD-93FD-4B10-AD34-6636B594E629
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8
 	:ensure t
@@ -472,9 +420,6 @@
 	(setq py-autopep8-options '("--max-line-length=100")))
     #+END_SRC
 *** flycheck
-    :PROPERTIES:
-    :ID:       12534A6A-8332-4EA9-8D36-F125ADFDB2CC
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
 	:ensure t
@@ -485,9 +430,6 @@
 	(add-hook 'elpy-mode-hook 'flycheck-mode))
     #+END_SRC
 *** ein
-    :PROPERTIES:
-    :ID:       545008C8-68CE-41DC-97CD-A453E0D8F708
-    :END:
     #+BEGIN_SRC emacs-lisp
       (use-package ein
 	:ensure t
@@ -495,9 +437,6 @@
     #+END_SRC
 * diff-sys
 ** window-nt
-   :PROPERTIES:
-   :ID:       0784B55B-0DC1-4215-86B3-5EFE76B2EC9D
-   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
        (setq conf_dir "e:/emacs/.emacs.d/"
@@ -509,17 +448,14 @@
        )
    #+END_SRC
 ** darwin
-   :PROPERTIES:
-   :ID:       11F144EE-8FF3-4206-82DE-F1D9BF308706
-   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'darwin)
        (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/org/"
+	     org-directory "~/firslov/"
 	     init-file (concat conf_dir "lisp/init-main.el")
 	     init-sys (concat conf_dir "lisp/darwin.el"))
        ;; font
-       (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+       (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 16")
        ;; env
        (setenv "PATHONPATH" "/opt/anaconda3/bin")
        (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
@@ -528,9 +464,6 @@
        )
    #+END_SRC
 ** linux
-   :PROPERTIES:
-   :ID:       FDB390CE-678A-41C9-B9A5-B4021A9B12E8
-   :END:
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'gnu/linux)
        (setq conf_dir "~/.emacs.d/"
@@ -541,16 +474,13 @@
    #+END_SRC
 * user-config
 ** config
-   :PROPERTIES:
-   :ID:       42B639EC-8752-40B0-9460-58F1C4288B24
-   :END:
    #+BEGIN_SRC emacs-lisp
-     ;; Æô¶¯Ò³Ãæ
+     ;; å¯åŠ¨é¡µé¢
      ;; (setq initial-buffer-choice (concat org-directory "note.org"))
-     ;; Ç¿ÖÆ×óÓÒ·ÖÆÁ
+     ;; å¼ºåˆ¶å·¦å³åˆ†å±
      (setq split-height-threshold nil)
      (setq split-width-threshold 0)
-     ;; ¹Ø±Õ»¶Ó­½çÃæ
+     ;; å…³é—­æ¬¢è¿ç•Œé¢
      (setq inhibit-splash-screen t)
      ;; fonts problem
      (setq inhibit-compacting-font-caches t)
@@ -575,10 +505,10 @@
      (setq-default cursor-type 'bar)
      ;; Save the point position
      (save-place-mode t)
-     ;; ÉèÖÃÄ¬ÈÏ¶ÁÈëÎÄ¼ş±àÂë
-     (prefer-coding-system 'gbk)
-     ;; ÉèÖÃĞ´ÈëÎÄ¼ş±àÂë
-     (setq default-buffer-file-coding-system 'gbk)
+     ;; è®¾ç½®é»˜è®¤è¯»å…¥æ–‡ä»¶ç¼–ç 
+     ;; (prefer-coding-system 'gbk)
+     ;; è®¾ç½®å†™å…¥æ–‡ä»¶ç¼–ç 
+     ;; (setq default-buffer-file-coding-system 'gbk)
      ;; disable backup
      (setq make-backup-files nil)
      ;; disable auto-save
@@ -593,7 +523,7 @@
      (global-auto-revert-mode 1)
      ;; highlight in org-mode
      (setq org-src-fontify-natively t)
-     ;; ×Ô¶¯»»ĞĞ
+     ;; è‡ªåŠ¨æ¢è¡Œ
      (toggle-truncate-lines 1)
      ;; emacs guess indent
      (setq python-indent-guess-indent-offset nil)
@@ -610,51 +540,46 @@
 	      (side . right)
 	      (slot . 1))
 	     ))
+     (add-to-list 'org-link-frame-setup '(file . find-file))
    #+END_SRC
 ** key-bind
-   :PROPERTIES:
-   :ID:       EE90F433-DE0F-4B59-9303-7E9E7F33AE57
-   :END:
    #+BEGIN_SRC emacs-lisp
      ;; save all buffers
      (global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
-     ;; °ó¶¨ <f5> <f6> ¼üÉÏ
+     ;; ç»‘å®š <f5> <f6> é”®ä¸Š
      (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
      (global-set-key (kbd "<f6>") 'youdao-dictionary-play-voice-at-point)
      ;; ibuffer
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      ;; show startup page
      (global-set-key (kbd "C-.") 'show-startup-page)
-     ;; ½«º¯Êı load-init-file °ó¶¨µ½ <f1> 0 ¼üÉÏ
+     ;; å°†å‡½æ•° load-init-file ç»‘å®šåˆ° <f1> 0 é”®ä¸Š
      (global-set-key (kbd "<f1> 0") 'load-init)
-     ;; ½«º¯Êı open-init-file °ó¶¨µ½ <f1> 1 ¼üÉÏ
+     ;; å°†å‡½æ•° open-init-file ç»‘å®šåˆ° <f1> 1 é”®ä¸Š
      (global-set-key (kbd "<f1> 1") 'open-init-file)
-     ;; ½«º¯Êı open-articles °ó¶¨µ½<f1> 2 ¼üÉÏ
+     ;; å°†å‡½æ•° open-articles ç»‘å®šåˆ°<f1> 2 é”®ä¸Š
      (global-set-key (kbd "<f1> 2") 'open-articles)
-     ;; ½«º¯Êı org-todo °ó¶¨µ½<f1> 3 ¼üÉÏ
+     ;; å°†å‡½æ•° org-todo ç»‘å®šåˆ°<f1> 3 é”®ä¸Š
      (global-set-key (kbd "<f1> 3") 'org-todo-list)
-     ;; ½«º¯Êı indent-buffer °ó¶¨µ½ <f8> ¼üÉÏ
+     ;; å°†å‡½æ•° indent-buffer ç»‘å®šåˆ° <f8> é”®ä¸Š
      (global-set-key (kbd "<f8>") 'indent-buffer)
-     ;; ÉÏÏÂ·­°ëÒ³
+     ;; ä¸Šä¸‹ç¿»åŠé¡µ
      (global-set-key "\M-n" 'scroll-half-page-up)
      (global-set-key "\M-p" 'scroll-half-page-down)
-     ;; Éú´Ê¼ÇÂ¼
+     ;; ç”Ÿè¯è®°å½•
      (global-set-key (kbd "<f7>") 'shengci-capture-word-and-save)
    #+END_SRC
 ** function
-   :PROPERTIES:
-   :ID:       9BE799A8-2208-4DEF-89CE-84C84FE9E4D1
-   :END:
    #+BEGIN_SRC emacs-lisp
-     ;; ¿ìËÙ´ò¿ªÅäÖÃÎÄ¼ş
+     ;; å¿«é€Ÿæ‰“å¼€é…ç½®æ–‡ä»¶
      (defun open-init-file()
        (interactive)
        (find-file (concat conf_dir "readme.org")))
-     ;; ¿ìËÙ¼ÓÔØÅäÖÃÎÄ¼ş
+     ;; å¿«é€ŸåŠ è½½é…ç½®æ–‡ä»¶
      (defun load-init()
        (interactive)
        (org-babel-load-file (concat conf_dir "readme.org")))
-     ;; ¿ìËÙ´ò¿ªarticles
+     ;; å¿«é€Ÿæ‰“å¼€articles
      (defun open-articles()
        (interactive)
        (find-file "~/org/Archive.org"))
@@ -667,7 +592,7 @@
      (defun indent-buffer()
        (interactive)
        (indent-region (point-min) (point-max)))
-     ;; ·­Ò³
+     ;; ç¿»é¡µ
      (defun scroll-half-page-down ()
        "scroll down half the page"
        (interactive)
@@ -676,9 +601,9 @@
        "scroll up half the page"
        (interactive)
        (scroll-up (/ (window-body-height) 2)))
-     ;; ´°¿ÚÆô¶¯Î»ÖÃ´óĞ¡
+     ;; çª—å£å¯åŠ¨ä½ç½®å¤§å°
      (defun init-my-frame ()
-       (set-frame-position (selected-frame) 160 80)
+       (set-frame-position (selected-frame) 120 40)
        (set-frame-width (selected-frame) 120)
        (set-frame-height (selected-frame) 30))
      (add-hook 'after-init-hook 'init-my-frame)
@@ -689,36 +614,14 @@
        (pcase var
 	 ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
 	 ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
-     ;; ¿ìËÙ´ò¿ªblogÎÄ¼ş
-     (defun blog()
-       (interactive)
-       (find-file "~/site/org/index.org")
-       (blog-mode)
-       (neotree-dir "~/site/"))
      ;; refresh startup function
      (defun show-startup-page()
        (interactive)
        (org-agenda-list)
-       (org-agenda-day-view)
-       (neotree-dir "~/Documents/org/")
-       (other-window -1))
-     ;; (add-hook 'window-setup-hook 'show-startup-page)
-   #+END_SRC
-** mode
-   :PROPERTIES:
-   :ID:       04F84E6D-E3AD-486B-8D9F-B8A1A3E16536
-   :END:
-   #+BEGIN_SRC emacs-lisp
-     ;; blog mode
-     (define-minor-mode blog-mode
-       "Toggle blog mode."
-       :global nil
-       :lighter "Blog")
+       (org-agenda-day-view))
+     (add-hook 'window-setup-hook 'show-startup-page)
    #+END_SRC
 ** transparency
-   :PROPERTIES:
-   :ID:       5C230C14-48EB-4C03-BA20-D924F2FC28BD
-   :END:
    #+BEGIN_SRC emacs-lisp
      ;; @purcell
      (defun sanityinc/adjust-opacity (frame incr)
@@ -741,15 +644,12 @@
 				     (modify-frame-parameters nil `((alpha . 100)))))
    #+END_SRC
 * org
-  :PROPERTIES:
-  :ID:       E98ACE32-BB8A-4510-89EE-E33DDEE2BE60
-  :END:
   #+BEGIN_SRC emacs-lisp
     ;; org variables
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
     (add-hook 'org-mode-hook 'linum-mode)
-    (setq org-agenda-files (list (concat org-directory "inbox.org"))
+    (setq org-agenda-files (directory-files-recursively "~/firslov/" "\\.org$")
 	  lt-todo-files org-agenda-files
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
 	  ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
@@ -761,12 +661,12 @@
 				 (1000 1400 1600 2000 2200)
 				 "......" "----------------")
 	  org-capture-templates
-	  `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
+	  `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
 	     "* %?" :unnarrowed t)
-	    ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	     "* %U\n%?" :unnarrowed t)
-	    ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
-	     "* %? %^T")
+	    ;; ;; ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+	    ;; ;;  "* %U\n%?" :unnarrowed t)
+	    ;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
+	    ;;  "* %? %^T")
 	    ("t" "Todo")
 	    ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	     "* TODO %?")
@@ -789,9 +689,6 @@
     (define-key global-map "\M-q" 'org-agenda)
   #+END_SRC
 * custom
-  :PROPERTIES:
-  :ID:       B62D78B1-5C3D-486C-87D3-FDFFAD59B2C3
-  :END:
   #+BEGIN_SRC emacs-lisp
     (when (eq system-type 'gnu/linux)
       (custom-set-variables
