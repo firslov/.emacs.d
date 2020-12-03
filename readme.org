@@ -309,6 +309,38 @@
 	       org-journal-date-format "%Y-%m-%d"
 	       org-journal-file-format "%Y-%m-%d.org"))
      #+END_SRC
+**** helm-org-rifle
+     #+BEGIN_SRC emacs-lisp
+       ;; helm-org-rifle will mostly be used with roam so it makes sense that i put it here
+       (use-package helm-org-rifle
+	 :ensure t
+	 :bind (("C-c n r" . my/helm-org-rifle-roam-rifle))
+	 :config
+	 (defun my/helm-org-rifle-roam-rifle ()
+	   "Use roam directory rifle"
+	   (interactive)
+	   (helm-org-rifle-directories org-roam-directory))
+
+	 (defun my/helm-org-rifle--store-link (candidate)
+	   "Store link into CANDIDATE."
+	   (-let (((buffer . pos) candidate))
+	     (with-current-buffer buffer
+	       (goto-char pos)
+	       (call-interactively 'org-store-link))))
+
+	 (defun my/helm-org-rifle--insert-link (candidate)
+	   "Insert link to CANDIDATE in current location."
+	   (interactive)
+	   (my/helm-org-rifle--store-link candidate)
+	   (call-interactively 'org-insert-link))
+
+	 ;; add new actions to the default rifle action list
+	 (setq helm-org-rifle-actions
+	       (append helm-org-rifle-actions
+		       (helm-make-actions
+			"Store link" 'my/helm-org-rifle--store-link
+			"Insert link" 'my/helm-org-rifle--insert-link))))
+     #+END_SRC
 **** deft
      #+BEGIN_SRC emacs-lisp
        (use-package deft
@@ -362,8 +394,8 @@
       (use-package diminish
 	:ensure t
 	:diminish (ivy-mode eldoc-mode which-key-mode))
-      (use-package org-equation-live-preview
-	:load-path "~/.emacs.d/git-repo/org-equation-live-preview"
+      (use-package org-elp
+	:load-path "~/.emacs.d/git-repo/org-elp"
 	:defer t)
       (use-package learn-timer
 	:load-path "~/.emacs.d/lisp"
@@ -650,7 +682,7 @@
     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
     (add-hook 'org-mode-hook 'linum-mode)
     (setq org-agenda-files (directory-files-recursively "~/firslov/" "\\.org$")
-	  lt-todo-files org-agenda-files
+	  lt-todo-files (directory-files-recursively "~/firslov/" "\\.org$")
 	  org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
 	  ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
 	  org-agenda-show-future-repeats nil
@@ -687,6 +719,32 @@
     ;; set key
     (define-key global-map "\C-cc" 'org-capture)
     (define-key global-map "\M-q" 'org-agenda)
+    ;; agenda 里面时间块彩色显示
+    ;; From: https://emacs-china.org/t/org-agenda/8679/3
+    (defun ljg/org-agenda-time-grid-spacing ()
+      "Set different line spacing w.r.t. time duration."
+      (save-excursion
+	(let* ((background (alist-get 'background-mode (frame-parameters)))
+	       (background-dark-p (string= background "dark"))
+	       (colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
+	       pos
+	       duration)
+	  (nconc colors colors)
+	  (goto-char (point-min))
+	  (while (setq pos (next-single-property-change (point) 'duration))
+	    (goto-char pos)
+	    (when (and (not (equal pos (point-at-eol)))
+		       (setq duration (org-get-at-bol 'duration)))
+	      (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
+		    (ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
+		(overlay-put ov 'face `(:background ,(car colors)
+						    :foreground
+						    ,(if background-dark-p "black" "white")))
+		(setq colors (cdr colors))
+		(overlay-put ov 'line-height line-height)
+		(overlay-put ov 'line-spacing (1- line-height))))))))
+
+    (add-hook 'org-agenda-finalize-hook #'ljg/org-agenda-time-grid-spacing)
   #+END_SRC
 * custom
   #+BEGIN_SRC emacs-lisp

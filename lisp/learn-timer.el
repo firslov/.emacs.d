@@ -57,75 +57,72 @@
 		 (minutes (progn (setq seconds (- seconds (* hours (* 60 60))))
 				 (/ seconds 60)))
 		 (seconds (setq seconds (- seconds (* minutes 60)))))
-		 (erase-buffer)
-		 (insert (propertize (format "  %s 天 %s 时 %s 分 %s 秒"
-                                             days hours minutes seconds)
-                                     'face '(:height 2.0))))
-	    (unless timer-lt
-	      (setq timer-lt
-		    (run-at-time t 1 'learn-timer--buf))))
-	  (when timer-lt
-	    (cancel-timer timer-lt)
-	    (setq timer-lt nil)))))
+	    (erase-buffer)
+	    (insert (propertize (format "  %s 天 %s 时 %s 分 %s 秒"
+                                        days hours minutes seconds)
+                                'face '(:height 2.0))))
+	  (unless timer-lt
+	    (setq timer-lt
+		  (run-at-time t 1 'learn-timer--buf))))
+      (when timer-lt
+	(cancel-timer timer-lt)
+	(setq timer-lt nil)))))
 
-  (defun learn-timer--time ()
-    (let* ((seconds (truncate
-		     (- (time-to-seconds (date-to-time learn-time))
-			(time-to-seconds))))
-	   (days    (/ seconds (* 24 60 60)))
-	   (hours   (progn (setq seconds (- seconds (* days (* 24 60 60))))
-			   (/ seconds (* 60 60))))
-	   (minutes (progn (setq seconds (- seconds (* hours (* 60 60))))
-			   (/ seconds 60)))
-	   (seconds (setq seconds (- seconds (* minutes 60)))))
-      (format "→%s天%s时←" days hours)))
+(defun learn-timer--time ()
+  (let* ((seconds (truncate
+		   (- (time-to-seconds (date-to-time learn-time))
+		      (time-to-seconds))))
+	 (days    (/ seconds (* 24 60 60)))
+	 (hours   (progn (setq seconds (- seconds (* days (* 24 60 60))))
+			 (/ seconds (* 60 60))))
+	 (minutes (progn (setq seconds (- seconds (* hours (* 60 60))))
+			 (/ seconds 60)))
+	 (seconds (setq seconds (- seconds (* minutes 60)))))
+    (format "→%s天%s时←" days hours)))
 
-  (defun todo-num ()
-    (save-excursion
-      (let* ((today (org-today))
-	     (date (calendar-gregorian-from-absolute today))
-	     (file (car lt-todo-files)))
-	(if file
-	    (let*
-		((rtn (org-agenda-get-day-entries file date :todo))
-		 (num (length rtn)))
-	      (format "Todo:%s" num))
-	  "Todo:~"))))
+(defun todo-num ()
+  (save-excursion
+    (let* ((today (org-today))
+	   (date (calendar-gregorian-from-absolute today))
+	   (num 0))
+      (mapcar #'(lambda (x) (setq rtn (org-agenda-get-day-entries x date :todo))
+		  (setq num (+ num (length rtn)))) lt-todo-files)
+      (format "Todo:%s" num))))
 
-  (defun timer ()
-    (interactive)
-    (with-current-buffer (get-buffer-create "*Learn Timer*")
-      (buffer-disable-undo)
-      (setq cursor-type nil)
-      (learn-timer--buf)
-      (display-buffer (current-buffer))))
+(defun timer ()
+  (interactive)
+  (with-current-buffer (get-buffer-create "*Learn Timer*")
+    (buffer-disable-undo)
+    (setq cursor-type nil)
+    (learn-timer--buf)
+    (display-buffer (current-buffer))))
 
-  (defun awesome-tray-module-timer-info ()
-    (learn-timer--time))
+(defun awesome-tray-module-timer-info ()
+  (learn-timer--time))
 
-  (defface awesome-tray-module-timer-face
-    '((((background light))
-       :foreground "#cc2444" :bold t)
-      (t
-       :foreground "#ff2d55" :bold t))
-    "timer face."
-    :group 'awesome-tray)
+(defface awesome-tray-module-timer-face
+  '((((background light))
+     :foreground "#cc2444" :bold t)
+    (t
+     :foreground "#ff2d55" :bold t))
+  "timer face."
+  :group 'awesome-tray)
 
-  (defun awesome-tray-module-todo-info ()
-    (todo-num))
+(defun awesome-tray-module-todo-info ()
+  (todo-num))
 
-  (defface awesome-tray-module-todo-face
-    '((((background light))
-       :foreground "#cc2444" :bold t)
-      (t
-       :foreground "#ffff00" :bold t))
-    "todo face."
-    :group 'awesome-tray)
+(defface awesome-tray-module-todo-face
+  '((((background light))
+     :foreground "#cc2444" :bold t)
+    (t
+     :foreground "#ffff00" :bold t))
+  "todo face."
+  :group 'awesome-tray)
 
-  (add-to-list 'awesome-tray-module-alist
-	       '("timer" . (awesome-tray-module-timer-info awesome-tray-module-timer-face)))
+(add-to-list 'awesome-tray-module-alist
+	     '("timer" . (awesome-tray-module-timer-info awesome-tray-module-timer-face)))
 
-  (add-to-list 'awesome-tray-module-alist
-	       '("todo" . (awesome-tray-module-todo-info awesome-tray-module-todo-face)))
+(add-to-list 'awesome-tray-module-alist
+	     '("todo" . (awesome-tray-module-todo-info awesome-tray-module-todo-face)))
 
-  (provide 'learn-timer)
+(provide 'learn-timer)
