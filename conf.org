@@ -1,0 +1,169 @@
+* Vim
+** init
+   #+BEGIN_SRC conf :tangle ~/.config/nvim/init.vim
+     for f in split(glob('~/.config/nvim/rc/*.vim'),'\n')
+     exe 'source' f
+     endfor
+   #+END_SRC
+** rc
+   - 01.general.vim
+     #+BEGIN_SRC conf :tangle ~/.config/nvim/rc/01-general.vim
+       " 关闭兼容模式
+       set nocompatible
+       " <LEADER>键
+       let mapleader=" "
+       " 主题配色
+       " 代码颜色主题
+       set t_Co=256monokai
+       " 语法高亮 
+       syntax on                        
+       syntax enable
+       " 共享系统剪贴板
+       set clipboard=unnamed
+       " 显示行号
+       set number              
+       " 突出显示当前行
+       set cursorline          
+       " 设定 tab 长度为 4
+       set tabstop=4
+       " 自动缩进空白长度
+       set softtabstop=4
+       " 统一缩进为4
+       set shiftwidth=4
+       " 自动缩进同上行
+       set autoindent
+       " 换行
+       " set wrap
+       " 显示命令
+       set showcmd
+       " 普通模式自动补全
+       set wildmenu
+       " 编码
+       set encoding=utf-8
+       " 不创建备份文件
+       set nobackup
+       " 不创建交换文件
+       set noswapfile
+       " 打开文件监视
+       set autoread
+       " 256色
+       set t_Co=256
+       " 退格可以退到上一行
+       set backspace=indent,eol,start
+       " 执行命令在当前目录下
+       set autochdir
+       " 永远显示边缘5行
+       set scrolloff=5
+       " 水平边缘5列
+       set sidescrolloff=5
+       " 高亮括号对
+       set showmatch
+       " 搜索相关
+       set hlsearch
+       set incsearch
+       set smartcase
+       exec "nohlsearch"
+       noremap - Nzz
+       noremap = nzz
+       " 不同模式不同光标
+       let &t_SI = "\<ESC>]50;CursorShape=1\x7"
+       let &t_SR = "\<ESC>]50;CursorShape=2\x7"
+       let &t_EI = "\<ESC>]50;CursorShape=0\x7"
+       " 打开文件光标回到之前位置
+       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+     #+END_SRC
+   - 02.keybindings.vim
+     #+BEGIN_SRC conf :tangle ~/.config/nvim/rc/02-keybindings.vim
+       " 基础改建
+       noremap s <nop>
+       nnoremap H 10h
+       nnoremap J 10j
+       nnoremap K 10k
+       nnoremap L 10l
+       map w :w<CR>
+       map q :q<CR>
+       map Q :qall!<CR>
+       nmap <LEADER>x xi
+       nmap <LEADER>o o<ESC>
+       map R :source %<CR>
+
+       " 打开vimrc
+       map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+       " 清除搜索标记
+       map <LEADER>/ :nohlsearch<CR>
+       " 快速查找'<++>'并替换插入
+       map <LEADER><LEADER> /<++><CR>:nohlsearch<CR>c4l
+
+       " 分屏改键
+       map sk :set nosplitbelow<CR>:split<CR>
+       map sj :set splitbelow<CR>:split<CR>
+       map sh :set nosplitright<CR>:vsplit<CR>
+       map sl :set splitright<CR>:vsplit<CR>
+       " 分屏切换
+       map <LEADER>k <C-w>k
+       map <LEADER>j <C-w>j
+       map <LEADER>h <C-w>h
+       map <LEADER>l <C-w>l
+       map <LEADER>u <C-w>t<C-w>H
+       map <LEADER>U <C-w>t<C-w>K
+       " 分屏改大小
+       map <up> :res+5<CR>
+       map <down> :res-5<CR>
+       map <left> :vertical resize-5<CR>
+       map <right> :vertical resize+5<CR>
+
+       " 文件切换
+       map ≤ :bp<CR>
+       map ≥ :bn<CR>
+
+       " 标签操作
+       map tt :tabe<CR>
+       map th :-tabnext<CR>
+       map tl :+tabnext<CR>
+
+       " ===
+       " === Terminal
+       " ===
+       " 在下方打开一个terminal并进入编辑
+       map <LEADER><CR> :set splitbelow<CR>:sp<CR>:term<CR>h
+     #+END_SRC
+   - 03-plugins.vim
+     #+BEGIN_SRC conf :tangle ~/.config/nvim/rc/03-plugins.vim
+       " ===
+       " === 插件安装
+       " ===
+       call plug#begin('~/.config/nvim/plugged')
+       " 文件树
+       Plug 'scrooloose/nerdtree'
+       " 初始界面
+       Plug 'mhinz/vim-startify'
+       " 显示文件修改历史
+       Plug 'mbbill/undotree'
+       call plug#end()
+     #+END_SRC
+   - 04-pluginconf.vim
+     #+BEGIN_SRC conf :tangle ~/.config/nvim/rc/04-pluginconf.vim
+       " ===
+       " === nerdtree 文件系统
+       " ===
+       map <F5> :NERDTreeToggle<CR>
+       " let NERDTreeMapOpenSplit = ""
+       autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(winbufnr(v:val), "&bt"))')) | qa | endif
+
+       " ===
+       " === Undotree 历史版本
+       " ===
+       let g:undotree_DiffAutoOpen = 0
+       map <LEADER>b :UndotreeToggle<CR>
+
+       "" ===
+       "" === Startify
+       "" ===
+       autocmd VimEnter *
+       \   if !argc()
+       \ |   Startify
+       \ |   NERDTree
+       \ |   wincmd w
+       \ | endif
+       let g:startify_custom_header = []
+     #+END_SRC

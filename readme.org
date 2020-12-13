@@ -370,20 +370,13 @@
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
        (setq conf_dir "e:/emacs/.emacs.d/"
-	     org-directory "e:/org/"
-	     init-file (concat conf_dir "lisp/init-main.el")
-	     init-sys (concat conf_dir "lisp/windows-nt.el"))
-       ;; init fullscreen
-       (add-to-list 'default-frame-alist '(fullscreen . maximized))
-       )
+	     org-directory "e:/org/"))
    #+END_SRC
 ** darwin
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'darwin)
        (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/firslov/"
-	     init-file (concat conf_dir "lisp/init-main.el")
-	     init-sys (concat conf_dir "lisp/darwin.el"))
+	     org-directory "~/firslov/")
        ;; font
        (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
        ;; (set-face-attribute 'default nil :font "Sarasa Mono SC Nerd 16")
@@ -395,23 +388,21 @@
        (setenv "PATHONPATH" "/opt/anaconda3/bin")
        (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
        (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
-       (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter")
-       )
+       (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter"))
    #+END_SRC
 ** linux
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'gnu/linux)
        (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/org/"
-	     init-file (concat conf_dir "lisp/init-main.el")
-	     init-sys (concat conf_dir "lisp/darwin.el"))
-       )
+	     org-directory "~/org/"))
    #+END_SRC
 * user-config
 ** config
    #+BEGIN_SRC emacs-lisp
      ;; 启动页面
      ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+     ;; init fullscreen
+     ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
      ;; 强制左右分屏
      (setq split-height-threshold nil)
      (setq split-width-threshold 0)
@@ -679,5 +670,6 @@
        ;; If there is more than one, they won't work right.
        '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
        '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+    ;; (font-get (face-attribute 'default :font) :family)
   #+END_SRC
 
