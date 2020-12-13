@@ -11,64 +11,19 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
 (use-package benchmark-init
   :ensure t
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(use-package org
-  :ensure t)
-(use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-(use-package auto-load
-  :load-path "~/.emacs.d/lisp")
-(use-package recentf
-  :bind ("C-x C-r" . recentf-open-files)
-  :defer 1
-  :config
-  (recentf-mode 1)
-  (setq recentf-max-menu-item 10))
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (setq exec-path-from-shell-arguments '("-l"))
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+(use-package org-mind
+  :load-path "~/.emacs.d/lisp/")
 
 (use-package magit
   :ensure t
   :defer t
   :bind ("C-x g" . magit-status))
-
-(use-package which-key
-  :ensure t
-  :config (which-key-mode))
-
-(use-package neotree
-  :ensure t
-  :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (setq projectile-switch-project-action 'neotree-projectile-action))
-
-(use-package highlight-parentheses
-  :ensure t
-  :config
-  (define-globalized-minor-mode global-highlight-parentheses-mode
-    highlight-parentheses-mode
-    (lambda ()
-      (highlight-parentheses-mode t)))
-  (global-highlight-parentheses-mode t))
-
-(use-package youdao-dictionary
-  :ensure t
-  :defer t
-  :config
-  ;; enable cache
-  (setq url-automatic-caching t))
 
 (use-package counsel
   :ensure t)
@@ -100,17 +55,6 @@
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 
-(use-package yasnippet
-  :ensure t
-  :config
-  (setq yas-snippet-dirs
-	'("~/.emacs.d/snippets"))
-  (yas-global-mode 1))
-
-(use-package undo-tree
-  :ensure t
-  :config (global-undo-tree-mode))
-
 (use-package projectile
   :ensure t
   :config
@@ -119,23 +63,6 @@
   (setq projectile-indexing-method 'native)
   (setq projectile-completion-system 'ivy))
 
-(use-package lazycat-theme
-  :load-path "~/.emacs.d/git-repo/lazycat-theme")
-
-(use-package awesome-tray
-  :load-path "~/.emacs.d/git-repo/awesome-tray"
-  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
-  :config
-  (awesome-tray-mode 1)
-  (lazycat-theme-load-dark))
-
-;; (use-package awesome-tab
-;;   :load-path "~/.emacs.d/git-repo/awesome-tab"
-;;   :config
-;;   (awesome-tab-mode t))
-
-(use-package phd
-  :defer t)
 (when (display-graphic-p)
   (use-package pdf-view
     :ensure pdf-tools
@@ -204,125 +131,68 @@
       :hook (pdf-view-mode . pdf-view-restore-mode)
       :init (setq pdf-view-restore-filename
 		  (locate-user-emacs-file ".pdf-view-restore")))))
-;; (use-package interleave
-;;   :defer t
-;;   :ensure t
-;;   :config
-;;   (setq interleave-split-direction 'horizontal)
-;;   (setq interleave-split-lines 9))
+
+(use-package lazycat-theme
+  :load-path "~/.emacs.d/git-repo/lazycat-theme")
+
+(use-package awesome-tray
+  :load-path "~/.emacs.d/git-repo/awesome-tray"
+  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+  :config
+  (awesome-tray-mode 1)
+  (lazycat-theme-load-dark)
+  (setq-default mode-line-format (remove 'mode-line-buffer-identification mode-line-format)))
+
+(use-package phd
+  :defer t)
+(use-package org-elp
+  :load-path "~/.emacs.d/git-repo/org-elp"
+  :defer t)
 (use-package shengci
   :ensure f
   :load-path "~/.emacs.d/git-repo/shengci.el")
 
-(use-package org-roam
+(use-package which-key
   :ensure t
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory "~/firslov")
-  :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate)))
-  :config
-  (setq org-roam-tag-sources '(prop last-directory)
-	org-roam-capture-templates
-	'(("d" "default" plain (function org-roam--capture-get-point)
-	   "%?"
-	   :file-name "${slug}"
-	   :head "#+title: ${title}\n"
-	   :unnarrowed t)
-	  ("t" "tag" plain (function org-roam--capture-get-point)
-	   "%?"
-	   :file-name "tag/${slug}"
-	   :head "#+title: ${title}\n"
-	   :unnarrowed t)
-	  ("j" "journal" plain (function org-roam--capture-get-point)
-	   "%?"
-	   :file-name "journal/${title}"
-	   :head "#+title: ${title}\n"
-	   :unnarrowed t)))
-  )
+  :config (which-key-mode))
 
-(use-package org-journal
-  :ensure t
-  :bind ("C-c n j" . org-journal-new-entry)
-  :config
-  (setq org-journal-dir "~/firslov/journal"
-	org-journal-date-prefix "#+title: "
-	org-journal-time-prefix "* "
-	org-journal-date-format "%Y-%m-%d"
-	org-journal-file-format "%Y-%m-%d.org"))
-
-;; helm-org-rifle will mostly be used with roam so it makes sense that i put it here
-(use-package helm-org-rifle
-  :ensure t
-  :bind (("C-c n r" . my/helm-org-rifle-roam-rifle))
-  :config
-  (defun my/helm-org-rifle-roam-rifle ()
-    "Use roam directory rifle"
-    (interactive)
-    (helm-org-rifle-directories org-roam-directory))
-
-  (defun my/helm-org-rifle--store-link (candidate)
-    "Store link into CANDIDATE."
-    (-let (((buffer . pos) candidate))
-      (with-current-buffer buffer
-	(goto-char pos)
-	(call-interactively 'org-store-link))))
-
-  (defun my/helm-org-rifle--insert-link (candidate)
-    "Insert link to CANDIDATE in current location."
-    (interactive)
-    (my/helm-org-rifle--store-link candidate)
-    (call-interactively 'org-insert-link))
-
-  ;; add new actions to the default rifle action list
-  (setq helm-org-rifle-actions
-	(append helm-org-rifle-actions
-		(helm-make-actions
-		 "Store link" 'my/helm-org-rifle--store-link
-		 "Insert link" 'my/helm-org-rifle--insert-link))))
-
-(use-package deft
-  :ensure t
-  :bind ("C-c n d" . deft)
-  :commands (deft)
-  :config (setq deft-directory "~/firslov"
-		deft-extensions '("md" "org")
-		;; deft-recursive t
-		deft-use-filename-as-title t))
-
-(use-package org-sidebar
-  :ensure t)
-(use-package org-download
+(use-package yasnippet
   :ensure t
   :config
-  ;; Drag-and-drop to `dired`
-  (add-hook 'dired-mode-hook 'org-download-enable)
-  (setq-default org-download-image-dir "./src")
-  (setq org-download-display-inline-images nil))
-;; (use-package helm-org-rifle
-;;   :ensure t)
-;; (use-package helm-rg
-;;   :ensure t)
-(use-package valign
-  :load-path "~/.emacs.d/git-repo/valign"
-  :config
-  (add-hook 'org-mode-hook #'valign-mode))
+  (setq yas-snippet-dirs
+	'("~/.emacs.d/snippets"))
+  (yas-global-mode 1))
 
-(use-package all-the-icons
-  :ensure t) 
-(use-package restart-emacs
+(use-package neotree
+  :ensure t
+  :config
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq projectile-switch-project-action 'neotree-projectile-action))
+
+(use-package undo-tree
+  :ensure t
+  :config (global-undo-tree-mode))
+
+(use-package youdao-dictionary
   :ensure t
   :defer t
-  :init
-  (defun b-restart-emacs (f)
-    (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
-  (advice-add #'restart-emacs :before #'b-restart-emacs))
+  :config
+  ;; enable cache
+  (setq url-automatic-caching t))
+
+(use-package posframe
+  :ensure t
+  :config
+  (defun call-a-posframe ()
+    (interactive)
+    (defvar my-posframe-buffer " *my-posframe-buffer*")
+    (with-current-buffer (get-buffer-create my-posframe-buffer)
+      (erase-buffer)
+      (insert "Hello world"))
+    (when (posframe-workable-p)
+      (posframe-show my-posframe-buffer
+		     :position (point)))))
+
 (use-package ace-window
   :ensure t
   :defer t
@@ -331,12 +201,47 @@
   (custom-set-faces
    '(aw-leading-char-face
      ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+
+(use-package org-tanglesync
+  :hook ((org-mode . org-tanglesync-mode)
+	 ;; enable watch-mode globally:
+	 ((prog-mode text-mode) . org-tanglesync-watch-mode))
+  :custom
+  (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))
+  :bind
+  (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
+   ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
+
+(use-package restart-emacs
+  :ensure t
+  :defer t
+  :bind ("<f12>" . restart-emacs)
+  :init
+  (defun b-restart-emacs (f)
+    (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
+  (advice-add #'restart-emacs :before #'b-restart-emacs))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (setq exec-path-from-shell-arguments '("-l"))
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
+(use-package highlight-parentheses
+  :ensure t
+  :config
+  (define-globalized-minor-mode global-highlight-parentheses-mode
+    highlight-parentheses-mode
+    (lambda ()
+      (highlight-parentheses-mode t)))
+  (global-highlight-parentheses-mode t))
+
+(use-package all-the-icons
+  :ensure t)
 (use-package diminish
   :ensure t
   :diminish (ivy-mode eldoc-mode which-key-mode))
-(use-package org-elp
-  :load-path "~/.emacs.d/git-repo/org-elp"
-  :defer t)
 (use-package learn-timer
   :load-path "~/.emacs.d/lisp"
   :after awesome-tray
@@ -353,19 +258,14 @@
 (use-package auto-indent
   :load-path "~/.emacs.d/lisp"
   :config (auto-indent-enable))
-(use-package posframe
-  :ensure t
+(use-package auto-load
+  :load-path "~/.emacs.d/lisp")
+(use-package recentf
+  :bind ("C-x C-r" . recentf-open-files)
+  :defer 1
   :config
-  (defun call-a-posframe ()
-    (interactive)
-    (defvar my-posframe-buffer " *my-posframe-buffer*")
-    (with-current-buffer (get-buffer-create my-posframe-buffer)
-      (erase-buffer)
-      (insert "Hello world"))
-    (when (posframe-workable-p)
-      (posframe-show my-posframe-buffer
-		     :position (point))))
-  )
+  (recentf-mode 1)
+  (setq recentf-max-menu-item 10))
 
 (use-package elpy
   :ensure t
@@ -413,7 +313,12 @@
 	init-file (concat conf_dir "lisp/init-main.el")
 	init-sys (concat conf_dir "lisp/darwin.el"))
   ;; font
-  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 16")
+  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
+  ;; (set-face-attribute 'default nil :font "Sarasa Mono SC Nerd 16")
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+		      charset
+		      (font-spec :family "STKaiti" :size 17)))
   ;; env
   (setenv "PATHONPATH" "/opt/anaconda3/bin")
   (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
@@ -477,7 +382,7 @@
 ;; highlight in org-mode
 (setq org-src-fontify-natively t)
 ;; 自动换行
-(toggle-truncate-lines 1)
+(toggle-truncate-lines nil)
 ;; emacs guess indent
 (setq python-indent-guess-indent-offset nil)
 ;; display buffer alist
@@ -495,8 +400,6 @@
 	))
 (add-to-list 'org-link-frame-setup '(file . find-file))
 
-;; save all buffers
-(global-set-key (kbd "<f12>") 'org-save-all-org-buffers)
 ;; 绑定 <f5> <f6> 键上
 (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
 (global-set-key (kbd "<f6>") 'youdao-dictionary-play-voice-at-point)
@@ -508,10 +411,10 @@
 (global-set-key (kbd "<f1> 0") 'load-init)
 ;; 将函数 open-init-file 绑定到 <f1> 1 键上
 (global-set-key (kbd "<f1> 1") 'open-init-file)
-;; 将函数 open-articles 绑定到<f1> 2 键上
-(global-set-key (kbd "<f1> 2") 'open-articles)
+;; 将函数 org-mind-conf 绑定到<f1> 2 键上
+(global-set-key (kbd "<f1> 2") 'org-mind-conf)
 ;; 将函数 org-todo 绑定到<f1> 3 键上
-(global-set-key (kbd "<f1> 3") 'org-todo-list)
+;; (global-set-key (kbd "<f1> 3") 'org-todo-list)
 ;; 将函数 indent-buffer 绑定到 <f8> 键上
 (global-set-key (kbd "<f8>") 'indent-buffer)
 ;; 上下翻半页
@@ -529,9 +432,9 @@
   (interactive)
   (org-babel-load-file (concat conf_dir "readme.org")))
 ;; 快速打开articles
-(defun open-articles()
+(defun org-mind-conf()
   (interactive)
-  (find-file "~/org/Archive.org"))
+  (find-file "~/.emacs.d/lisp/org-mind.el"))
 ;; neotree list config-dir
 (defun nconf()
   (interactive)
@@ -553,8 +456,8 @@
 ;; 窗口启动位置大小
 (defun init-my-frame ()
   (set-frame-position (selected-frame) 120 40)
-  (set-frame-width (selected-frame) 120)
-  (set-frame-height (selected-frame) 30))
+  (set-frame-width (selected-frame) 128)
+  (set-frame-height (selected-frame) 32))
 (add-hook 'after-init-hook 'init-my-frame)
 ;; set alpha
 (defun set-alpha (var)
@@ -564,11 +467,28 @@
     ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
     ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
 ;; refresh startup function
+(defcustom startup-page t
+  "Whether show the startup page when startup.")
 (defun show-startup-page()
   (interactive)
-  (org-agenda-list)
-  (org-agenda-day-view))
-(add-hook 'window-setup-hook 'show-startup-page)
+  (if startup-page
+      (progn
+	(org-agenda-list)
+	(org-agenda-day-view)
+	;; (calendar)
+	(setq startup-page nil))
+    (progn
+      (when (gnus-buffer-exists-p "*Org Agenda*")
+	(bury-buffer)))))
+;;(add-hook 'window-setup-hook 'show-startup-page)
+(advice-add 'org-agenda-day-view :after (lambda (&rest r)
+					  (my/show-todo)
+					  (shrink-window-horizontally 12)))
+(advice-add 'bury-buffer :after (lambda (&rest r)
+				  (delete-other-windows)
+				  (cl-loop while (gnus-buffer-exists-p "*Org Agenda*")
+					   do (kill-buffer "*Org Agenda*"))
+				  (setq startup-page t)))
 
 ;; @purcell
 (defun sanityinc/adjust-opacity (frame incr)
@@ -597,16 +517,12 @@
 (setq org-agenda-files (directory-files-recursively "~/firslov/" "\\.org$")
       lt-todo-files (directory-files-recursively "~/firslov/" "\\.org$")
       org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
-      ;; org-agenda-skip-function-global '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|\\* CANCELED")
-      org-agenda-show-future-repeats nil
       org-deadline-warning-days 30
       org-agenda-window-setup nil
       org-M-RET-may-split-line '((headline . nil))
-      org-agenda-time-grid '((daily today require-timed)
-			     (1000 1400 1600 2000 2200)
-			     "......" "----------------")
+      ;; org-agenda-time-grid nil
       org-capture-templates
-      `(("i" "Inbox" entry (file ,(concat org-directory "inbox.org"))
+      `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
 	 "* %?" :unnarrowed t)
 	;; ;; ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
 	;; ;;  "* %U\n%?" :unnarrowed t)
@@ -614,7 +530,7 @@
 	;;  "* %? %^T")
 	("t" "Todo")
 	("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-	 "* TODO %?")
+	 "* SOMEDAY %?")
 	("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
 	 "* TODO %?\nSCHEDULED:%^t")
 	("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
@@ -625,9 +541,9 @@
       ;; (,(concat org-directory "learn.org") :maxlevel . 1)
       ;; (,(concat org-directory "emacs.org") :level . 1))
       org-todo-keywords
-      '((sequence "TODO(t)" "CANCELED(c)" "|" "DONE(d)"))
+      '((sequence "TODO(t)" "SOMEDAY(s)" "CANCELED(c)" "|" "DONE(d)"))
       org-todo-keyword-faces
-      '(("DAILY" . "green")
+      '(("SOMEDAY" . "#34CCDB")
 	("CANCELED" . "grey")))
 ;; set key
 (define-key global-map "\C-cc" 'org-capture)

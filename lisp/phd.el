@@ -10,8 +10,6 @@
   :type 'string
   :group 'phd)
 
-;; work with interleave-mode
-
 ;;;###autoload
 (defun mv-articles ()
   "Move articles from downloads to archive."
@@ -37,12 +35,6 @@
 ;; 	    (end-of-buffer)
 ;; 	    (insert (format "** [[file:%s][%s]]\n" (concat archive-dir article) article))))
 ;; 	))))
-
-(defun if-run-mv ()
-  (when (equal (buffer-name) "Archive.org")
-    (mv-articles)))
-
-(add-hook 'org-mode-hook 'if-run-mv)
 
 (provide 'phd)
 
