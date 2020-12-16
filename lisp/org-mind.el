@@ -1,6 +1,7 @@
 ;; org
 (use-package org
   :ensure t)
+
 ;; habits
 (add-to-list 'org-modules 'org-habit t)
 ;; I prefer to log TODO creation also
@@ -11,49 +12,57 @@
 (setq org-habit-show-all-today t)
 
 ;; org-roam
-(use-package org-roam
-  :ensure t
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory "~/firslov")
-  :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph)
-	       ("C-c n t" . org-tags-view))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate)))
-  :config
-  (setq org-roam-tag-sources '(prop last-directory)
-	org-roam-capture-templates
-	'(("d" "default" plain (function org-roam--capture-get-point)
-	   "%?"
-	   :file-name "${slug}"
-	   :head "#+title: ${title}\n"
-	   :unnarrowed t)
-	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
-	  ;;  "%?"
-	  ;;  :file-name "tag/${slug}"
-	  ;;  :head "#+title: ${title}\n"
-	  ;;  :unnarrowed t)
-	  ;; ("j" "journal" plain (function org-roam--capture-get-point)
-	  ;;  "%?"
-	  ;;  :file-name "journal/${title}"
-	  ;;  :head "#+title: ${title}\n"
-	  ;;  :unnarrowed t)
-	  )))
+;; (use-package org-roam
+;;   :ensure t
+;;   :hook
+;;   (after-init . org-roam-mode)
+;;   :custom
+;;   (org-roam-directory "~/firslov")
+;;   :bind (:map org-roam-mode-map
+;; 	      (("C-c n l" . org-roam)
+;; 	       ("C-c n f" . org-roam-find-file)
+;; 	       ("C-c n g" . org-roam-graph)
+;; 	       ("C-c n t" . org-tags-view))
+;; 	      :map org-mode-map
+;; 	      (("C-c n i" . org-roam-insert))
+;; 	      (("C-c n I" . org-roam-insert-immediate)))
+;;   :config
+;;   (setq org-roam-tag-sources '(prop last-directory)
+;; 	org-roam-capture-templates
+;; 	'(("d" "default" plain (function org-roam--capture-get-point)
+;; 	   "%?"
+;; 	   :file-name "${slug}"
+;; 	   :head "#+title: ${title}\n"
+;; 	   :unnarrowed t)
+;; 	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
+;; 	  ;;  "%?"
+;; 	  ;;  :file-name "tag/${slug}"
+;; 	  ;;  :head "#+title: ${title}\n"
+;; 	  ;;  :unnarrowed t)
+;; 	  ;; ("j" "journal" plain (function org-roam--capture-get-point)
+;; 	  ;;  "%?"
+;; 	  ;;  :file-name "journal/${title}"
+;; 	  ;;  :head "#+title: ${title}\n"
+;; 	  ;;  :unnarrowed t)
+;; 	  )))
+
+;; org-capture-journal
+(defun my/org-capture-journal ()
+  (interactive)
+  "Capture a journal."
+  (org-capture nil "j"))
+(define-key global-map (kbd "C-c n j") 'my/org-capture-journal)
+
 ;; org-journal
-(use-package org-journal
-  :ensure t
-  :bind ("C-c n j" . org-journal-new-entry)
-  :config
-  (setq org-journal-dir "~/firslov/journal"
-	org-journal-date-prefix "#+title: "
-	org-journal-time-prefix "* "
-	org-journal-date-format "%Y-%m-%d"
-	org-journal-file-format "%Y-%m-%d.org"))
+;; (use-package org-journal
+;;   :ensure t
+;;   :bind ("C-c n j" . org-journal-new-entry)
+;;   :config
+;;   (setq org-journal-dir "~/firslov"
+;; 	org-journal-file-type 'yearly
+;; 	org-journal-date-format "%Y-%m-%d %A"
+;; 	org-journal-file-format "journal_%Y.org"))
+
 ;; helm-org-rifle
 (use-package helm-org-rifle
   :ensure t
@@ -83,6 +92,7 @@
 		(helm-make-actions
 		 "Store link" 'my/helm-org-rifle--store-link
 		 "Insert link" 'my/helm-org-rifle--insert-link))))
+
 ;; deft
 (use-package deft
   :ensure t
@@ -92,6 +102,7 @@
 		deft-extensions '("md" "org")
 		;; deft-recursive t
 		deft-use-filename-as-title t))
+
 ;; super-agenda
 (use-package org-super-agenda
   :ensure t
@@ -109,6 +120,7 @@
 	  (:name "Habits"  ; Optionally specify section name
 		 :habit t)))
   (org-super-agenda-mode))
+
 ;; org-ql
 (use-package org-ql
   :ensure t
@@ -140,6 +152,7 @@
   :config
   ;; (define-key org-ql-view-map "q" #'delete-window)
   )
+
 ;; emacs-calfw
 (use-package calfw-org
   :ensure calfw

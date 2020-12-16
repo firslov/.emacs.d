@@ -45,10 +45,10 @@
 	 )
   :config
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t))
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t))
 
 (use-package company
   :ensure t
@@ -59,9 +59,9 @@
   :ensure t
   :config
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (setq projectile-indexing-method 'native)
-  (setq projectile-completion-system 'ivy))
+  (define-key projectile-mode-map (kbd "C-c n p") 'projectile-command-map)
+  (setq projectile-indexing-method 'native
+	projectile-completion-system 'ivy))
 
 (when (display-graphic-p)
   (use-package pdf-view
@@ -166,8 +166,8 @@
 (use-package neotree
   :ensure t
   :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (setq projectile-switch-project-action 'neotree-projectile-action))
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
+	projectile-switch-project-action 'neotree-projectile-action))
 
 (use-package undo-tree
   :ensure t
@@ -201,16 +201,6 @@
   (custom-set-faces
    '(aw-leading-char-face
      ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-
-(use-package org-tanglesync
-  :hook ((org-mode . org-tanglesync-mode)
-	 ;; enable watch-mode globally:
-	 ((prog-mode text-mode) . org-tanglesync-watch-mode))
-  :custom
-  (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))
-  :bind
-  (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
-   ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
 (use-package restart-emacs
   :ensure t
@@ -300,18 +290,11 @@
 
 (when (eq system-type 'windows-nt)
   (setq conf_dir "e:/emacs/.emacs.d/"
-	org-directory "e:/org/"
-	init-file (concat conf_dir "lisp/init-main.el")
-	init-sys (concat conf_dir "lisp/windows-nt.el"))
-  ;; init fullscreen
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  )
+	org-directory "e:/org/"))
 
 (when (eq system-type 'darwin)
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/firslov/"
-	init-file (concat conf_dir "lisp/init-main.el")
-	init-sys (concat conf_dir "lisp/darwin.el"))
+	org-directory "~/firslov/")
   ;; font
   (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
   ;; (set-face-attribute 'default nil :font "Sarasa Mono SC Nerd 16")
@@ -323,18 +306,16 @@
   (setenv "PATHONPATH" "/opt/anaconda3/bin")
   (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
   (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
-  (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter")
-  )
+  (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter"))
 
 (when (eq system-type 'gnu/linux)
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/org/"
-	init-file (concat conf_dir "lisp/init-main.el")
-	init-sys (concat conf_dir "lisp/darwin.el"))
-  )
+	org-directory "~/org/"))
 
 ;; 启动页面
 ;; (setq initial-buffer-choice (concat org-directory "note.org"))
+;; init fullscreen
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; 强制左右分屏
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
@@ -394,8 +375,8 @@
 	 (slot . -1))
 	("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
 	 (display-buffer-in-side-window)
-	 (window-width . 0.5)
-	 (side . right)
+	 (window-height . 0.3)
+	 (side . bottom)
 	 (slot . 1))
 	))
 (add-to-list 'org-link-frame-setup '(file . find-file))
@@ -467,28 +448,27 @@
     ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
     ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
 ;; refresh startup function
-(defcustom startup-page t
-  "Whether show the startup page when startup.")
 (defun show-startup-page()
   (interactive)
-  (if startup-page
-      (progn
-	(org-agenda-list)
-	(org-agenda-day-view)
-	;; (calendar)
-	(setq startup-page nil))
+  (if (equal (buffer-name) "*Org Agenda*")
+      (bury-buffer)
     (progn
-      (when (gnus-buffer-exists-p "*Org Agenda*")
-	(bury-buffer)))))
+      (org-agenda-list)
+      (org-agenda-day-view))))
+
+(add-hook 'org-agenda-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "\`") 'my/show-todo)))
+(define-key org-ql-view-map (kbd "q") 'kill-buffer-and-window)
+
 ;;(add-hook 'window-setup-hook 'show-startup-page)
-(advice-add 'org-agenda-day-view :after (lambda (&rest r)
-					  (my/show-todo)
-					  (shrink-window-horizontally 12)))
-(advice-add 'bury-buffer :after (lambda (&rest r)
-				  (delete-other-windows)
-				  (cl-loop while (gnus-buffer-exists-p "*Org Agenda*")
-					   do (kill-buffer "*Org Agenda*"))
-				  (setq startup-page t)))
+(advice-add 'my/show-todo :after (lambda (&rest r)
+				   (shrink-window-horizontally 12)))
+;; (advice-add 'bury-buffer :after (lambda (&rest r)
+;; 				  (delete-other-windows)
+;; 				  (cl-loop while (gnus-buffer-exists-p "*Org Agenda*")
+;; 					   do (kill-buffer "*Org Agenda*"))
+;; 				  (setq startup-page t)))
 
 ;; @purcell
 (defun sanityinc/adjust-opacity (frame incr)
@@ -520,12 +500,15 @@
       org-deadline-warning-days 30
       org-agenda-window-setup nil
       org-M-RET-may-split-line '((headline . nil))
-      ;; org-agenda-time-grid nil
+      org-agenda-time-grid (quote
+			    ((daily today require-timed remove-match)
+			     (800 1800)
+			     "......" "----------------"))
       org-capture-templates
       `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
 	 "* %?" :unnarrowed t)
-	;; ;; ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	;; ;;  "* %U\n%?" :unnarrowed t)
+	("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+	 "* %U\n%?" :unnarrowed t)
 	;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
 	;;  "* %? %^T")
 	("t" "Todo")
@@ -592,3 +575,4 @@
    ;; If there is more than one, they won't work right.
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+;; (font-get (face-attribute 'default :font) :family)

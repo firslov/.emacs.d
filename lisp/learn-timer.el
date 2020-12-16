@@ -78,7 +78,7 @@
 	 (minutes (progn (setq seconds (- seconds (* hours (* 60 60))))
 			 (/ seconds 60)))
 	 (seconds (setq seconds (- seconds (* minutes 60)))))
-    (format "→%s天%s时←" days hours)))
+    (format "%sd%sh" days hours)))
 
 (defun todo-num ()
   (save-excursion
@@ -102,7 +102,7 @@
 
 (defface awesome-tray-module-timer-face
   '((((background light))
-     :foreground "#cc2444" :bold t)
+     :foreground "#abcabc" :bold t)
     (t
      :foreground "#ff2d55" :bold t))
   "timer face."
@@ -113,7 +113,7 @@
 
 (defface awesome-tray-module-todo-face
   '((((background light))
-     :foreground "#cc2444" :bold t)
+     :foreground "#cc2000" :bold t)
     (t
      :foreground "#ffff00" :bold t))
   "todo face."
