@@ -12,39 +12,39 @@
 (setq org-habit-show-all-today t)
 
 ;; org-roam
-;; (use-package org-roam
-;;   :ensure t
-;;   :hook
-;;   (after-init . org-roam-mode)
-;;   :custom
-;;   (org-roam-directory "~/firslov")
-;;   :bind (:map org-roam-mode-map
-;; 	      (("C-c n l" . org-roam)
-;; 	       ("C-c n f" . org-roam-find-file)
-;; 	       ("C-c n g" . org-roam-graph)
-;; 	       ("C-c n t" . org-tags-view))
-;; 	      :map org-mode-map
-;; 	      (("C-c n i" . org-roam-insert))
-;; 	      (("C-c n I" . org-roam-insert-immediate)))
-;;   :config
-;;   (setq org-roam-tag-sources '(prop last-directory)
-;; 	org-roam-capture-templates
-;; 	'(("d" "default" plain (function org-roam--capture-get-point)
-;; 	   "%?"
-;; 	   :file-name "${slug}"
-;; 	   :head "#+title: ${title}\n"
-;; 	   :unnarrowed t)
-;; 	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
-;; 	  ;;  "%?"
-;; 	  ;;  :file-name "tag/${slug}"
-;; 	  ;;  :head "#+title: ${title}\n"
-;; 	  ;;  :unnarrowed t)
-;; 	  ;; ("j" "journal" plain (function org-roam--capture-get-point)
-;; 	  ;;  "%?"
-;; 	  ;;  :file-name "journal/${title}"
-;; 	  ;;  :head "#+title: ${title}\n"
-;; 	  ;;  :unnarrowed t)
-;; 	  )))
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/firslov")
+  :bind (:map org-roam-mode-map
+	      (("C-c n l" . org-roam)
+	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n g" . org-roam-graph)
+	       ("C-c n t" . org-tags-view))
+	      :map org-mode-map
+	      (("C-c n i" . org-roam-insert))
+	      (("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (setq org-roam-tag-sources '(prop last-directory)
+	org-roam-capture-templates
+	'(("d" "default" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "${slug}"
+	   :head "#+title: ${title}\n"
+	   :unnarrowed t)
+	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
+	  ;;  "%?"
+	  ;;  :file-name "tag/${slug}"
+	  ;;  :head "#+title: ${title}\n"
+	  ;;  :unnarrowed t)
+	  ;; ("j" "journal" plain (function org-roam--capture-get-point)
+	  ;;  "%?"
+	  ;;  :file-name "journal/${title}"
+	  ;;  :head "#+title: ${title}\n"
+	  ;;  :unnarrowed t)
+	  )))
 
 ;; org-capture-journal
 (defun my/org-capture-journal ()

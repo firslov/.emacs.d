@@ -137,14 +137,14 @@
 
 (use-package awesome-tray
   :load-path "~/.emacs.d/git-repo/awesome-tray"
-  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "git" "date"))
+  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "date"))
   :config
   (awesome-tray-mode 1)
   (lazycat-theme-load-dark)
   (setq-default mode-line-format (remove 'mode-line-buffer-identification mode-line-format)))
 
-(use-package phd
-  :defer t)
+;; (use-package phd
+;;   :defer t)
 (use-package org-elp
   :load-path "~/.emacs.d/git-repo/org-elp"
   :defer t)
@@ -195,7 +195,6 @@
 
 (use-package ace-window
   :ensure t
-  :defer t
   :config
   (global-set-key [remap other-window] 'ace-window)
   (custom-set-faces
@@ -210,6 +209,29 @@
   (defun b-restart-emacs (f)
     (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
   (advice-add #'restart-emacs :before #'b-restart-emacs))
+
+(use-package good-scroll
+  :load-path "~/.emacs.d/git-repo/good-scroll.el"
+  :config
+  (good-scroll-mode 1))
+
+;; https://github.com/rlister/org-present
+(add-to-list 'load-path "~/.emacs.d/git-repo/org-present")
+(autoload 'org-present "org-present" nil t)
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+	       (lambda ()
+		 (org-present-big)
+		 (org-display-inline-images)
+		 (org-present-hide-cursor)
+		 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+	       (lambda ()
+		 (org-present-small)
+		 (org-remove-inline-images)
+		 (org-present-show-cursor)
+		 (org-present-read-write)))))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -257,37 +279,6 @@
   (recentf-mode 1)
   (setq recentf-max-menu-item 10))
 
-(use-package elpy
-  :ensure t
-  :defer t
-  :config
-  (elpy-enable)
-  ;; Use IPython for REPL
-  (setq python-shell-interpreter "jupyter"
-	python-shell-interpreter-args "console --simple-prompt"
-	python-shell-prompt-detect-failure-warning nil)
-  (add-to-list 'python-shell-completion-native-disabled-interpreters
-	       "jupyter"))
-
-(use-package py-autopep8
-  :ensure t
-  :defer t
-  :config
-  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-  (setq py-autopep8-options '("--max-line-length=100")))
-
-(use-package flycheck
-  :ensure t
-  :defer t
-  :config
-  (global-flycheck-mode)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-
-(use-package ein
-  :ensure t
-  )
-
 (when (eq system-type 'windows-nt)
   (setq conf_dir "e:/emacs/.emacs.d/"
 	org-directory "e:/org/"))
@@ -312,6 +303,9 @@
   (setq conf_dir "~/.emacs.d/"
 	org-directory "~/org/"))
 
+;; theme
+(add-to-list 'load-path "~/.emacs.d/lisp")
+;; (require 'darkless-theme)
 ;; 启动页面
 ;; (setq initial-buffer-choice (concat org-directory "note.org"))
 ;; init fullscreen
@@ -334,13 +328,7 @@
 ;; Highlight the "()"
 (show-paren-mode t)
 ;; Auto complete the "()"
-(electric-pair-mode t)
-;; Set the electric-pair-mode's pair keywords
-(setq electric-pair-pairs
-      '((?\" . ?\")
-	(?\( . ?\))
-	;;(?\< . ?\>)
-	(?\{ . ?\})))
+(electric-pair-mode -1)
 (setq-default cursor-type 'bar)
 ;; Save the point position
 (save-place-mode t)
@@ -494,10 +482,9 @@
 ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
 (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
 (add-hook 'org-mode-hook 'linum-mode)
-(setq org-agenda-files (directory-files-recursively "~/firslov/" "\\.org$")
-      lt-todo-files (directory-files-recursively "~/firslov/" "\\.org$")
+(setq org-agenda-files (directory-files org-directory t "\\.org$" t)
+      lt-todo-files (directory-files org-directory t "\\.org$" t)
       org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
-      org-deadline-warning-days 30
       org-agenda-window-setup nil
       org-M-RET-may-split-line '((headline . nil))
       org-agenda-time-grid (quote
@@ -530,7 +517,7 @@
 	("CANCELED" . "grey")))
 ;; set key
 (define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\M-q" 'org-agenda)
+;; (define-key global-map "\M-q" 'org-agenda)
 ;; agenda 里面时间块彩色显示
 ;; From: https://emacs-china.org/t/org-agenda/8679/3
 (defun ljg/org-agenda-time-grid-spacing ()
@@ -576,3 +563,16 @@
    '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
    '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
 ;; (font-get (face-attribute 'default :font) :family)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(youdao-dictionary which-key use-package undo-tree restart-emacs py-autopep8 projectile posframe pdf-view-restore org-tanglesync org-sidebar org-roam org-journal org-download org-bullets neotree magit highlight-parentheses helm-org-rifle flycheck esup elpy ein diminish deft counsel company-tabnine calfw-org calfw benchmark-init all-the-icons ace-window)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0)))))
