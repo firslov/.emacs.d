@@ -3,8 +3,7 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-			   ("melpa" . "http://elpa.emacs-china.org/melpa/")))
-  (package-initialize))
+                           ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
 ;; Add use-package
@@ -30,25 +29,25 @@
 (use-package swiper
   :ensure t
   :bind (
-	 ("C-s" . swiper)
-	 ("M-n" . next-error)
-	 ("M-p" . previous-error)
-	 ("C-c C-r" . ivy-resume)
-	 ("M-x" . counsel-M-x)
-	 ("C-x C-f" . counsel-find-file)
-	 ("<f1> f" . counsel-describe-function)
-	 ("<f1> v" . counsel-describe-variable)
-	 ("<f1> o" . counsel-describe-symbol)
-	 ("<f1> l" . counsel-find-library)
-	 ("C-c g" . counsel-git)
-	 ("C-c j" . counsel-git-grep)
-	 )
+         ("C-s" . swiper)
+         ("M-n" . next-error)
+         ("M-p" . previous-error)
+         ("C-c C-r" . ivy-resume)
+         ("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("<f1> f" . counsel-describe-function)
+         ("<f1> v" . counsel-describe-variable)
+         ("<f1> o" . counsel-describe-symbol)
+         ("<f1> l" . counsel-find-library)
+         ("C-c g" . counsel-git)
+         ("C-c j" . counsel-git-grep)
+         )
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t))
+        enable-recursive-minibuffers t
+        ivy-use-virtual-buffers t
+        enable-recursive-minibuffers t))
 
 (use-package company
   :ensure t
@@ -61,7 +60,7 @@
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c n p") 'projectile-command-map)
   (setq projectile-indexing-method 'native
-	projectile-completion-system 'ivy))
+        projectile-completion-system 'ivy))
 
 (when (display-graphic-p)
   (use-package pdf-view
@@ -74,7 +73,7 @@
     :magic ("%PDF" . pdf-view-mode)
     :hook (after-load-theme . my-pdf-view-set-dark-theme)
     :bind (:map pdf-view-mode-map
-		("C-s" . isearch-forward))
+                ("C-s" . isearch-forward))
     :init
     (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-view))
     (setq pdf-annot-activate-created-annotations t)
@@ -82,15 +81,15 @@
     (defun my-pdf-view-set-midnight-colors ()
       "Set pdf-view midnight colors."
       (setq pdf-view-midnight-colors
-	    `(,(face-foreground 'default) . ,(face-background 'default))))
+            `(,(face-foreground 'default) . ,(face-background 'default))))
 
     (defun my-pdf-view-set-dark-theme ()
       "Set pdf-view midnight theme as color theme."
       (my-pdf-view-set-midnight-colors)
       (dolist (buf (buffer-list))
-	(with-current-buffer buf
-	  (when (eq major-mode 'pdf-view-mode)
-	    (pdf-view-midnight-minor-mode (if pdf-view-midnight-minor-mode 1 -1))))))
+        (with-current-buffer buf
+          (when (eq major-mode 'pdf-view-mode)
+            (pdf-view-midnight-minor-mode (if pdf-view-midnight-minor-mode 1 -1))))))
     :config
     ;; WORKAROUND: Fix compilation errors on macOS.
     ;; @see https://github.com/politza/pdf-tools/issues/480
@@ -102,46 +101,38 @@
     ;; @see https://emacs-china.org/t/pdf-tools-mac-retina-display/10243/
     ;; and https://github.com/politza/pdf-tools/pull/501/
     (setq pdf-view-use-scaling t
-	  pdf-view-use-imagemagick nil)
+          pdf-view-use-imagemagick nil)
     (with-no-warnings
       (defun pdf-view-use-scaling-p ()
-	"Return t if scaling should be used."
-	(and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
-		 (memq (pdf-view-image-type)
-		       '(imagemagick image-io)))
-	     pdf-view-use-scaling))
+        "Return t if scaling should be used."
+        (and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
+                 (memq (pdf-view-image-type)
+                       '(imagemagick image-io)))
+             pdf-view-use-scaling))
       (defun pdf-view-create-page (page &optional window)
-	"Create an image of PAGE for display on WINDOW."
-	(let* ((size (pdf-view-desired-image-size page window))
-	       (width (if (not (pdf-view-use-scaling-p))
-			  (car size)
-			(* 2 (car size))))
-	       (data (pdf-cache-renderpage
-		      page width width))
-	       (hotspots (pdf-view-apply-hotspot-functions
-			  window page size)))
-	  (pdf-view-create-image data
-				 :width width
-				 :scale (if (pdf-view-use-scaling-p) 0.5 1)
-				 :map hotspots
-				 :pointer 'arrow))))
+        "Create an image of PAGE for display on WINDOW."
+        (let* ((size (pdf-view-desired-image-size page window))
+               (width (if (not (pdf-view-use-scaling-p))
+                          (car size)
+                        (* 2 (car size))))
+               (data (pdf-cache-renderpage
+                      page width width))
+               (hotspots (pdf-view-apply-hotspot-functions
+                          window page size)))
+          (pdf-view-create-image data
+                                 :width width
+                                 :scale (if (pdf-view-use-scaling-p) 0.5 1)
+                                 :map hotspots
+                                 :pointer 'arrow))))
 
     ;; Recover last viewed position
     (use-package pdf-view-restore
       :hook (pdf-view-mode . pdf-view-restore-mode)
       :init (setq pdf-view-restore-filename
-		  (locate-user-emacs-file ".pdf-view-restore")))))
+                  (locate-user-emacs-file ".pdf-view-restore")))))
 
-(use-package lazycat-theme
-  :load-path "~/.emacs.d/git-repo/lazycat-theme")
-
-(use-package awesome-tray
-  :load-path "~/.emacs.d/git-repo/awesome-tray"
-  :init (setq awesome-tray-active-modules '("parent-dir" "mode-name" "date"))
-  :config
-  (awesome-tray-mode 1)
-  (lazycat-theme-load-dark)
-  (setq-default mode-line-format (remove 'mode-line-buffer-identification mode-line-format)))
+(add-to-list 'load-path "~/.emacs.d/git-repo/nano-emacs/")
+(require 'nano)
 
 ;; (use-package phd
 ;;   :defer t)
@@ -160,14 +151,14 @@
   :ensure t
   :config
   (setq yas-snippet-dirs
-	'("~/.emacs.d/snippets"))
+        '("~/.emacs.d/snippets"))
   (yas-global-mode 1))
 
 (use-package neotree
   :ensure t
   :config
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
-	projectile-switch-project-action 'neotree-projectile-action))
+        projectile-switch-project-action 'neotree-projectile-action))
 
 (use-package undo-tree
   :ensure t
@@ -191,7 +182,7 @@
       (insert "Hello world"))
     (when (posframe-workable-p)
       (posframe-show my-posframe-buffer
-		     :position (point)))))
+                     :position (point)))))
 
 (use-package ace-window
   :ensure t
@@ -221,17 +212,23 @@
 (eval-after-load "org-present"
   '(progn
      (add-hook 'org-present-mode-hook
-	       (lambda ()
-		 (org-present-big)
-		 (org-display-inline-images)
-		 (org-present-hide-cursor)
-		 (org-present-read-only)))
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-hide-cursor)
+                 (org-present-read-only)))
      (add-hook 'org-present-mode-quit-hook
-	       (lambda ()
-		 (org-present-small)
-		 (org-remove-inline-images)
-		 (org-present-show-cursor)
-		 (org-present-read-write)))))
+               (lambda ()
+                 (org-present-small)
+                 (org-remove-inline-images)
+                 (org-present-show-cursor)
+                 (org-present-read-write)))))
+
+(use-package org-bullets
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "◆" "▶"))
+  (org-ellipsis "⤵")
+  :hook (org-mode . org-bullets-mode))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -254,13 +251,6 @@
 (use-package diminish
   :ensure t
   :diminish (ivy-mode eldoc-mode which-key-mode))
-(use-package learn-timer
-  :load-path "~/.emacs.d/lisp"
-  :after awesome-tray
-  :config
-  (add-to-list 'awesome-tray-active-modules "timer" 'append)
-  (add-to-list 'awesome-tray-active-modules "todo" 'append)
-  )
 (use-package auto-save
   :load-path "~/.emacs.d/lisp"
   :config
@@ -281,93 +271,18 @@
 
 (when (eq system-type 'windows-nt)
   (setq conf_dir "e:/emacs/.emacs.d/"
-	org-directory "e:/org/"))
+        org-directory "e:/org/"))
 
 (when (eq system-type 'darwin)
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/firslov/")
-  ;; font
-  (set-face-attribute 'default nil :font "MesloLGLDZ Nerd Font 15")
-  ;; (set-face-attribute 'default nil :font "Sarasa Mono SC Nerd 16")
-  (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font)
-		      charset
-		      (font-spec :family "STKaiti" :size 17)))
-  ;; env
-  (setenv "PATHONPATH" "/opt/anaconda3/bin")
-  (setenv "PATH" "/opt/anaconda3/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin")
-  (setq python-shell-interpreter "/opt/anaconda3/bin/python3")
-  (setq ein:jupyter-server-command "/opt/anaconda3/bin/jupyter"))
+        org-directory "~/firslov/"))
 
 (when (eq system-type 'gnu/linux)
   (setq conf_dir "~/.emacs.d/"
-	org-directory "~/org/"))
+        org-directory "~/org/"))
 
-;; theme
-(add-to-list 'load-path "~/.emacs.d/lisp")
-;; (require 'darkless-theme)
-;; 启动页面
-;; (setq initial-buffer-choice (concat org-directory "note.org"))
 ;; init fullscreen
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-;; 强制左右分屏
-(setq split-height-threshold nil)
-(setq split-width-threshold 0)
-;; 关闭欢迎界面
-(setq inhibit-splash-screen t)
-;; fonts problem
-(setq inhibit-compacting-font-caches t)
-;; Enable line numbers globally
-;; (global-linum-mode nil)
-;; disable alert voice
-(setq ring-bell-function 'ignore)
-;; UI
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-(menu-bar-mode t)
-;; Highlight the "()"
-(show-paren-mode t)
-;; Auto complete the "()"
-(electric-pair-mode -1)
-(setq-default cursor-type 'bar)
-;; Save the point position
-(save-place-mode t)
-;; 设置默认读入文件编码
-;; (prefer-coding-system 'gbk)
-;; 设置写入文件编码
-;; (setq default-buffer-file-coding-system 'gbk)
-;; disable backup
-(setq make-backup-files nil)
-;; disable auto-save
-(setq auto-save-default nil)
-;; yes-or-no y-or-n
-(fset 'yes-or-no-p 'y-or-n-p)
-;; select input delete
-(delete-selection-mode 1)
-;; highlight current line
-(global-hl-line-mode 1)
-;; autoload change out of emacs
-(global-auto-revert-mode 1)
-;; highlight in org-mode
-(setq org-src-fontify-natively t)
-;; 自动换行
-(toggle-truncate-lines nil)
-;; emacs guess indent
-(setq python-indent-guess-indent-offset nil)
-;; display buffer alist
-(setq display-buffer-alist
-      '(("\\*e?shell\\*"
-	 (display-buffer-in-side-window)
-	 (window-height . 0.3)
-	 (side . bottom)
-	 (slot . -1))
-	("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-	 (display-buffer-in-side-window)
-	 (window-height . 0.3)
-	 (side . bottom)
-	 (slot . 1))
-	))
-(add-to-list 'org-link-frame-setup '(file . find-file))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; 绑定 <f5> <f6> 键上
 (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
@@ -423,11 +338,11 @@
   (interactive)
   (scroll-up (/ (window-body-height) 2)))
 ;; 窗口启动位置大小
-(defun init-my-frame ()
-  (set-frame-position (selected-frame) 120 40)
-  (set-frame-width (selected-frame) 128)
-  (set-frame-height (selected-frame) 32))
-(add-hook 'after-init-hook 'init-my-frame)
+;; (defun init-my-frame ()
+;;   (set-frame-position (selected-frame) 120 40)
+;;   (set-frame-width (selected-frame) 128)
+;;   (set-frame-height (selected-frame) 32))
+;; (add-hook 'after-init-hook 'init-my-frame)
 ;; set alpha
 (defun set-alpha (var)
   "Set the backgroud alpha by VAR."
@@ -445,13 +360,13 @@
       (org-agenda-day-view))))
 
 (add-hook 'org-agenda-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "\`") 'my/show-todo)))
+          (lambda ()
+            (local-set-key (kbd "\`") 'my/show-todo)))
 (define-key org-ql-view-map (kbd "q") 'kill-buffer-and-window)
 
 ;;(add-hook 'window-setup-hook 'show-startup-page)
 (advice-add 'my/show-todo :after (lambda (&rest r)
-				   (shrink-window-horizontally 12)))
+                                   (shrink-window-horizontally 12)))
 ;; (advice-add 'bury-buffer :after (lambda (&rest r)
 ;; 				  (delete-other-windows)
 ;; 				  (cl-loop while (gnus-buffer-exists-p "*Org Agenda*")
@@ -464,47 +379,47 @@
   (unless (display-graphic-p frame)
     (error "Cannot adjust opacity of this frame"))
   (let* ((oldalpha (or (frame-parameter frame 'alpha) 100))
-	 (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
-	 (newalpha (+ incr oldalpha)))
+         (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
+         (newalpha (+ incr oldalpha)))
     (when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
       (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
 (global-set-key (kbd "M-C-8") (lambda ()
-				(interactive)
-				(sanityinc/adjust-opacity nil -2)))
+                                (interactive)
+                                (sanityinc/adjust-opacity nil -2)))
 (global-set-key (kbd "M-C-9") (lambda ()
-				(interactive)
-				(sanityinc/adjust-opacity nil 2)))
+                                (interactive)
+                                (sanityinc/adjust-opacity nil 2)))
 (global-set-key (kbd "M-C-7") (lambda ()
-				(interactive)
-				(modify-frame-parameters nil `((alpha . 100)))))
+                                (interactive)
+                                (modify-frame-parameters nil `((alpha . 100)))))
 
 ;; org variables
 ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
 (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-(add-hook 'org-mode-hook 'linum-mode)
+;; (add-hook 'org-mode-hook 'linum-mode)
 (setq org-agenda-files (directory-files org-directory t "\\.org$" t)
       lt-todo-files (directory-files org-directory t "\\.org$" t)
       org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
       org-agenda-window-setup nil
       org-M-RET-may-split-line '((headline . nil))
       org-agenda-time-grid (quote
-			    ((daily today require-timed remove-match)
-			     (800 1800)
-			     "......" "----------------"))
+                            ((daily today require-timed remove-match)
+                             (800 1800)
+                             "......" "----------------"))
       org-capture-templates
       `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
-	 "* %?" :unnarrowed t)
-	("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-	 "* %U\n%?" :unnarrowed t)
-	;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
-	;;  "* %? %^T")
-	("t" "Todo")
-	("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-	 "* SOMEDAY %?")
-	("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-	 "* TODO %?\nSCHEDULED:%^t")
-	("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-	 "* TODO %?\nDEADLINE:%^t"))
+         "* %?" :unnarrowed t)
+        ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+         "* %U\n%?" :unnarrowed t)
+        ;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
+        ;;  "* %? %^T")
+        ("t" "Todo")
+        ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* SOMEDAY %?")
+        ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* TODO %?\nSCHEDULED:%^t")
+        ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* TODO %?\nDEADLINE:%^t"))
       ;; org-refile-targets
       ;; `((,(concat org-directory "note.org") :maxlevel . 2))
       ;; `((,(concat org-directory "read.org") :maxlevel . 1)
@@ -514,7 +429,7 @@
       '((sequence "TODO(t)" "SOMEDAY(s)" "CANCELED(c)" "|" "DONE(d)"))
       org-todo-keyword-faces
       '(("SOMEDAY" . "#34CCDB")
-	("CANCELED" . "grey")))
+        ("CANCELED" . "grey")))
 ;; set key
 (define-key global-map "\C-cc" 'org-capture)
 ;; (define-key global-map "\M-q" 'org-agenda)
@@ -524,55 +439,23 @@
   "Set different line spacing w.r.t. time duration."
   (save-excursion
     (let* ((background (alist-get 'background-mode (frame-parameters)))
-	   (background-dark-p (string= background "dark"))
-	   (colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
-	   pos
-	   duration)
+           (background-dark-p (string= background "dark"))
+           (colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
+           pos
+           duration)
       (nconc colors colors)
       (goto-char (point-min))
       (while (setq pos (next-single-property-change (point) 'duration))
-	(goto-char pos)
-	(when (and (not (equal pos (point-at-eol)))
-		   (setq duration (org-get-at-bol 'duration)))
-	  (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
-		(ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
-	    (overlay-put ov 'face `(:background ,(car colors)
-						:foreground
-						,(if background-dark-p "black" "white")))
-	    (setq colors (cdr colors))
-	    (overlay-put ov 'line-height line-height)
-	    (overlay-put ov 'line-spacing (1- line-height))))))))
+        (goto-char pos)
+        (when (and (not (equal pos (point-at-eol)))
+                   (setq duration (org-get-at-bol 'duration)))
+          (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
+                (ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
+            (overlay-put ov 'face `(:background ,(car colors)
+                                                :foreground
+                                                ,(if background-dark-p "black" "white")))
+            (setq colors (cdr colors))
+            (overlay-put ov 'line-height line-height)
+            (overlay-put ov 'line-spacing (1- line-height))))))))
 
 (add-hook 'org-agenda-finalize-hook #'ljg/org-agenda-time-grid-spacing)
-
-(when (eq system-type 'gnu/linux)
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     '(ein flycheck py-autopep8 elpy diminish ace-window org-bullets restart-emacs all-the-icons pdf-tools projectile undo-tree yasnippet company counsel youdao-dictionary highlight-parentheses org-download neotree which-key magit exec-path-from-shell use-package))
-   '(show-paren-mode t)
-   '(tool-bar-mode nil))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(default ((t (:family "Purisa" :foundry "PfEd" :slant normal :weight bold :height 120 :width normal))))
-   '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-;; (font-get (face-attribute 'default :font) :family)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(youdao-dictionary which-key use-package undo-tree restart-emacs py-autopep8 projectile posframe pdf-view-restore org-tanglesync org-sidebar org-roam org-journal org-download org-bullets neotree magit highlight-parentheses helm-org-rifle flycheck esup elpy ein diminish deft counsel company-tabnine calfw-org calfw benchmark-init all-the-icons ace-window)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inderit ace-jump-face-foreground :height 3.0)))))
