@@ -24,11 +24,6 @@
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
        (package-install 'use-package))
-     (use-package benchmark-init
-       :ensure t
-       :config
-       ;; To disable collection of benchmark data after init is done.
-       (add-hook 'after-init-hook 'benchmark-init/deactivate))
    #+END_SRC
 ** packages
 *** org-mind
@@ -173,6 +168,8 @@
       (use-package shengci
         :ensure f
         :load-path "~/.emacs.d/git-repo/shengci.el")
+      (require 'org2ctex)
+      (org2ctex-toggle t)
     #+END_SRC
 *** useful
 **** which-key
@@ -352,7 +349,8 @@
 ** config
    #+BEGIN_SRC emacs-lisp
      ;; init fullscreen
-     (add-to-list 'default-frame-alist '(fullscreen . maximized))
+     ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+     (setq inhibit-splash-screen t)
    #+END_SRC
 ** key-bind
    #+BEGIN_SRC emacs-lisp
@@ -472,6 +470,7 @@
      ;; (add-hook 'org-mode-hook 'linum-mode)
      (setq org-agenda-files (directory-files org-directory t "\\.org$" t)
            lt-todo-files (directory-files org-directory t "\\.org$" t)
+           org-image-actual-width '(400)
            org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
            org-agenda-window-setup nil
            org-M-RET-may-split-line '((headline . nil))
@@ -489,9 +488,6 @@
            org-todo-keyword-faces
            '(("SOMEDAY" . "#34CCDB")
              ("CANCELED" . "grey")))
-     ;; set key
-     (define-key global-map "\C-cc" 'org-capture)
-     ;; (define-key global-map "\M-q" 'org-agenda)
    #+END_SRC
 ** capture
    #+BEGIN_SRC emacs-lisp
@@ -500,8 +496,6 @@
               "* %?" :unnarrowed t)
              ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
               "* %U\n%?" :unnarrowed t)
-             ;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
-             ;;  "* %? %^T")
              ("t" "Todo")
              ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
               "* SOMEDAY %?")

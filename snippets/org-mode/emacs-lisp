@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: emacs-lisp
-# key: !el
+# key: <el
 # --
 #+BEGIN_SRC emacs-lisp
 $0

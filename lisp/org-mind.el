@@ -18,14 +18,15 @@
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory "~/firslov")
-  :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph)
-	       ("C-c n t" . org-tags-view))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate)))
+  :bind (("C-c n c" . org-capture)
+         :map org-roam-mode-map
+	 (("C-c n l" . org-roam)
+	  ("C-c n f" . org-roam-find-file)
+	  ("C-c n g" . org-roam-graph)
+	  ("C-c n t" . org-tags-view))
+	 :map org-mode-map
+	 (("C-c n i" . org-roam-insert))
+	 (("C-c n I" . org-roam-insert-immediate)))
   :config
   (setq org-roam-tag-sources '(prop last-directory)
 	org-roam-capture-templates
@@ -103,6 +104,12 @@
 		;; deft-recursive t
 		deft-use-filename-as-title t))
 
+;; org-ref
+(use-package org-ref
+  :init (require 'helm-swoop)
+  :config
+  (setq org-latex-prefer-user-labels t))
+
 ;; super-agenda
 (use-package org-super-agenda
   :ensure t
@@ -152,18 +159,6 @@
   :config
   ;; (define-key org-ql-view-map "q" #'delete-window)
   )
-
-;; emacs-calfw
-(use-package calfw-org
-  :ensure calfw
-  :bind (("C-c n C" . cfw:open-org-calendar)
-	 ("C-c n c" . toggle-calendar))
-  :config
-  (defun toggle-calendar ()
-    (interactive)
-    (if (and (get-buffer-window "*Calendar*" 'visible) (gnus-buffer-exists-p "*Calendar*"))
-	(calendar-exit)
-      (calendar))))
 
 ;; misc
 (use-package org-sidebar

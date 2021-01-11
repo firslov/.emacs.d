@@ -10,11 +10,6 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package org-mind
   :load-path "~/.emacs.d/lisp/")
@@ -142,6 +137,8 @@
 (use-package shengci
   :ensure f
   :load-path "~/.emacs.d/git-repo/shengci.el")
+(require 'org2ctex)
+(org2ctex-toggle t)
 
 (use-package which-key
   :ensure t
@@ -282,7 +279,8 @@
         org-directory "~/org/"))
 
 ;; init fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq inhibit-splash-screen t)
 
 ;; 绑定 <f5> <f6> 键上
 (global-set-key (kbd "<f5>") 'youdao-dictionary-search-at-point-posframe)
@@ -364,14 +362,8 @@
             (local-set-key (kbd "\`") 'my/show-todo)))
 (define-key org-ql-view-map (kbd "q") 'kill-buffer-and-window)
 
-;;(add-hook 'window-setup-hook 'show-startup-page)
 (advice-add 'my/show-todo :after (lambda (&rest r)
                                    (shrink-window-horizontally 12)))
-;; (advice-add 'bury-buffer :after (lambda (&rest r)
-;; 				  (delete-other-windows)
-;; 				  (cl-loop while (gnus-buffer-exists-p "*Org Agenda*")
-;; 					   do (kill-buffer "*Org Agenda*"))
-;; 				  (setq startup-page t)))
 
 ;; @purcell
 (defun sanityinc/adjust-opacity (frame incr)
@@ -399,6 +391,7 @@
 ;; (add-hook 'org-mode-hook 'linum-mode)
 (setq org-agenda-files (directory-files org-directory t "\\.org$" t)
       lt-todo-files (directory-files org-directory t "\\.org$" t)
+      org-image-actual-width '(400)
       org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
       org-agenda-window-setup nil
       org-M-RET-may-split-line '((headline . nil))
@@ -406,20 +399,6 @@
                             ((daily today require-timed remove-match)
                              (800 1800)
                              "......" "----------------"))
-      org-capture-templates
-      `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
-         "* %?" :unnarrowed t)
-        ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
-         "* %U\n%?" :unnarrowed t)
-        ;; ("a" "Arrangement" entry (file+headline ,(concat org-directory "inbox.org") "Arrangement:")
-        ;;  "* %? %^T")
-        ("t" "Todo")
-        ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-         "* SOMEDAY %?")
-        ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-         "* TODO %?\nSCHEDULED:%^t")
-        ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
-         "* TODO %?\nDEADLINE:%^t"))
       ;; org-refile-targets
       ;; `((,(concat org-directory "note.org") :maxlevel . 2))
       ;; `((,(concat org-directory "read.org") :maxlevel . 1)
@@ -430,9 +409,20 @@
       org-todo-keyword-faces
       '(("SOMEDAY" . "#34CCDB")
         ("CANCELED" . "grey")))
-;; set key
-(define-key global-map "\C-cc" 'org-capture)
-;; (define-key global-map "\M-q" 'org-agenda)
+
+(setq org-capture-templates
+      `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
+         "* %?" :unnarrowed t)
+        ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+         "* %U\n%?" :unnarrowed t)
+        ("t" "Todo")
+        ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* SOMEDAY %?")
+        ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* TODO %?\nSCHEDULED:%^t")
+        ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+         "* TODO %?\nDEADLINE:%^t")))
+
 ;; agenda 里面时间块彩色显示
 ;; From: https://emacs-china.org/t/org-agenda/8679/3
 (defun ljg/org-agenda-time-grid-spacing ()
