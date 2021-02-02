@@ -17,24 +17,35 @@
   :hook
   (after-init . org-roam-mode)
   :custom
-  (org-roam-directory "~/firslov")
+  (org-roam-directory org-directory)
   :bind (("C-c n c" . org-capture)
          :map org-roam-mode-map
 	 (("C-c n l" . org-roam)
 	  ("C-c n f" . org-roam-find-file)
-	  ("C-c n g" . org-roam-graph)
-	  ("C-c n t" . org-tags-view))
+	  ("C-c n g" . org-roam-graph))
 	 :map org-mode-map
 	 (("C-c n i" . org-roam-insert))
 	 (("C-c n I" . org-roam-insert-immediate)))
   :config
   (setq org-roam-tag-sources '(prop last-directory)
+        org-roam-title-sources '(title alias)
+        org-roam-rename-file-on-title-change nil
 	org-roam-capture-templates
 	'(("d" "default" plain (function org-roam--capture-get-point)
 	   "%?"
 	   :file-name "${slug}"
 	   :head "#+title: ${title}\n"
 	   :unnarrowed t)
+          ("b" "base" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "base/${slug}"
+	   :head "#+title: ${title}\n"
+	   :unnarrowed t)
+          ("p" "paper" plain (function org-roam--capture-get-point)
+           "%?"
+           :file-name "science/${slug}"
+           :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
+           :unnarrowed t)
 	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
 	  ;;  "%?"
 	  ;;  :file-name "tag/${slug}"
@@ -45,14 +56,10 @@
 	  ;;  :file-name "journal/${title}"
 	  ;;  :head "#+title: ${title}\n"
 	  ;;  :unnarrowed t)
-	  )))
-
-;; org-capture-journal
-(defun my/org-capture-journal ()
-  (interactive)
-  "Capture a journal."
-  (org-capture nil "j"))
-(define-key global-map (kbd "C-c n j") 'my/org-capture-journal)
+	  ))
+  (use-package org-roam-bibtex
+    :ensure ivy-bibtex
+    :hook (org-roam-mode . org-roam-bibtex-mode)))
 
 ;; org-journal
 ;; (use-package org-journal
@@ -76,8 +83,8 @@
 
   (defun my/helm-org-rifle--store-link (candidate)
     "Store link into CANDIDATE."
-    (-let (((buffer . pos) candidate))
-      (with-current-buffer buffer
+    (-let (((buffer . pos) candidate)) 
+      (with-current-buffer  (find-file-noselect (buffer-file-name buffer))
 	(goto-char pos)
 	(call-interactively 'org-store-link))))
 
@@ -99,10 +106,14 @@
   :ensure t
   :bind ("C-c n d" . deft)
   :commands (deft)
-  :config (setq deft-directory "~/firslov"
-		deft-extensions '("md" "org")
-		;; deft-recursive t
-		deft-use-filename-as-title t))
+  :init (setq deft-directory org-roam-directory)
+  :config (setq deft-extensions '("md" "org")
+                deft-auto-save-interval 0
+		deft-recursive t
+		deft-use-filename-as-title t
+                deft-use-filter-string-for-filename t
+                deft-default-extension "org"
+                deft-org-mode-title-prefix t))
 
 ;; org-ref
 (use-package org-ref
@@ -161,14 +172,22 @@
   )
 
 ;; misc
+(use-package org-appear
+  :load-path "~/.emacs.d/git-repo/org-appear"
+  :config
+  (add-hook 'org-mode-hook 'org-appear-mode)
+  (setq org-appear-autolinks t))
 (use-package org-sidebar
   :ensure t)
 (use-package org-download
   :ensure t
   :config
+  (defun org-download--dir-2 ()
+    "Return the current filename instead of heading name"
+    (file-name-base (buffer-file-name)))
   ;; Drag-and-drop to `dired`
   (add-hook 'dired-mode-hook 'org-download-enable)
-  (setq-default org-download-image-dir "./src")
+  (setq-default org-download-image-dir (concat org-roam-directory "/src"))
   (setq org-download-display-inline-images nil))
 (use-package valign
   :load-path "~/.emacs.d/git-repo/valign"

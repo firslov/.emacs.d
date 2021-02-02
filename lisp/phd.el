@@ -36,5 +36,14 @@
 ;; 	    (insert (format "** [[file:%s][%s]]\n" (concat archive-dir article) article))))
 ;; 	))))
 
+;; (define-minor-mode paper-mode
+;;   "Read papers."
+;;   :lighter "paper-mode"
+;;   (if paper-mode
+;;       (setq deft-directory (concat org-directory "/science"))
+;;     (setq deft-directory org-directory)
+;;     ))
+
+
 (provide 'phd)
 

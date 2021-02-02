@@ -7,6 +7,25 @@
   #+BEGIN_SRC emacs-lisp :tangle no
     (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el")
   #+END_SRC
+* diff-sys
+** window-nt
+   #+BEGIN_SRC emacs-lisp
+     (when (eq system-type 'windows-nt)
+       (setq conf_dir "e:/emacs/.emacs.d/"
+             org-directory "e:/org/"))
+   #+END_SRC
+** darwin
+   #+BEGIN_SRC emacs-lisp
+     (when (eq system-type 'darwin)
+       (setq conf_dir "~/.emacs.d/"
+             org-directory "~/firslov"))
+   #+END_SRC
+** linux
+   #+BEGIN_SRC emacs-lisp
+     (when (eq system-type 'gnu/linux)
+       (setq conf_dir "~/.emacs.d/"
+             org-directory "~/org/"))
+   #+END_SRC
 * packages
 ** resources
    #+BEGIN_SRC emacs-lisp
@@ -15,7 +34,9 @@
      (when (>= emacs-major-version 24)
        (require 'package)
        (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                                ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
+                                ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+       ;;(setq package-archives '(("melpa" . "https://melpa.org/packages/")))
+       )
      (add-to-list 'load-path "~/.emacs.d/lisp")
    #+END_SRC
 ** use-package
@@ -160,11 +181,18 @@
     #+END_SRC
 *** phd
     #+BEGIN_SRC emacs-lisp
-      ;; (use-package phd
-      ;;   :defer t)
+      (use-package phd
+        :after org-mind)
       (use-package org-elp
-        :load-path "~/.emacs.d/git-repo/org-elp"
-        :defer t)
+        :ensure t
+        :config
+        (setq org-elp-split-fraction 0.2
+              org-elp-buffer-name "*Equation Live*"
+              org-elp-idle-time 0.5))
+      (use-package org-fragtog
+        :ensure t
+        :config
+        (add-hook 'org-mode-hook 'org-fragtog-mode))
       (use-package shengci
         :ensure f
         :load-path "~/.emacs.d/git-repo/shengci.el")
@@ -281,6 +309,15 @@
          (org-ellipsis "⤵")
          :hook (org-mode . org-bullets-mode))
      #+END_SRC
+**** crypt
+     #+BEGIN_SRC emacs-lisp
+       (require 'org-crypt)
+       (org-crypt-use-before-save-magic)
+       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+       ;; GPG key to use for encryption
+       ;; Either the Key ID or set to nil to use symmetric encryption.
+       (setq org-crypt-key nil)
+     #+END_SRC
 **** exec-path-from-shell
      #+BEGIN_SRC emacs-lisp
        (use-package exec-path-from-shell
@@ -326,25 +363,6 @@
         (recentf-mode 1)
         (setq recentf-max-menu-item 10))
     #+END_SRC
-* diff-sys
-** window-nt
-   #+BEGIN_SRC emacs-lisp
-     (when (eq system-type 'windows-nt)
-       (setq conf_dir "e:/emacs/.emacs.d/"
-             org-directory "e:/org/"))
-   #+END_SRC
-** darwin
-   #+BEGIN_SRC emacs-lisp
-     (when (eq system-type 'darwin)
-       (setq conf_dir "~/.emacs.d/"
-             org-directory "~/firslov/"))
-   #+END_SRC
-** linux
-   #+BEGIN_SRC emacs-lisp
-     (when (eq system-type 'gnu/linux)
-       (setq conf_dir "~/.emacs.d/"
-             org-directory "~/org/"))
-   #+END_SRC
 * user-config
 ** config
    #+BEGIN_SRC emacs-lisp
@@ -468,12 +486,13 @@
      ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
      (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
      ;; (add-hook 'org-mode-hook 'linum-mode)
-     (setq org-agenda-files (directory-files org-directory t "\\.org$" t)
-           lt-todo-files (directory-files org-directory t "\\.org$" t)
+     (setq org-agenda-files (list (concat org-directory "/base/inbox.org") (concat org-directory "/base/journal.org"))
+           lt-todo-files (list (concat org-directory "/base/inbox.org") (concat org-directory "/base/journal.org"))
            org-image-actual-width '(400)
            org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
            org-agenda-window-setup nil
            org-M-RET-may-split-line '((headline . nil))
+           org-use-tag-inheritance t
            org-agenda-time-grid (quote
                                  ((daily today require-timed remove-match)
                                   (800 1800)
@@ -492,16 +511,19 @@
 ** capture
    #+BEGIN_SRC emacs-lisp
      (setq org-capture-templates
-           `(("i" "Inbox" entry (file+headline ,(concat org-directory "inbox.org") "Inbox:")
+           `(("i" "Inbox" entry (file+headline ,(concat org-directory "/inbox.org") "Inbox:")
               "* %?" :unnarrowed t)
-             ("j" "Journal" entry (file+datetree ,(concat org-directory "journal.org"))
+             ("b" "Bibtex")
+             ("br" "references" plain (file ,(concat org-roam-directory "/references.bib")))
+             ("bo" "phd" plain (file ,(concat org-roam-directory "/phd.bib")))
+             ("j" "Journal" entry (file+datetree ,(concat org-directory "/journal.org"))
               "* %U\n%?" :unnarrowed t)
              ("t" "Todo")
-             ("tt" "Todo without time" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+             ("tt" "Todo without time" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
               "* SOMEDAY %?")
-             ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+             ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
               "* TODO %?\nSCHEDULED:%^t")
-             ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "inbox.org") "Todo:")
+             ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
               "* TODO %?\nDEADLINE:%^t")))
    #+END_SRC
 ** timeblock
