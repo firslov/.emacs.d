@@ -198,8 +198,20 @@
         :load-path "~/.emacs.d/git-repo/shengci.el")
       (require 'org2ctex)
       (org2ctex-toggle t)
+      (use-package tex
+        :ensure auctex
+        :defer t
+        :config
+        (setq TeX-global-PDF-mode t TeX-engine 'xetex)
+        (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+        (setq TeX-command-default "XeLaTeX"))
     #+END_SRC
 *** useful
+**** f
+     #+BEGIN_SRC emacs-lisp
+       (use-package f
+         :ensure t)
+     #+END_SRC
 **** which-key
      #+BEGIN_SRC emacs-lisp
        (use-package which-key
@@ -353,7 +365,7 @@
         )
       (use-package auto-indent
         :load-path "~/.emacs.d/lisp"
-        :config (auto-indent-enable))
+        :config (auto-indent-disable))
       (use-package auto-load
         :load-path "~/.emacs.d/lisp")
       (use-package recentf
@@ -385,8 +397,6 @@
      (global-set-key (kbd "<f1> 1") 'open-init-file)
      ;; 将函数 org-mind-conf 绑定到<f1> 2 键上
      (global-set-key (kbd "<f1> 2") 'org-mind-conf)
-     ;; 将函数 org-todo 绑定到<f1> 3 键上
-     ;; (global-set-key (kbd "<f1> 3") 'org-todo-list)
      ;; 将函数 indent-buffer 绑定到 <f8> 键上
      (global-set-key (kbd "<f8>") 'indent-buffer)
      ;; 上下翻半页
@@ -446,16 +456,10 @@
        (if (equal (buffer-name) "*Org Agenda*")
            (bury-buffer)
          (progn
-           (org-agenda-list)
-           (org-agenda-day-view))))
+           (org-agenda nil "z"))))
 
-     (add-hook 'org-agenda-mode-hook
-               (lambda ()
-                 (local-set-key (kbd "\`") 'my/show-todo)))
-     (define-key org-ql-view-map (kbd "q") 'kill-buffer-and-window)
-
-     (advice-add 'my/show-todo :after (lambda (&rest r)
-                                        (shrink-window-horizontally 12)))
+     ;; revert pdf-view after compilation
+     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
    #+END_SRC
 ** transparency
    #+BEGIN_SRC emacs-lisp
@@ -486,11 +490,12 @@
      ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
      (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
      ;; (add-hook 'org-mode-hook 'linum-mode)
-     (setq org-agenda-files (list (concat org-directory "/base/inbox.org") (concat org-directory "/base/journal.org"))
-           lt-todo-files (list (concat org-directory "/base/inbox.org") (concat org-directory "/base/journal.org"))
+     (setq org-agenda-files (list (concat org-directory "/inbox.org") (concat org-directory "/journal.org"))
+           lt-todo-files (list (concat org-directory "/inbox.org") (concat org-directory "/journal.org"))
            org-image-actual-width '(400)
            org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
            org-agenda-window-setup nil
+           org-deadline-warning-days 30
            org-M-RET-may-split-line '((headline . nil))
            org-use-tag-inheritance t
            org-agenda-time-grid (quote

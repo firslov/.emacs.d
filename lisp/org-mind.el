@@ -125,51 +125,51 @@
 (use-package org-super-agenda
   :ensure t
   :config
-  (setq org-super-agenda-groups
-	'(;; Each group has an implicit boolean OR operator between its selectors.
-	  (:name "Today"  ; Optionally specify section name
-		 :time-grid t  ; Items that appear on the time grid
-		 :todo "TODAY")  ; Items that have this TODO keyword
-	  (:name "Urgent"
-		 :deadline (past today))
-	  (:name "Important"
-		 ;; Single arguments given alone
-		 :priority>= "B")
-	  (:name "Habits"  ; Optionally specify section name
-		 :habit t)))
+  (setq org-agenda-custom-commands
+        '(("z" "Firslov view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '(;; Each group has an implicit boolean OR operator between its selectors.
+	                   (:name "Today"  ; Optionally specify section name
+		                  :time-grid t  ; Items that appear on the time grid
+		                  :todo "TODAY")  ; Items that have this TODO keyword
+	                   (:name "Urgent"
+		                  :deadline (past today))
+	                   (:name "Important"
+		                  ;; Single arguments given alone
+		                  :priority>= "B")
+	                   (:name "Habits"  ; Optionally specify section name
+		                  :habit t)))))
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:name "Next to do"
+                                   :todo "NEXT"
+                                   :order 1)
+                            (:name "Important"
+                                   :tag "Important"
+                                   :priority "A"
+                                   :order 6)
+                            (:name "Due Today"
+                                   :deadline today
+                                   :order 2)
+                            (:name "Due Soon"
+                                   :deadline future
+                                   :order 8)
+                            (:name "Overdue"
+                                   :deadline past
+                                   :order 7)
+                            (:name "Habits"
+         	                   :habit t
+                                   :order 3)
+                            (:name "Phd"
+                                   :tag "phd"
+                                   :order 15)
+                            (:name "Unimportant"
+                                   :priority<= "C"
+                                   :todo ("SOMEDAY")
+                                   :order 90)
+                            (:discard (:tag ("Routine" "Daily")))))))))))
   (org-super-agenda-mode))
-
-;; org-ql
-(use-package org-ql
-  :ensure t
-  :config
-  (defun my/show-todo ()
-    (interactive)
-    (org-ql-search (org-agenda-files)
-      '(and (todo) (not (todo "CANCELED")))
-      :super-groups '(;; Each group has an implicit boolean OR operator between its selectors.
-		      (:name "Urgent"
-			     :and (:deadline (today)     
-					     :not (:habit t))
-			     :and (:deadline (past)
-					     :not (:habit t))
-			     :and (:scheduled (past)
-					      :not (:habit t)))
-		      (:name "Today"  ; Optionally specify section name
-			     :scheduled (today))  ; Items that have this TODO keyword
-		      (:name "Important"
-			     ;; Single arguments given alone
-			     :priority>= "B")
-		      (:name "Habits"  ; Optionally specify section name
-			     :habit t)
-		      (:name "Someday"
-			     :todo "SOMEDAY"))
-      ))
-  (global-set-key (kbd "<f1> 3") 'my/show-todo))
-(use-package org-ql-view
-  :config
-  ;; (define-key org-ql-view-map "q" #'delete-window)
-  )
 
 ;; misc
 (use-package org-appear
