@@ -19,6 +19,7 @@
   :custom
   (org-roam-directory org-directory)
   :bind (("C-c n c" . org-capture)
+         ("C-c n s" . roam-global-search)
          :map org-roam-mode-map
 	 (("C-c n l" . org-roam)
 	  ("C-c n f" . org-roam-find-file)
@@ -70,6 +71,11 @@
 ;; 	org-journal-file-type 'yearly
 ;; 	org-journal-date-format "%Y-%m-%d %A"
 ;; 	org-journal-file-format "journal_%Y.org"))
+
+(defun roam-global-search (arg)
+  (interactive "sRgrep search for: ")
+  (grep-compute-defaults)
+  (rgrep arg "*.org" org-roam-directory nil))
 
 ;; helm-org-rifle
 (use-package helm-org-rifle
@@ -129,41 +135,35 @@
         '(("z" "Firslov view"
            ((agenda "" ((org-agenda-span 'day)
                         (org-super-agenda-groups
-                         '(;; Each group has an implicit boolean OR operator between its selectors.
-	                   (:name "Today"  ; Optionally specify section name
+                         '((:name "Today"  ; Optionally specify section name
 		                  :time-grid t  ; Items that appear on the time grid
 		                  :todo "TODAY")  ; Items that have this TODO keyword
-	                   (:name "Urgent"
-		                  :deadline (past today))
-	                   (:name "Important"
-		                  ;; Single arguments given alone
-		                  :priority>= "B")
-	                   (:name "Habits"  ; Optionally specify section name
+	                   (:name "Habits"
 		                  :habit t)))))
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-super-agenda-groups
                           '((:name "Next to do"
                                    :todo "NEXT"
                                    :order 1)
-                            (:name "Important"
-                                   :tag "Important"
-                                   :priority "A"
-                                   :order 6)
-                            (:name "Due Today"
+                            (:name "Urgent"
                                    :deadline today
                                    :order 2)
+                            (:name "Important"
+                                   :tag "Important"
+                                   :priority>= "B"
+                                   :order 3)
                             (:name "Due Soon"
                                    :deadline future
                                    :order 8)
                             (:name "Overdue"
                                    :deadline past
                                    :order 7)
-                            (:name "Habits"
-         	                   :habit t
-                                   :order 3)
                             (:name "Phd"
                                    :tag "phd"
                                    :order 15)
+                            (:name "Habits"
+		                   :habit t
+                                   :order 80)
                             (:name "Unimportant"
                                    :priority<= "C"
                                    :todo ("SOMEDAY")

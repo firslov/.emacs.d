@@ -163,10 +163,10 @@
                      (hotspots (pdf-view-apply-hotspot-functions
                                 window page size)))
                 (pdf-view-create-image data
-                                       :width width
-                                       :scale (if (pdf-view-use-scaling-p) 0.5 1)
-                                       :map hotspots
-                                       :pointer 'arrow))))
+                  :width width
+                  :scale (if (pdf-view-use-scaling-p) 0.5 1)
+                  :map hotspots
+                  :pointer 'arrow))))
 
           ;; Recover last viewed position
           (use-package pdf-view-restore
@@ -204,7 +204,8 @@
         :config
         (setq TeX-global-PDF-mode t TeX-engine 'xetex)
         (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
-        (setq TeX-command-default "XeLaTeX"))
+        (setq TeX-command-default "XeLaTeX")
+        )
     #+END_SRC
 *** useful
 **** f
@@ -495,7 +496,7 @@
            org-image-actual-width '(400)
            org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
            org-agenda-window-setup nil
-           org-deadline-warning-days 30
+           org-deadline-warning-days 14
            org-M-RET-may-split-line '((headline . nil))
            org-use-tag-inheritance t
            org-agenda-time-grid (quote
