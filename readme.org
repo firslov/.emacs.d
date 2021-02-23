@@ -1,13 +1,13 @@
 #+STARTUP: fold
 #+STARTUP: hidestars
-* install
+* 1 install
   #+BEGIN_SRC shell :tangle no
     git clone --depth=1 git@github.com:firslov/.emacs.d.git
   #+END_SRC
   #+BEGIN_SRC emacs-lisp :tangle no
     (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el")
   #+END_SRC
-* diff-sys
+* 2 system
 ** window-nt
    #+BEGIN_SRC emacs-lisp
      (when (eq system-type 'windows-nt)
@@ -26,8 +26,8 @@
        (setq conf_dir "~/.emacs.d/"
              org-directory "~/org/"))
    #+END_SRC
-* packages
-** resources
+* 3 package
+** resource
    #+BEGIN_SRC emacs-lisp
      ;; cl - Common Lisp Extension
      (require 'cl-lib)
@@ -38,19 +38,24 @@
        ;;(setq package-archives '(("melpa" . "https://melpa.org/packages/")))
        )
      (add-to-list 'load-path "~/.emacs.d/lisp")
-   #+END_SRC
-** use-package
-   #+BEGIN_SRC emacs-lisp
+     (require 'gcmh)
+     (gcmh-mode 1)
      ;; Add use-package
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
        (package-install 'use-package))
    #+END_SRC
-** packages
+** list
 *** org-mind
     #+BEGIN_SRC emacs-lisp
-      (use-package org-mind
-        :load-path "~/.emacs.d/lisp/")
+      (require 'org-mind)
+    #+END_SRC
+*** evil
+    #+BEGIN_SRC emacs-lisp
+      ;; (use-package evil
+      ;;   :ensure t
+      ;;   :config
+      ;;   (evil-mode 1))
     #+END_SRC
 *** magit
     #+BEGIN_SRC emacs-lisp
@@ -108,6 +113,7 @@
       (when (display-graphic-p)
         (use-package pdf-view
           :ensure pdf-tools
+          :defer t
           :diminish (pdf-view-midnight-minor-mode pdf-view-printer-minor-mode)
           :defines pdf-annot-activate-created-annotations
           :functions my-pdf-view-set-midnight-colors
@@ -163,10 +169,10 @@
                      (hotspots (pdf-view-apply-hotspot-functions
                                 window page size)))
                 (pdf-view-create-image data
-                  :width width
-                  :scale (if (pdf-view-use-scaling-p) 0.5 1)
-                  :map hotspots
-                  :pointer 'arrow))))
+                                       :width width
+                                       :scale (if (pdf-view-use-scaling-p) 0.5 1)
+                                       :map hotspots
+                                       :pointer 'arrow))))
 
           ;; Recover last viewed position
           (use-package pdf-view-restore
@@ -181,8 +187,7 @@
     #+END_SRC
 *** phd
     #+BEGIN_SRC emacs-lisp
-      (use-package phd
-        :after org-mind)
+      (require 'phd)
       (use-package org-elp
         :ensure t
         :config
@@ -193,9 +198,6 @@
         :ensure t
         :config
         (add-hook 'org-mode-hook 'org-fragtog-mode))
-      (use-package shengci
-        :ensure f
-        :load-path "~/.emacs.d/git-repo/shengci.el")
       (require 'org2ctex)
       (org2ctex-toggle t)
       (use-package tex
@@ -204,171 +206,156 @@
         :config
         (setq TeX-global-PDF-mode t TeX-engine 'xetex)
         (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
-        (setq TeX-command-default "XeLaTeX")
+        (setq TeX-command-default "XeLaTeX"))
+    #+END_SRC
+*** f
+    #+BEGIN_SRC emacs-lisp
+      (use-package f
+        :ensure t)
+    #+END_SRC
+*** which-key
+    #+BEGIN_SRC emacs-lisp
+      (use-package which-key
+        :ensure t
+        :config (which-key-mode))
+    #+END_SRC
+*** yasnippet
+    #+BEGIN_SRC emacs-lisp
+      (use-package yasnippet
+        :ensure t
+        :config
+        (setq yas-snippet-dirs
+              '("~/.emacs.d/snippets"))
+        (yas-global-mode 1))
+    #+END_SRC
+*** dashboard
+    #+BEGIN_SRC emacs-lisp
+      (use-package dashboard
+        :ensure t
+        :if (< (length command-line-args) 2)
+        :config
+        (dashboard-setup-startup-hook)
+        (setq dashboard-items '((recents  . 5)
+                                ;; (bookmarks . 5)
+                                (projects . 5)
+                                (agenda . 5)
+                                ;; (registers . 5)
+                                ))
+        (dashboard-modify-heading-icons '((recents . "file-text") 
+                                          (bookmarks . "book")))
+        ;; 设置标题
+        (setq dashboard-banner-logo-title
+              "人生苦短，我用Emacs")
+        ;; 设置banner
+        (setq dashboard-startup-banner "~/.emacs.d/var/banner.png")
+        (setq dashboard-center-content t) 
+        (setq dashboard-set-heading-icons t) 
+        (setq dashboard-set-navigator t)
+        ;; (add-hook 'after-init-hook (lambda () (dashboard-refresh-buffer)))
         )
     #+END_SRC
-*** useful
-**** f
-     #+BEGIN_SRC emacs-lisp
-       (use-package f
-         :ensure t)
-     #+END_SRC
-**** which-key
-     #+BEGIN_SRC emacs-lisp
-       (use-package which-key
-         :ensure t
-         :config (which-key-mode))
-     #+END_SRC
-**** yasnippet
-     #+BEGIN_SRC emacs-lisp
-       (use-package yasnippet
-         :ensure t
-         :config
-         (setq yas-snippet-dirs
-               '("~/.emacs.d/snippets"))
-         (yas-global-mode 1))
-     #+END_SRC
-**** neotree
-     #+BEGIN_SRC emacs-lisp
-       (use-package neotree
-         :ensure t
-         :config
-         (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
-               projectile-switch-project-action 'neotree-projectile-action))
-     #+END_SRC
-**** undo-tree
-     #+BEGIN_SRC emacs-lisp
-       (use-package undo-tree
-         :ensure t
-         :config (global-undo-tree-mode))
-     #+END_SRC
-**** dictionary
-     #+BEGIN_SRC emacs-lisp
-       (use-package youdao-dictionary
-         :ensure t
-         :defer t
-         :config
-         ;; enable cache
-         (setq url-automatic-caching t))
-     #+END_SRC
-**** posframe
-     #+BEGIN_SRC emacs-lisp
-       (use-package posframe
-         :ensure t
-         :config
-         (defun call-a-posframe ()
-           (interactive)
-           (defvar my-posframe-buffer " *my-posframe-buffer*")
-           (with-current-buffer (get-buffer-create my-posframe-buffer)
-             (erase-buffer)
-             (insert "Hello world"))
-           (when (posframe-workable-p)
-             (posframe-show my-posframe-buffer
-                            :position (point)))))
-     #+END_SRC
-**** ace-window
-     #+BEGIN_SRC emacs-lisp
-       (use-package ace-window
-         :ensure t
-         :config
-         (global-set-key [remap other-window] 'ace-window)
-         (custom-set-faces
-          '(aw-leading-char-face
-            ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-     #+END_SRC
-**** restart-emacs
-     #+BEGIN_SRC emacs-lisp
-       (use-package restart-emacs
-         :ensure t
-         :defer t
-         :bind ("<f12>" . restart-emacs)
-         :init
-         (defun b-restart-emacs (f)
-           (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
-         (advice-add #'restart-emacs :before #'b-restart-emacs))
-     #+END_SRC
-**** good-scroll
-     #+BEGIN_SRC emacs-lisp
-       (use-package good-scroll
-         :load-path "~/.emacs.d/git-repo/good-scroll.el"
-         :config
-         (good-scroll-mode 1))
-     #+END_SRC
-**** org-present
-     #+BEGIN_SRC emacs-lisp
-       ;; https://github.com/rlister/org-present
-       (add-to-list 'load-path "~/.emacs.d/git-repo/org-present")
-       (autoload 'org-present "org-present" nil t)
-       (eval-after-load "org-present"
-         '(progn
-            (add-hook 'org-present-mode-hook
-                      (lambda ()
-                        (org-present-big)
-                        (org-display-inline-images)
-                        (org-present-hide-cursor)
-                        (org-present-read-only)))
-            (add-hook 'org-present-mode-quit-hook
-                      (lambda ()
-                        (org-present-small)
-                        (org-remove-inline-images)
-                        (org-present-show-cursor)
-                        (org-present-read-write)))))
-     #+END_SRC
-**** org-bullets
-     #+BEGIN_SRC emacs-lisp
-       (use-package org-bullets
-         :custom
-         (org-bullets-bullet-list '("◉" "○" "◆" "▶"))
-         (org-ellipsis "⤵")
-         :hook (org-mode . org-bullets-mode))
-     #+END_SRC
-**** crypt
-     #+BEGIN_SRC emacs-lisp
-       (require 'org-crypt)
-       (org-crypt-use-before-save-magic)
-       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-       ;; GPG key to use for encryption
-       ;; Either the Key ID or set to nil to use symmetric encryption.
-       (setq org-crypt-key nil)
-     #+END_SRC
-**** exec-path-from-shell
-     #+BEGIN_SRC emacs-lisp
-       (use-package exec-path-from-shell
-         :ensure t
-         :config
-         (setq exec-path-from-shell-arguments '("-l"))
-         (when (memq window-system '(mac ns x))
-           (exec-path-from-shell-initialize)))
-     #+END_SRC
-**** highlight-parentheses
-     #+BEGIN_SRC emacs-lisp
-       (use-package highlight-parentheses
-         :ensure t
-         :config
-         (define-globalized-minor-mode global-highlight-parentheses-mode
-           highlight-parentheses-mode
-           (lambda ()
-             (highlight-parentheses-mode t)))
-         (global-highlight-parentheses-mode t))
-     #+END_SRC
-*** misc packages
+*** posframe
+    #+BEGIN_SRC emacs-lisp
+      (use-package posframe
+        :ensure t
+        :config
+        (defun call-a-posframe ()
+          (interactive)
+          (defvar my-posframe-buffer " *my-posframe-buffer*")
+          (with-current-buffer (get-buffer-create my-posframe-buffer)
+            (erase-buffer)
+            (insert "Hello world"))
+          (when (posframe-workable-p)
+            (posframe-show my-posframe-buffer
+                           :position (point)))))
+    #+END_SRC
+*** ace-window
+    #+BEGIN_SRC emacs-lisp
+      (use-package ace-window
+        :ensure t
+        :config
+        (global-set-key [remap other-window] 'ace-window)
+        (custom-set-faces
+         '(aw-leading-char-face
+           ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+    #+END_SRC
+*** restart-emacs
+    #+BEGIN_SRC emacs-lisp
+      (use-package restart-emacs
+        :ensure t
+        :defer t
+        :bind ("<f12>" . restart-emacs)
+        :init
+        (defun b-restart-emacs (f)
+          (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
+        (advice-add #'restart-emacs :before #'b-restart-emacs))
+    #+END_SRC
+*** ivy-posframe
+    #+BEGIN_SRC emacs-lisp
+      (require 'ivy-posframe)
+      ;; display at `ivy-posframe-style'
+      (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+      ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+      ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+      ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+      ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+      ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+      (setq ivy-posframe-parameters
+            '((left-fringe . 10)
+              (right-fringe . 10)))
+      (ivy-posframe-mode 1)
+    #+END_SRC
+*** crypt
+    #+BEGIN_SRC emacs-lisp
+      (require 'org-crypt)
+      (org-crypt-use-before-save-magic)
+      (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+      ;; GPG key to use for encryption
+      ;; Either the Key ID or set to nil to use symmetric encryption.
+      (setq org-crypt-key nil)
+    #+END_SRC
+*** exec-path-from-shell
+    #+BEGIN_SRC emacs-lisp
+      ;; (use-package exec-path-from-shell
+      ;;   :ensure t
+      ;;   :config
+      ;;   (setq exec-path-from-shell-arguments '("-l"))
+      ;;   (when (memq window-system '(mac ns x))
+      ;;     (exec-path-from-shell-initialize)))
+    #+END_SRC
+*** highlight-parentheses
+    #+BEGIN_SRC emacs-lisp
+      (use-package highlight-parentheses
+        :ensure t
+        :config
+        (define-globalized-minor-mode global-highlight-parentheses-mode
+          highlight-parentheses-mode
+          (lambda ()
+            (highlight-parentheses-mode t)))
+        (global-highlight-parentheses-mode t))
+    #+END_SRC
+*** all-the-icons
     #+BEGIN_SRC emacs-lisp
       (use-package all-the-icons
         :ensure t)
+    #+END_SRC
+*** diminish
+    #+BEGIN_SRC emacs-lisp
       (use-package diminish
         :ensure t
         :diminish (ivy-mode eldoc-mode which-key-mode))
-      (use-package auto-save
-        :load-path "~/.emacs.d/lisp"
-        :config
-        (auto-save-enable)              ;; 开启自动保存功能
-        (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
-        )
-      (use-package auto-indent
-        :load-path "~/.emacs.d/lisp"
-        :config (auto-indent-disable))
-      (use-package auto-load
-        :load-path "~/.emacs.d/lisp")
+    #+END_SRC
+*** misc packages
+    #+BEGIN_SRC emacs-lisp
+      (require 'auto-save)
+      (auto-save-enable)              ;; 开启自动保存功能
+      (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
+
+      (require 'auto-indent)
+      (auto-indent-disable)
+
+      (require 'auto-load)
+
       (use-package recentf
         :bind ("C-x C-r" . recentf-open-files)
         :defer 1
@@ -376,12 +363,14 @@
         (recentf-mode 1)
         (setq recentf-max-menu-item 10))
     #+END_SRC
-* user-config
+* 4 user
 ** config
    #+BEGIN_SRC emacs-lisp
      ;; init fullscreen
      ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
      (setq inhibit-splash-screen t)
+     (setq ns-pop-up-frames nil)
+     (add-to-list 'default-frame-alist '(fullscreen . maximized))
    #+END_SRC
 ** key-bind
    #+BEGIN_SRC emacs-lisp
@@ -391,7 +380,7 @@
      ;; ibuffer
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      ;; show startup page
-     (global-set-key (kbd "C-.") 'show-startup-page)
+     (global-set-key (kbd "<f1> 3") 'show-startup-page)
      ;; 将函数 load-init-file 绑定到 <f1> 0 键上
      (global-set-key (kbd "<f1> 0") 'load-init)
      ;; 将函数 open-init-file 绑定到 <f1> 1 键上
@@ -484,7 +473,7 @@
                                      (interactive)
                                      (modify-frame-parameters nil `((alpha . 100)))))
    #+END_SRC
-* org
+* 5 org
 ** variables
    #+BEGIN_SRC emacs-lisp
      ;; org variables
