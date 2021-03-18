@@ -202,10 +202,11 @@
   :ensure t
   :defer t
   :bind ("<f12>" . restart-emacs)
-  :init
-  (defun b-restart-emacs (f)
-    (org-babel-tangle-file "~/.emacs.d/readme.org"))
-  (advice-add #'restart-emacs :before #'b-restart-emacs))
+  ;; :init
+  ;; (defun b-restart-emacs (f)
+  ;;   (org-babel-tangle-file "~/.emacs.d/readme.org"))
+  ;; (advice-add #'restart-emacs :before #'b-restart-emacs)
+  )
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)

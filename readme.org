@@ -1,19 +1,19 @@
 #+STARTUP: fold
 #+STARTUP: hidestars
-* 0 structure
-  - [[file:./init.el][init.el]]
-    - init-sys.el
-    - init-roam.el
-    - init-package.el
-    - init-user.el
-    - init-org.el
-* 1 install
+* 0 install
   #+BEGIN_SRC shell :tangle no
     git clone --depth=1 git@github.com:firslov/.emacs.d.git
   #+END_SRC
   #+BEGIN_SRC emacs-lisp :tangle no
     (org-babel-tangle-file "~/.emacs.d/readme.org")
   #+END_SRC
+* 1 structure
+  [[file:./init.el][init.el]]
+  - init-sys.el
+  - init-roam.el
+  - init-package.el
+  - init-user.el
+  - init-org.el
 * 2 system
 ** windiows
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
@@ -272,10 +272,11 @@
        :ensure t
        :defer t
        :bind ("<f12>" . restart-emacs)
-       :init
-       (defun b-restart-emacs (f)
-	 (org-babel-tangle-file "~/.emacs.d/readme.org"))
-       (advice-add #'restart-emacs :before #'b-restart-emacs))
+       ;; :init
+       ;; (defun b-restart-emacs (f)
+       ;;   (org-babel-tangle-file "~/.emacs.d/readme.org"))
+       ;; (advice-add #'restart-emacs :before #'b-restart-emacs)
+       )
    #+END_SRC
 ** crypt
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
