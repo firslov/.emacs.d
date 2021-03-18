@@ -11,6 +11,11 @@
 ;; variable
 (setq org-habit-show-all-today t)
 
+;; writing
+(defun writing ()
+    (interactive)
+  (org-capture nil "w"))
+
 ;; org-roam
 (use-package org-roam
   :ensure t
@@ -20,6 +25,7 @@
   (org-roam-directory org-directory)
   :bind (("C-c n c" . org-capture)
          ("C-c n s" . roam-global-search)
+	 ("C-c n w" . writing)
          :map org-roam-mode-map
 	 (("C-c n l" . org-roam)
 	  ("C-c n f" . org-roam-find-file)
@@ -194,4 +200,4 @@
   :config
   (add-hook 'org-mode-hook #'valign-mode))
 
-(provide 'org-mind)
+(provide 'init-roam)

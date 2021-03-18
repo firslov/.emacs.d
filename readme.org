@@ -1,356 +1,391 @@
 #+STARTUP: fold
 #+STARTUP: hidestars
+* 0 structure
+  - [[file:./init.el][init.el]]
+    - init-sys.el
+    - init-roam.el
+    - init-package.el
+    - init-user.el
+    - init-org.el
 * 1 install
   #+BEGIN_SRC shell :tangle no
     git clone --depth=1 git@github.com:firslov/.emacs.d.git
   #+END_SRC
   #+BEGIN_SRC emacs-lisp :tangle no
-    (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el")
+    (org-babel-tangle-file "~/.emacs.d/readme.org")
   #+END_SRC
 * 2 system
-  #+BEGIN_SRC emacs-lisp
-    (require 'cl-lib)
-  #+END_SRC
-** window-nt
-   #+BEGIN_SRC emacs-lisp
+** windiows
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'windows-nt)
        (setq conf_dir "e:/emacs/.emacs.d/"
-             org-directory "e:/org/"))
+	     org-directory "e:/org/"))
    #+END_SRC
-** darwin
-   #+BEGIN_SRC emacs-lisp
+** macos
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'darwin)
        (setq conf_dir "~/.emacs.d/"
-             org-directory "~/firslov"))
+	     org-directory "~/firslov"))
    #+END_SRC
 ** linux
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'gnu/linux)
        (setq conf_dir "~/.emacs.d/"
-             org-directory "~/org/"))
+	     org-directory "~/org/"))
+   #+END_SRC
+** provide
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
+     (provide 'init-sys)
    #+END_SRC
 * 3 package
-** resource
-   #+BEGIN_SRC emacs-lisp
-     ;; cl - Common Lisp Extension
-     (when (>= emacs-major-version 24)
-       (require 'package)
-       (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                                ("melpa" . "http://elpa.emacs-china.org/melpa/")))
-       ;;(setq package-archives '(("melpa" . "https://melpa.org/packages/")))
-       )
-     (add-to-list 'load-path "~/.emacs.d/lisp")
-     (require 'gcmh)
-     (gcmh-mode 1)
-     ;; Add use-package
-     (unless (package-installed-p 'use-package)
-       (package-refresh-contents)
-       (package-install 'use-package))
+** evil
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     ;; (use-package evil
+     ;;   :ensure t
+     ;;   :config
+     ;;   (evil-mode 1))
    #+END_SRC
-** list
-*** org-mind
-    #+BEGIN_SRC emacs-lisp
-      (require 'org-mind)
-    #+END_SRC
-*** evil
-    #+BEGIN_SRC emacs-lisp
-      ;; (use-package evil
-      ;;   :ensure t
-      ;;   :config
-      ;;   (evil-mode 1))
-    #+END_SRC
-*** magit
-    #+BEGIN_SRC emacs-lisp
-      (use-package magit
-        :ensure t
-        :defer t
-        :bind ("C-x g" . magit-status))
-    #+END_SRC
-*** swiper
-    #+BEGIN_SRC emacs-lisp
-      (use-package counsel
-        :ensure t)
-      (use-package swiper
-        :ensure t
-        :bind (
-               ("C-s" . swiper)
-               ("M-n" . next-error)
-               ("M-p" . previous-error)
-               ("C-c C-r" . ivy-resume)
-               ("M-x" . counsel-M-x)
-               ("C-x C-f" . counsel-find-file)
-               ("<f1> f" . counsel-describe-function)
-               ("<f1> v" . counsel-describe-variable)
-               ("<f1> o" . counsel-describe-symbol)
-               ("<f1> l" . counsel-find-library)
-               ("C-c g" . counsel-git)
-               ("C-c j" . counsel-git-grep)
-               )
-        :config
-        (ivy-mode 1)
-        (setq ivy-use-virtual-buffers t
-              enable-recursive-minibuffers t
-              ivy-use-virtual-buffers t
-              enable-recursive-minibuffers t))
-    #+END_SRC
-*** company
-    #+BEGIN_SRC emacs-lisp
-      (use-package company
-        :ensure t
-        :config
-        (add-hook 'after-init-hook 'global-company-mode))
-    #+END_SRC
-*** projectile
-    #+BEGIN_SRC emacs-lisp
-      (use-package projectile
-        :ensure t
-        :config
-        (projectile-mode +1)
-        (define-key projectile-mode-map (kbd "C-c n p") 'projectile-command-map)
-        (setq projectile-indexing-method 'native
-              projectile-completion-system 'ivy))
-    #+END_SRC
-*** pdf-view
-    #+BEGIN_SRC emacs-lisp
-      (when (display-graphic-p)
-        (use-package pdf-view
-          :ensure pdf-tools
-          :defer t
-          :diminish (pdf-view-midnight-minor-mode pdf-view-printer-minor-mode)
-          :defines pdf-annot-activate-created-annotations
-          :functions my-pdf-view-set-midnight-colors
-          :commands pdf-view-midnight-minor-mode
-          :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
-          :magic ("%PDF" . pdf-view-mode)
-          :hook (after-load-theme . my-pdf-view-set-dark-theme)
-          :bind (:map pdf-view-mode-map
-                      ("C-s" . isearch-forward))
-          :init
-          (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-view))
-          (setq pdf-annot-activate-created-annotations t)
+** magit
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package magit
+       :ensure t
+       :defer t
+       :bind ("C-x g" . magit-status))
+   #+END_SRC
+** swiper
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package counsel
+       :ensure t)
+     (use-package swiper
+       :ensure t
+       :bind (
+	      ("C-s" . swiper)
+	      ("M-n" . next-error)
+	      ("M-p" . previous-error)
+	      ("C-c C-r" . ivy-resume)
+	      ("M-x" . counsel-M-x)
+	      ("C-x C-f" . counsel-find-file)
+	      ("<f1> f" . counsel-describe-function)
+	      ("<f1> v" . counsel-describe-variable)
+	      ("<f1> o" . counsel-describe-symbol)
+	      ("<f1> l" . counsel-find-library)
+	      ("C-c g" . counsel-git)
+	      ("C-c j" . counsel-git-grep)
+	      )
+       :config
+       (ivy-mode 1)
+       (setq ivy-use-virtual-buffers t
+	     enable-recursive-minibuffers t
+	     ivy-use-virtual-buffers t
+	     enable-recursive-minibuffers t))
+   #+END_SRC
+** company
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package company
+       :ensure t
+       :config
+       (add-hook 'after-init-hook 'global-company-mode))
+   #+END_SRC
+** projectile
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package projectile
+       :ensure t
+       :config
+       (projectile-mode +1)
+       (define-key projectile-mode-map (kbd "C-c n p") 'projectile-command-map)
+       (setq projectile-indexing-method 'native
+	     projectile-completion-system 'ivy))
+   #+END_SRC
+** pdf-view
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (when (display-graphic-p)
+       (use-package pdf-view
+	 :ensure pdf-tools
+	 :defer t
+	 :diminish (pdf-view-midnight-minor-mode pdf-view-printer-minor-mode)
+	 :defines pdf-annot-activate-created-annotations
+	 :functions my-pdf-view-set-midnight-colors
+	 :commands pdf-view-midnight-minor-mode
+	 :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+	 :magic ("%PDF" . pdf-view-mode)
+	 :hook (after-load-theme . my-pdf-view-set-dark-theme)
+	 :bind (:map pdf-view-mode-map
+		     ("C-s" . isearch-forward))
+	 :init
+	 (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-view))
+	 (setq pdf-annot-activate-created-annotations t)
 
-          (defun my-pdf-view-set-midnight-colors ()
-            "Set pdf-view midnight colors."
-            (setq pdf-view-midnight-colors
-                  `(,(face-foreground 'default) . ,(face-background 'default))))
+	 (defun my-pdf-view-set-midnight-colors ()
+	   "Set pdf-view midnight colors."
+	   (setq pdf-view-midnight-colors
+		 `(,(face-foreground 'default) . ,(face-background 'default))))
 
-          (defun my-pdf-view-set-dark-theme ()
-            "Set pdf-view midnight theme as color theme."
-            (my-pdf-view-set-midnight-colors)
-            (dolist (buf (buffer-list))
-              (with-current-buffer buf
-                (when (eq major-mode 'pdf-view-mode)
-                  (pdf-view-midnight-minor-mode (if pdf-view-midnight-minor-mode 1 -1))))))
-          :config
-          ;; WORKAROUND: Fix compilation errors on macOS.
-          ;; @see https://github.com/politza/pdf-tools/issues/480
-          (pdf-tools-install t nil t t)
+	 (defun my-pdf-view-set-dark-theme ()
+	   "Set pdf-view midnight theme as color theme."
+	   (my-pdf-view-set-midnight-colors)
+	   (dolist (buf (buffer-list))
+	     (with-current-buffer buf
+	       (when (eq major-mode 'pdf-view-mode)
+		 (pdf-view-midnight-minor-mode (if pdf-view-midnight-minor-mode 1 -1))))))
+	 :config
+	 ;; WORKAROUND: Fix compilation errors on macOS.
+	 ;; @see https://github.com/politza/pdf-tools/issues/480
+	 (pdf-tools-install t nil t t)
 
-          (my-pdf-view-set-midnight-colors)
+	 (my-pdf-view-set-midnight-colors)
 
-          ;; FIXME: Support retina
-          ;; @see https://emacs-china.org/t/pdf-tools-mac-retina-display/10243/
-          ;; and https://github.com/politza/pdf-tools/pull/501/
-          (setq pdf-view-use-scaling t
-                pdf-view-use-imagemagick nil)
-          (with-no-warnings
-            (defun pdf-view-use-scaling-p ()
-              "Return t if scaling should be used."
-              (and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
-                       (memq (pdf-view-image-type)
-                             '(imagemagick image-io)))
-                   pdf-view-use-scaling))
-            (defun pdf-view-create-page (page &optional window)
-              "Create an image of PAGE for display on WINDOW."
-              (let* ((size (pdf-view-desired-image-size page window))
-                     (width (if (not (pdf-view-use-scaling-p))
-                                (car size)
-                              (* 2 (car size))))
-                     (data (pdf-cache-renderpage
-                            page width width))
-                     (hotspots (pdf-view-apply-hotspot-functions
-                                window page size)))
-                (pdf-view-create-image data
-                                       :width width
-                                       :scale (if (pdf-view-use-scaling-p) 0.5 1)
-                                       :map hotspots
-                                       :pointer 'arrow))))
+	 ;; FIXME: Support retina
+	 ;; @see https://emacs-china.org/t/pdf-tools-mac-retina-display/10243/
+	 ;; and https://github.com/politza/pdf-tools/pull/501/
+	 (setq pdf-view-use-scaling t
+	       pdf-view-use-imagemagick nil)
+	 (with-no-warnings
+	   (defun pdf-view-use-scaling-p ()
+	     "Return t if scaling should be used."
+	     (and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
+		      (memq (pdf-view-image-type)
+			    '(imagemagick image-io)))
+		  pdf-view-use-scaling))
+	   (defun pdf-view-create-page (page &optional window)
+	     "Create an image of PAGE for display on WINDOW."
+	     (let* ((size (pdf-view-desired-image-size page window))
+		    (width (if (not (pdf-view-use-scaling-p))
+			       (car size)
+			     (* 2 (car size))))
+		    (data (pdf-cache-renderpage
+			   page width width))
+		    (hotspots (pdf-view-apply-hotspot-functions
+			       window page size)))
+	       (pdf-view-create-image data
+				      :width width
+				      :scale (if (pdf-view-use-scaling-p) 0.5 1)
+				      :map hotspots
+				      :pointer 'arrow))))
 
-          ;; Recover last viewed position
-          (use-package pdf-view-restore
-            :hook (pdf-view-mode . pdf-view-restore-mode)
-            :init (setq pdf-view-restore-filename
-                        (locate-user-emacs-file ".pdf-view-restore")))))
-    #+END_SRC
-*** nano
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'load-path "~/.emacs.d/git-repo/nano-emacs/")
-      (require 'nano)
-    #+END_SRC
-*** phd
-    #+BEGIN_SRC emacs-lisp
-      (require 'phd)
-      (use-package org-elp
-        :ensure t
-        :config
-        (setq org-elp-split-fraction 0.2
-              org-elp-buffer-name "*Equation Live*"
-              org-elp-idle-time 0.5))
-      (use-package org-fragtog
-        :ensure t
-        :config
-        (add-hook 'org-mode-hook 'org-fragtog-mode))
-      (require 'org2ctex)
-      (org2ctex-toggle t)
-      (use-package tex
-        :ensure auctex
-        :defer t
-        :config
-        (setq TeX-global-PDF-mode t TeX-engine 'xetex)
-        (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
-        (setq TeX-command-default "XeLaTeX"))
-    #+END_SRC
-*** f
-    #+BEGIN_SRC emacs-lisp
-      (use-package f
-        :ensure t)
-    #+END_SRC
-*** which-key
-    #+BEGIN_SRC emacs-lisp
-      (use-package which-key
-        :ensure t
-        :config (which-key-mode))
-    #+END_SRC
-*** yasnippet
-    #+BEGIN_SRC emacs-lisp
-      (use-package yasnippet
-        :ensure t
-        :config
-        (setq yas-snippet-dirs
-              '("~/.emacs.d/snippets"))
-        (yas-global-mode 1))
-    #+END_SRC
-*** dashboard
-    #+BEGIN_SRC emacs-lisp
-      (use-package dashboard
-        :ensure t
-        :if (< (length command-line-args) 2)
-        :config
-        (dashboard-setup-startup-hook)
-        (setq dashboard-items '((recents  . 5)
-                                ;; (bookmarks . 5)
-                                (projects . 5)
-                                (agenda . 5)
-                                ;; (registers . 5)
-                                ))
-        (dashboard-modify-heading-icons '((recents . "file-text") 
-                                          (bookmarks . "book")))
-        ;; 设置标题
-        (setq dashboard-banner-logo-title
-              "人生苦短，我用Emacs")
-        ;; 设置banner
-        (setq dashboard-startup-banner "~/.emacs.d/var/banner.png")
-        (setq dashboard-center-content t) 
-        (setq dashboard-set-heading-icons t) 
-        (setq dashboard-set-navigator t)
-        ;; (add-hook 'after-init-hook (lambda () (dashboard-refresh-buffer)))
-        )
-    #+END_SRC
-*** ace-window
-    #+BEGIN_SRC emacs-lisp
-      (use-package ace-window
-        :ensure t
-        :config
-        (global-set-key [remap other-window] 'ace-window)
-        (custom-set-faces
-         '(aw-leading-char-face
-           ((t (:inderit ace-jump-face-foreground :height 3.0))))))
-    #+END_SRC
-*** restart-emacs
-    #+BEGIN_SRC emacs-lisp
-      (use-package restart-emacs
-        :ensure t
-        :defer t
-        :bind ("<f12>" . restart-emacs)
-        :init
-        (defun b-restart-emacs (f)
-          (org-babel-tangle-file "~/.emacs.d/readme.org" "~/.emacs.d/init.el"))
-        (advice-add #'restart-emacs :before #'b-restart-emacs))
-    #+END_SRC
-*** crypt
-    #+BEGIN_SRC emacs-lisp
-      (require 'org-crypt)
-      (org-crypt-use-before-save-magic)
-      (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-      ;; GPG key to use for encryption
-      ;; Either the Key ID or set to nil to use symmetric encryption.
-      (setq org-crypt-key nil)
-    #+END_SRC
-*** exec-path-from-shell
-    #+BEGIN_SRC emacs-lisp
-      ;; (use-package exec-path-from-shell
-      ;;   :ensure t
-      ;;   :config
-      ;;   (setq exec-path-from-shell-arguments '("-l"))
-      ;;   (when (memq window-system '(mac ns x))
-      ;;     (exec-path-from-shell-initialize)))
-    #+END_SRC
-*** highlight-parentheses
-    #+BEGIN_SRC emacs-lisp
-      (use-package highlight-parentheses
-        :ensure t
-        :config
-        (define-globalized-minor-mode global-highlight-parentheses-mode
-          highlight-parentheses-mode
-          (lambda ()
-            (highlight-parentheses-mode t)))
-        (global-highlight-parentheses-mode t))
-    #+END_SRC
-*** all-the-icons
-    #+BEGIN_SRC emacs-lisp
-      (use-package all-the-icons
-        :ensure t)
-    #+END_SRC
-*** diminish
-    #+BEGIN_SRC emacs-lisp
-      (use-package diminish
-        :ensure t
-        :diminish (ivy-mode eldoc-mode which-key-mode))
-    #+END_SRC
-*** misc packages
-    #+BEGIN_SRC emacs-lisp
-      (require 'auto-save)
-      (auto-save-enable)              ;; 开启自动保存功能
-      (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
+	 ;; Recover last viewed position
+	 (use-package pdf-view-restore
+	   :hook (pdf-view-mode . pdf-view-restore-mode)
+	   :init (setq pdf-view-restore-filename
+		       (locate-user-emacs-file ".pdf-view-restore")))))
+   #+END_SRC
+** nano
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     ;; (add-to-list 'load-path "~/.emacs.d/git-repo/nano-emacs/")
+     ;; (require 'nano)
+   #+END_SRC
+** themify
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package org-html-themify
+       :load-path "~/.emacs.d/git-repo/org-html-themify"
+       )
 
-      (require 'auto-indent)
-      (auto-indent-disable)
+     (setq org-html-themify-themes
+	   '((dark . atom-one-dark)
+	     (light . doom-flatwhite)))
 
-      (require 'auto-load)
+     (add-hook 'org-mode-hook 'org-html-themify-mode)
+   #+END_SRC
+** phd
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (require 'phd)
+     (use-package org-elp
+       :ensure t
+       :config
+       (setq org-elp-split-fraction 0.2
+	     org-elp-buffer-name "*Equation Live*"
+	     org-elp-idle-time 0.5))
+     (use-package org-fragtog
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook 'org-fragtog-mode))
+     (require 'org2ctex)
+     ;;(org2ctex-toggle t)
+     (use-package tex
+       :ensure auctex
+       :defer t
+       :config
+       (setq TeX-global-PDF-mode t TeX-engine 'xetex)
+       (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+       (setq TeX-command-default "XeLaTeX")
+       ;; revert pdf-view after compilation
+       (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+   #+END_SRC
+** f
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package f
+       :ensure t)
+   #+END_SRC
+** which-key
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package which-key
+       :ensure t
+       :config (which-key-mode))
+   #+END_SRC
+** yasnippet
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package yasnippet
+       :ensure t
+       :config
+       (setq yas-snippet-dirs
+	     '("~/.emacs.d/snippets"))
+       (yas-global-mode 1))
+   #+END_SRC
+** dashboard
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package dashboard
+       :ensure t
+       :if (< (length command-line-args) 2)
+       :config
+       (dashboard-setup-startup-hook)
+       (setq dashboard-items '((recents  . 5)
+			       ;; (bookmarks . 5)
+			       (projects . 5)
+			       (agenda . 5)
+			       ;; (registers . 5)
+			       ))
+       (dashboard-modify-heading-icons '((recents . "file-text") 
+					 (bookmarks . "book")))
+       ;; 设置标题
+       (setq dashboard-banner-logo-title
+	     "人生苦短，我用Emacs")
+       ;; 设置banner
+       (setq dashboard-startup-banner "~/.emacs.d/var/banner.png")
+       (setq dashboard-center-content t) 
+       (setq dashboard-set-heading-icons t) 
+       (setq dashboard-set-navigator t)
+       ;; (add-hook 'after-init-hook (lambda () (dashboard-refresh-buffer)))
+       )
+   #+END_SRC
+** ace-window
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package ace-window
+       :ensure t
+       :config
+       (global-set-key [remap other-window] 'ace-window)
+       (custom-set-faces
+	'(aw-leading-char-face
+	  ((t (:inderit ace-jump-face-foreground :height 3.0))))))
+   #+END_SRC
+** restart-emacs
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package restart-emacs
+       :ensure t
+       :defer t
+       :bind ("<f12>" . restart-emacs)
+       :init
+       (defun b-restart-emacs (f)
+	 (org-babel-tangle-file "~/.emacs.d/readme.org"))
+       (advice-add #'restart-emacs :before #'b-restart-emacs))
+   #+END_SRC
+** crypt
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (require 'org-crypt)
+     (org-crypt-use-before-save-magic)
+     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+     ;; GPG key to use for encryption
+     ;; Either the Key ID or set to nil to use symmetric encryption.
+     (setq org-crypt-key nil)
+   #+END_SRC
+** exec-path-from-shell
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package exec-path-from-shell
+       :ensure t
+       :config
+       (setq exec-path-from-shell-arguments '("-l"))
+       (when (memq window-system '(mac ns x))
+	 (exec-path-from-shell-initialize)))
+   #+END_SRC
+** highlight-parentheses
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package highlight-parentheses
+       :ensure t
+       :config
+       (define-globalized-minor-mode global-highlight-parentheses-mode
+	 highlight-parentheses-mode
+	 (lambda ()
+	   (highlight-parentheses-mode t)))
+       (global-highlight-parentheses-mode t))
+   #+END_SRC
+** all-the-icons
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package all-the-icons
+       :ensure t)
+   #+END_SRC
+** diminish
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package diminish
+       :ensure t
+       :diminish (ivy-mode eldoc-mode which-key-mode))
+   #+END_SRC
+** misc packages
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (require 'auto-save)
+     (auto-save-enable)              ;; 开启自动保存功能
+     (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我
 
-      (use-package recentf
-        :bind ("C-x C-r" . recentf-open-files)
-        :defer 1
-        :config
-        (recentf-mode 1)
-        (setq recentf-max-menu-item 10))
-    #+END_SRC
+     (require 'auto-indent)
+     (auto-indent-disable)
+
+     (require 'auto-load)
+
+     (add-to-list 'load-path "~/.emacs.d/git-repo/awesome-tray/")
+     (require 'awesome-tray)
+     (setq awesome-tray-info-padding-right 2
+	   awesome-tray-active-modules '("last-command" "location" "parent-dir" "mode-name" "battery" "date"))
+     (use-package htmlize
+       :custom
+       (htmlize-face-overrides '(clojure-keyword-face (:foreground "var(--clr-constant)" :background "var(--bg-constant)"))))
+
+     (use-package recentf
+       :bind ("C-x C-r" . recentf-open-files)
+       :defer 1
+       :config
+       (recentf-mode 1)
+       (setq recentf-max-menu-item 10))
+   #+END_SRC
+** provide
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (provide 'init-package)
+   #+END_SRC
 * 4 user
 ** config
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; init fullscreen
      ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
      (setq inhibit-splash-screen t)
+     (fset 'yes-or-no-p 'y-or-n-p)
      (setq ns-pop-up-frames nil)
-     (add-to-list 'default-frame-alist '(fullscreen . maximized))
-     ;; 透明标题栏
-     (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-     (add-to-list 'default-frame-alist '(ns-appearance . dark))
-     ;; revert pdf-view after compilation
-     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+     ;; desktop-save
+     ;; (desktop-save-mode t)
+     ;; (setq desktop-restore-in-current-display t)
+     ;; (setq desktop-restore-frames t)
+     ;; atom-one-dark theme
+     (load-theme 'atom-one-dark t)
+     ;; dashboard message
+     (setq dashboard-footer-messages
+	   '("So?"))
+     ;; ui
+     (setq default-frame-alist
+	   (append (list
+		    '(font . "MesloLGLDZ Nerd Font:style=Light:size=14")
+		    ;; '(font . "Roboto Mono Emacs Regular:size=14")
+		    ;; '(min-height . 1)  '(height     . 45)
+		    ;; '(min-width  . 1) '(width      . 81)
+		    '(fullscreen . maximized)
+		    '(vertical-scroll-bars . nil)
+		    '(internal-border-width . 24)
+		    '(left-fringe    . 0)
+		    '(right-fringe   . 0)
+		    '(tool-bar-lines . 0)
+		    '(menu-bar-lines . 0)
+		    ;; 透明标题栏
+		    '(ns-transparent-titlebar . t)
+		    '(ns-appearance . dark))))
+     ;; 置于default-frame-alist后，否则被覆盖
+     (awesome-tray-mode 1)
    #+END_SRC
 ** key-bind
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; ibuffer
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      ;; show startup page
@@ -360,7 +395,9 @@
      ;; 将函数 open-init-file 绑定到 <f1> 1 键上
      (global-set-key (kbd "<f1> 1") 'open-init-file)
      ;; 将函数 org-mind-conf 绑定到<f1> 2 键上
-     (global-set-key (kbd "<f1> 2") 'org-mind-conf)
+     (global-set-key (kbd "<f1> 2") (lambda ()
+				      (interactive)
+				      (dired (concat user-emacs-directory "lisp/"))))
      ;; 将函数 indent-buffer 绑定到 <f8> 键上
      (global-set-key (kbd "<f8>") 'indent-buffer)
      ;; 上下翻半页
@@ -368,7 +405,7 @@
      (global-set-key "\M-p" 'scroll-half-page-down)
    #+END_SRC
 ** function
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; 快速打开配置文件
      (defun open-init-file()
        (interactive)
@@ -376,11 +413,7 @@
      ;; 快速加载配置文件
      (defun load-init()
        (interactive)
-       (org-babel-load-file (concat conf_dir "readme.org")))
-     ;; 快速打开org-mind.el
-     (defun org-mind-conf()
-       (interactive)
-       (find-file "~/.emacs.d/lisp/org-mind.el"))
+       (load-file (concat user-emacs-directory "init.el")))
      ;; format the buffer
      (defun indent-buffer()
        (interactive)
@@ -405,112 +438,122 @@
        "Set the backgroud alpha by VAR."
        (interactive "sAlpha or not(y-or-n): ")
        (pcase var
-         ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
-         ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
+	 ("y" (set-frame-parameter nil 'alpha '(90 . 100)))
+	 ("n" (set-frame-parameter nil 'alpha '(100 . 100)))))
      ;; refresh startup function
      (defun show-startup-page()
        (interactive)
        (if (equal (buffer-name) "*Org Agenda*")
-           (bury-buffer)
-         (progn
-           (org-agenda nil "z"))))
+	   (bury-buffer)
+	 (progn
+	   (org-agenda nil "z"))))
    #+END_SRC
 ** transparency
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; @purcell
      (defun sanityinc/adjust-opacity (frame incr)
        "Adjust the background opacity of FRAME by increment INCR."
        (unless (display-graphic-p frame)
-         (error "Cannot adjust opacity of this frame"))
+	 (error "Cannot adjust opacity of this frame"))
        (let* ((oldalpha (or (frame-parameter frame 'alpha) 100))
-              (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
-              (newalpha (+ incr oldalpha)))
-         (when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
-           (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
+	      (oldalpha (if (listp oldalpha) (car oldalpha) oldalpha))
+	      (newalpha (+ incr oldalpha)))
+	 (when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
+	   (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
      (global-set-key (kbd "M-C-8") (lambda ()
-                                     (interactive)
-                                     (sanityinc/adjust-opacity nil -2)))
+				     (interactive)
+				     (sanityinc/adjust-opacity nil -2)))
      (global-set-key (kbd "M-C-9") (lambda ()
-                                     (interactive)
-                                     (sanityinc/adjust-opacity nil 2)))
+				     (interactive)
+				     (sanityinc/adjust-opacity nil 2)))
      (global-set-key (kbd "M-C-7") (lambda ()
-                                     (interactive)
-                                     (modify-frame-parameters nil `((alpha . 100)))))
+				     (interactive)
+				     (modify-frame-parameters nil `((alpha . 100)))))
+   #+END_SRC
+** provide
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
+     (provide 'init-user)
    #+END_SRC
 * 5 org
 ** variables
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      ;; org variables
      ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "Microsoft\ edge %s"))
      (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
      ;; (add-hook 'org-mode-hook 'linum-mode)
      (setq org-agenda-files (list (concat org-directory "/inbox.org") (concat org-directory "/journal.org"))
-           lt-todo-files (list (concat org-directory "/inbox.org") (concat org-directory "/journal.org"))
-           org-image-actual-width '(400)
-           org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
-           org-agenda-window-setup nil
-           org-deadline-warning-days 14
-           org-M-RET-may-split-line '((headline . nil))
-           org-use-tag-inheritance t
-           org-agenda-time-grid (quote
-                                 ((daily today require-timed remove-match)
-                                  (800 1800)
-                                  "......" "----------------"))
-           ;; org-refile-targets
-           ;; `((,(concat org-directory "note.org") :maxlevel . 2))
-           ;; `((,(concat org-directory "read.org") :maxlevel . 1)
-           ;; (,(concat org-directory "learn.org") :maxlevel . 1)
-           ;; (,(concat org-directory "emacs.org") :level . 1))
-           org-todo-keywords
-           '((sequence "TODO(t)" "SOMEDAY(s)" "CANCELED(c)" "|" "DONE(d)"))
-           org-todo-keyword-faces
-           '(("SOMEDAY" . "#34CCDB")
-             ("CANCELED" . "grey")))
+	   lt-todo-files (list (concat org-directory "/inbox.org") (concat org-directory "/journal.org"))
+	   org-image-actual-width '(400)
+	   org-agenda-skip-function-global '(org-agenda-skip-entry-if 'regexp "\\* DONE\\|\\* CANCELED")
+	   org-agenda-window-setup nil
+	   org-deadline-warning-days 14
+	   org-M-RET-may-split-line '((headline . nil))
+	   org-use-tag-inheritance t
+	   org-agenda-time-grid (quote
+				 ((daily today require-timed remove-match)
+				  (800 1800)
+				  "......" "----------------"))
+	   ;; org-refile-targets
+	   ;; `((,(concat org-directory "note.org") :maxlevel . 2))
+	   ;; `((,(concat org-directory "read.org") :maxlevel . 1)
+	   ;; (,(concat org-directory "learn.org") :maxlevel . 1)
+	   ;; (,(concat org-directory "emacs.org") :level . 1))
+	   org-todo-keywords
+	   '((sequence "TODO(t)" "SOMEDAY(s)" "CANCELED(c)" "|" "DONE(d)"))
+	   org-todo-keyword-faces
+	   '(("SOMEDAY" . "#34CCDB")
+	     ("CANCELED" . "grey")))
    #+END_SRC
 ** capture
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      (setq org-capture-templates
-           `(("i" "Inbox" entry (file+headline ,(concat org-directory "/inbox.org") "Inbox:")
-              "* %?" :unnarrowed t)
-             ("b" "Bibtex")
-             ("br" "references" plain (file ,(concat org-roam-directory "/references.bib")))
-             ("bo" "phd" plain (file ,(concat org-roam-directory "/phd.bib")))
-             ("j" "Journal" entry (file+datetree ,(concat org-directory "/journal.org"))
-              "* %U\n%?" :unnarrowed t)
-             ("t" "Todo")
-             ("tt" "Todo without time" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
-              "* SOMEDAY %?")
-             ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
-              "* TODO %?\nSCHEDULED:%^t")
-             ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
-              "* TODO %?\nDEADLINE:%^t")))
+	   `(("i" "Inbox" entry (file+headline ,(concat org-directory "/inbox.org") "Inbox:")
+	      "* %?" :unnarrowed t)
+	     ("b" "Bibtex")
+	     ("br" "references" plain (file ,(concat org-roam-directory "/references.bib")))
+	     ("bo" "phd" plain (file ,(concat org-roam-directory "/phd.bib")))
+	     ("j" "Journal" entry (file+datetree ,(concat org-directory "/journal.org"))
+	      "* %U\n%?" :unnarrowed t)
+	     ("w" "Writing" entry (file+datetree ,(concat org-directory "/write.org"))
+	      "* %U\n%?" )
+	     ("t" "Todo")
+	     ("tt" "Todo without time" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
+	      "* SOMEDAY %?")
+	     ("ts" "Todo with SCHEDULED" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
+	      "* TODO %?\nSCHEDULED:%^t")
+	     ("td" "Todo with DEADLINE" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
+	      "* TODO %?\nDEADLINE:%^t")))
    #+END_SRC
 ** timeblock
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      ;; agenda 里面时间块彩色显示
      ;; From: https://emacs-china.org/t/org-agenda/8679/3
      (defun ljg/org-agenda-time-grid-spacing ()
        "Set different line spacing w.r.t. time duration."
        (save-excursion
-         (let* ((background (alist-get 'background-mode (frame-parameters)))
-                (background-dark-p (string= background "dark"))
-                (colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
-                pos
-                duration)
-           (nconc colors colors)
-           (goto-char (point-min))
-           (while (setq pos (next-single-property-change (point) 'duration))
-             (goto-char pos)
-             (when (and (not (equal pos (point-at-eol)))
-                        (setq duration (org-get-at-bol 'duration)))
-               (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
-                     (ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
-                 (overlay-put ov 'face `(:background ,(car colors)
-                                                     :foreground
-                                                     ,(if background-dark-p "black" "white")))
-                 (setq colors (cdr colors))
-                 (overlay-put ov 'line-height line-height)
-                 (overlay-put ov 'line-spacing (1- line-height))))))))
+	 (let* ((background (alist-get 'background-mode (frame-parameters)))
+		(background-dark-p (string= background "dark"))
+		(colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
+		pos
+		duration)
+	   (nconc colors colors)
+	   (goto-char (point-min))
+	   (while (setq pos (next-single-property-change (point) 'duration))
+	     (goto-char pos)
+	     (when (and (not (equal pos (point-at-eol)))
+			(setq duration (org-get-at-bol 'duration)))
+	       (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
+		     (ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
+		 (overlay-put ov 'face `(:background ,(car colors)
+						     :foreground
+						     ,(if background-dark-p "black" "white")))
+		 (setq colors (cdr colors))
+		 (overlay-put ov 'line-height line-height)
+		 (overlay-put ov 'line-spacing (1- line-height))))))))
 
      (add-hook 'org-agenda-finalize-hook #'ljg/org-agenda-time-grid-spacing)
+   #+END_SRC
+** provide
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
+     (provide 'init-org)
    #+END_SRC
