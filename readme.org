@@ -333,7 +333,7 @@
      (provide 'init-sys)
    #+END_SRC
 * 5 package
-  The package configs:
+  The package config:
 ** evil
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      ;; (use-package evil
@@ -635,7 +635,7 @@
      (provide 'init-package)
    #+END_SRC
 * 6 user
-  The user configs:
+  The user config:
 ** config
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; init fullscreen
@@ -763,7 +763,7 @@
      (provide 'init-user)
    #+END_SRC
 * 7 org
-  The org configs:
+  The org config:
 ** variables
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      ;; org variables
