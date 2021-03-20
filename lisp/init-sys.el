@@ -3,8 +3,8 @@
 	org-directory "e:/org/"))
 
 (when (eq system-type 'darwin)
-  (setq conf_dir "~/.emacs.d/"
-	org-directory "~/firslov"))
+  (setq org-directory "~/firslov"
+	org-roam-directory org-directory))
 
 (when (eq system-type 'gnu/linux)
   (setq conf_dir "~/.emacs.d/"

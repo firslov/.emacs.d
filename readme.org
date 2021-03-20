@@ -24,8 +24,8 @@
 ** macos
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'darwin)
-       (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/firslov"))
+       (setq org-directory "~/firslov"
+	     org-roam-directory org-directory))
    #+END_SRC
 ** linux
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
@@ -38,6 +38,33 @@
      (provide 'init-sys)
    #+END_SRC
 * 3 package
+** list
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     ;; Add Packages
+     (defvar my/packages '(
+			   helm-swoop
+			   htmlize
+			   atom-one-dark-theme
+			   org2ctex
+			   org-roam-bibtex
+			   org-ref
+			   all-the-icons
+			   ) "Default packages")
+
+     (setq package-selected-packages my/packages)
+
+     (defun my/packages-installed-p ()
+       (cl-loop for pkg in my/packages
+		when (not (package-installed-p pkg)) return nil
+		finally return t))
+
+     (unless (my/packages-installed-p)
+       (message "%s" "Refreshing package database...")
+       (package-refresh-contents)
+       (dolist (pkg my/packages)
+	 (when (not (package-installed-p pkg))
+	   (package-install pkg))))
+   #+END_SRC
 ** evil
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      ;; (use-package evil
@@ -307,11 +334,6 @@
 	   (highlight-parentheses-mode t)))
        (global-highlight-parentheses-mode t))
    #+END_SRC
-** all-the-icons
-   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
-     (use-package all-the-icons
-       :ensure t)
-   #+END_SRC
 ** diminish
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      (use-package diminish
@@ -410,7 +432,7 @@
      ;; 快速打开配置文件
      (defun open-init-file()
        (interactive)
-       (find-file (concat conf_dir "readme.org")))
+       (find-file (concat user-emacs-directory "readme.org")))
      ;; 快速加载配置文件
      (defun load-init()
        (interactive)

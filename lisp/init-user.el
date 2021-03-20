@@ -53,7 +53,7 @@
 ;; 快速打开配置文件
 (defun open-init-file()
   (interactive)
-  (find-file (concat conf_dir "readme.org")))
+  (find-file (concat user-emacs-directory "readme.org")))
 ;; 快速加载配置文件
 (defun load-init()
   (interactive)

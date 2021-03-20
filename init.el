@@ -19,16 +19,11 @@
 		  gc-cons-percentage 0.1
 		  file-name-handler-alist default-file-name-handler-alist)))
 
-;; Increase the amount of data from the process
-;; `lsp-mode' gains
-(setq read-process-output-max (* 1024 1024))
-
 ;; Package
 (require 'package)
+(package-initialize)
 (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
-
-(package-initialize)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)

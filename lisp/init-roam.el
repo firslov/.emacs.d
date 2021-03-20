@@ -118,7 +118,7 @@
   :ensure t
   :bind ("C-c n d" . deft)
   :commands (deft)
-  :init (setq deft-directory org-roam-directory)
+  :custom (deft-directory org-roam-directory)
   :config (setq deft-extensions '("md" "org")
                 deft-auto-save-interval 0
 		deft-recursive t
