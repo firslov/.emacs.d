@@ -11,12 +11,12 @@
   #+END_SRC
 * 1 structure
   The structure of config files:
-  [[file:./init.el][init.el]]
-  - init-sys.el
-  - init-roam.el
-  - init-package.el
-  - init-user.el
-  - init-org.el
+  - [[file:./init.el][init.el]]
+    - init-sys.el
+    - init-roam.el
+    - init-package.el
+    - init-user.el
+    - init-org.el
 * 2 init
   The init file:
   #+BEGIN_SRC emacs-lisp :tangle init.el
