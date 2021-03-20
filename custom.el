@@ -3,8 +3,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(org-ref yasnippet which-key use-package restart-emacs projectile pdf-tools org2ctex org-sidebar org-roam-bibtex org-fragtog org-elp org-download magit ivy-bibtex htmlize highlight-parentheses helm-swoop helm-org-rifle exec-path-from-shell diminish deft dashboard counsel company auctex atom-one-dark-theme all-the-icons ace-window)))
+ '(custom-enabled-themes '(solarized-light-high-contrast))
+ '(custom-safe-themes
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" default)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

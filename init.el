@@ -29,6 +29,7 @@
 		      helm-swoop
 		      htmlize
 		      atom-one-dark-theme
+		      solarized-theme
 		      org2ctex
 		      org-roam-bibtex
 		      org-ref
