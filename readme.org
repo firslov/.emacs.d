@@ -9,7 +9,7 @@
   #+BEGIN_SRC emacs-lisp :tangle no
     (org-babel-tangle-file "~/.emacs.d/readme.org")
   #+END_SRC
-* 1 strukcture
+* 1 structure
   The structure of config files:
   [[file:./init.el][init.el]]
   - init-sys.el
