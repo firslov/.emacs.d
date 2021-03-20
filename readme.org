@@ -1,20 +1,315 @@
 #+STARTUP: fold
 #+STARTUP: hidestars
 * 0 install
+  Install config:
   #+BEGIN_SRC shell :tangle no
     git clone --depth=1 git@github.com:firslov/.emacs.d.git
   #+END_SRC
+  Rebuild config:
   #+BEGIN_SRC emacs-lisp :tangle no
     (org-babel-tangle-file "~/.emacs.d/readme.org")
   #+END_SRC
-* 1 structure
+* 1 strukcture
+  The structure of config files:
   [[file:./init.el][init.el]]
   - init-sys.el
   - init-roam.el
   - init-package.el
   - init-user.el
   - init-org.el
-* 2 system
+* 2 init
+  The init file:
+  #+BEGIN_SRC emacs-lisp :tangle init.el
+    ;;; init.el --- The main entry for emacs -*- lexical-binding: t -*-
+
+    ;; A big contributor to startup times is garbage collection. We up the gc
+    ;; threshold to temporarily prevent it from running, and then reset it later
+    ;; using a hook.
+    (setq gc-cons-threshold most-positive-fixnum
+	  gc-cons-percentage 0.6)
+
+    ;; Keep a ref to the actual file-name-handler
+    (defvar default-file-name-handler-alist file-name-handler-alist)
+
+    ;; Set the file-name-handler to nil (because regexing is cpu intensive)
+    (setq file-name-handler-alist nil)
+
+    ;; Reset file-name-handler-alist after initialization
+    (add-hook 'emacs-startup-hook
+	      (lambda ()
+		(setq gc-cons-threshold 16777216
+		      gc-cons-percentage 0.1
+		      file-name-handler-alist default-file-name-handler-alist)))
+
+    ;; Package
+    (require 'package)
+    (package-initialize)
+    (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+			     ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+    ;; Add Packages
+    (defvar my/packages '(
+			  helm-swoop
+			  htmlize
+			  atom-one-dark-theme
+			  org2ctex
+			  org-roam-bibtex
+			  org-ref
+			  f
+			  all-the-icons
+			  ) "Default packages")
+
+    (setq package-selected-packages my/packages)
+
+    (defun my/packages-installed-p ()
+      (cl-loop for pkg in my/packages
+	       when (not (package-installed-p pkg)) return nil
+	       finally return t))
+
+    (unless (my/packages-installed-p)
+      (message "%s" "Refreshing package database...")
+      (package-refresh-contents)
+      (dolist (pkg my/packages)
+	(when (not (package-installed-p pkg))
+	  (package-install pkg))))
+
+    ;; Bootstrap `use-package'
+    (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))
+    (eval-and-compile
+      (setq use-package-always-ensure nil)
+      (setq use-package-always-defer nil)
+      (setq use-package-always-demand nil)
+      (setq use-package-expand-minimally nil)
+      (setq use-package-enable-imenu-support t))
+    (eval-when-compile
+      (require 'use-package))
+
+
+    (setq debug-on-error t)
+    (setq-default lexical-binding t)
+
+    (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+    (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+    (require 'init-sys)
+    (require 'init-roam)
+    (require 'init-package)
+    (require 'init-user)
+    (require 'init-org)
+
+    (provide 'init)
+    ;;; init.el ends here
+  #+END_SRC
+* 3 roam
+  The roam config:
+  #+BEGIN_SRC emacs-lisp :tangle lisp/init-roam.el
+    ;; org
+    (use-package org
+      :ensure t)
+
+    ;; habits
+    (add-to-list 'org-modules 'org-habit t)
+    ;; I prefer to log TODO creation also
+    (setq org-treat-insert-todo-heading-as-state-change t)
+    ;; log into LOGBOOK drawer
+    (setq org-log-into-drawer t)
+    ;; variable
+    (setq org-habit-show-all-today t)
+
+    ;; writing
+    (defun writing ()
+      (interactive)
+      (org-capture nil "w"))
+
+    ;; org-roam
+    (use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory org-directory)
+      :bind (("C-c n c" . org-capture)
+	     ("C-c n s" . roam-global-search)
+	     ("C-c n w" . writing)
+	     :map org-roam-mode-map
+	     (("C-c n l" . org-roam)
+	      ("C-c n f" . org-roam-find-file)
+	      ("C-c n g" . org-roam-graph))
+	     :map org-mode-map
+	     (("C-c n i" . org-roam-insert))
+	     (("C-c n I" . org-roam-insert-immediate)))
+      :config
+      (setq org-roam-tag-sources '(prop last-directory)
+	    org-roam-title-sources '(title alias)
+	    org-roam-rename-file-on-title-change nil
+	    org-roam-capture-templates
+	    '(("d" "default" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "${slug}"
+	       :head "#+title: ${title}\n"
+	       :unnarrowed t)
+	      ("b" "base" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "base/${slug}"
+	       :head "#+title: ${title}\n"
+	       :unnarrowed t)
+	      ("p" "paper" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "science/${slug}"
+	       :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
+	       :unnarrowed t)
+	      ;; ("t" "tag" plain (function org-roam--capture-get-point)
+	      ;;  "%?"
+	      ;;  :file-name "tag/${slug}"
+	      ;;  :head "#+title: ${title}\n"
+	      ;;  :unnarrowed t)
+	      ;; ("j" "journal" plain (function org-roam--capture-get-point)
+	      ;;  "%?"
+	      ;;  :file-name "journal/${title}"
+	      ;;  :head "#+title: ${title}\n"
+	      ;;  :unnarrowed t)
+	      ))
+      (use-package org-roam-bibtex
+	:ensure ivy-bibtex
+	:hook (org-roam-mode . org-roam-bibtex-mode)))
+
+    ;; org-journal
+    ;; (use-package org-journal
+    ;;   :ensure t
+    ;;   :bind ("C-c n j" . org-journal-new-entry)
+    ;;   :config
+    ;;   (setq org-journal-dir "~/firslov"
+    ;; 	org-journal-file-type 'yearly
+    ;; 	org-journal-date-format "%Y-%m-%d %A"
+    ;; 	org-journal-file-format "journal_%Y.org"))
+
+    (defun roam-global-search (arg)
+      (interactive "sRgrep search for: ")
+      (grep-compute-defaults)
+      (rgrep arg "*.org" org-roam-directory nil))
+
+    ;; helm-org-rifle
+    (use-package helm-org-rifle
+      :ensure t
+      :bind (("C-c n r" . org-roam-rifle))
+      :config
+      (defun org-roam-rifle ()
+	"Use roam directory rifle"
+	(interactive)
+	(helm-org-rifle-directories org-roam-directory))
+
+      (defun my/helm-org-rifle--store-link (candidate)
+	"Store link into CANDIDATE."
+	(-let (((buffer . pos) candidate)) 
+	  (with-current-buffer  (find-file-noselect (buffer-file-name buffer))
+	    (goto-char pos)
+	    (call-interactively 'org-store-link))))
+
+      (defun my/helm-org-rifle--insert-link (candidate)
+	"Insert link to CANDIDATE in current location."
+	(interactive)
+	(my/helm-org-rifle--store-link candidate)
+	(call-interactively 'org-insert-link))
+
+      ;; add new actions to the default rifle action list
+      (setq helm-org-rifle-actions
+	    (append helm-org-rifle-actions
+		    (helm-make-actions
+		     "Store link" 'my/helm-org-rifle--store-link
+		     "Insert link" 'my/helm-org-rifle--insert-link))))
+
+    ;; deft
+    (use-package deft
+      :ensure t
+      :bind ("C-c n d" . deft)
+      :commands (deft)
+      :custom (deft-directory org-roam-directory)
+      :config (setq deft-extensions '("md" "org")
+		    deft-auto-save-interval 0
+		    deft-recursive t
+		    deft-use-filename-as-title t
+		    deft-use-filter-string-for-filename t
+		    deft-default-extension "org"
+		    deft-org-mode-title-prefix t))
+
+    ;; org-ref
+    (use-package org-ref
+      :init (require 'helm-swoop)
+      :config
+      (setq org-latex-prefer-user-labels t))
+
+    ;; super-agenda
+    (use-package org-super-agenda
+      :ensure t
+      :config
+      (setq org-agenda-custom-commands
+	    '(("z" "Firslov view"
+	       ((agenda "" ((org-agenda-span 'day)
+			    (org-super-agenda-groups
+			     '((:name "Today"  ; Optionally specify section name
+				      :time-grid t  ; Items that appear on the time grid
+				      :todo "TODAY")  ; Items that have this TODO keyword
+			       (:name "Habits"
+				      :habit t)))))
+		(alltodo "" ((org-agenda-overriding-header "")
+			     (org-super-agenda-groups
+			      '((:name "Next to do"
+				       :todo "NEXT"
+				       :order 1)
+				(:name "Urgent"
+				       :deadline today
+				       :order 2)
+				(:name "Important"
+				       :tag "Important"
+				       :priority>= "B"
+				       :order 3)
+				(:name "Due Soon"
+				       :deadline future
+				       :order 8)
+				(:name "Overdue"
+				       :deadline past
+				       :order 7)
+				(:name "Phd"
+				       :tag "phd"
+				       :order 15)
+				(:name "Habits"
+				       :habit t
+				       :order 80)
+				(:name "Unimportant"
+				       :priority<= "C"
+				       :todo ("SOMEDAY")
+				       :order 90)
+				(:discard (:tag ("Routine" "Daily")))))))))))
+      (org-super-agenda-mode))
+
+    ;; misc
+    (use-package org-appear
+      :load-path "~/.emacs.d/git-repo/org-appear"
+      :config
+      (add-hook 'org-mode-hook 'org-appear-mode)
+      (setq org-appear-autolinks t))
+    (use-package org-sidebar
+      :ensure t)
+    (use-package org-download
+      :ensure t
+      :config
+      (defun org-download--dir-2 ()
+	"Return the current filename instead of heading name"
+	(file-name-base (buffer-file-name)))
+      ;; Drag-and-drop to `dired`
+      (add-hook 'dired-mode-hook 'org-download-enable)
+      (setq-default org-download-image-dir (concat org-roam-directory "/src"))
+      (setq org-download-display-inline-images nil))
+    (use-package valign
+      :load-path "~/.emacs.d/git-repo/valign"
+      :config
+      (add-hook 'org-mode-hook #'valign-mode))
+
+    (provide 'init-roam)
+  #+END_SRC
+* 4 system
+  The different system entries:
 ** windiows
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'windows-nt)
@@ -37,35 +332,8 @@
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (provide 'init-sys)
    #+END_SRC
-* 3 package
-** list
-   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
-     ;; Add Packages
-     (defvar my/packages '(
-			   helm-swoop
-			   htmlize
-			   atom-one-dark-theme
-			   org2ctex
-			   org-roam-bibtex
-			   org-ref
-			   f
-			   all-the-icons
-			   ) "Default packages")
-
-     (setq package-selected-packages my/packages)
-
-     (defun my/packages-installed-p ()
-       (cl-loop for pkg in my/packages
-		when (not (package-installed-p pkg)) return nil
-		finally return t))
-
-     (unless (my/packages-installed-p)
-       (message "%s" "Refreshing package database...")
-       (package-refresh-contents)
-       (dolist (pkg my/packages)
-	 (when (not (package-installed-p pkg))
-	   (package-install pkg))))
-   #+END_SRC
+* 5 package
+  The package configs:
 ** evil
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      ;; (use-package evil
@@ -366,7 +634,8 @@
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      (provide 'init-package)
    #+END_SRC
-* 4 user
+* 6 user
+  The user configs:
 ** config
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; init fullscreen
@@ -493,7 +762,8 @@
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      (provide 'init-user)
    #+END_SRC
-* 5 org
+* 7 org
+  The org configs:
 ** variables
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      ;; org variables

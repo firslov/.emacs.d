@@ -13,7 +13,7 @@
 
 ;; writing
 (defun writing ()
-    (interactive)
+  (interactive)
   (org-capture nil "w"))
 
 ;; org-roam
@@ -24,9 +24,9 @@
   :custom
   (org-roam-directory org-directory)
   :bind (("C-c n c" . org-capture)
-         ("C-c n s" . roam-global-search)
+	 ("C-c n s" . roam-global-search)
 	 ("C-c n w" . writing)
-         :map org-roam-mode-map
+	 :map org-roam-mode-map
 	 (("C-c n l" . org-roam)
 	  ("C-c n f" . org-roam-find-file)
 	  ("C-c n g" . org-roam-graph))
@@ -35,24 +35,24 @@
 	 (("C-c n I" . org-roam-insert-immediate)))
   :config
   (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-title-sources '(title alias)
-        org-roam-rename-file-on-title-change nil
+	org-roam-title-sources '(title alias)
+	org-roam-rename-file-on-title-change nil
 	org-roam-capture-templates
 	'(("d" "default" plain (function org-roam--capture-get-point)
 	   "%?"
 	   :file-name "${slug}"
 	   :head "#+title: ${title}\n"
 	   :unnarrowed t)
-          ("b" "base" plain (function org-roam--capture-get-point)
+	  ("b" "base" plain (function org-roam--capture-get-point)
 	   "%?"
 	   :file-name "base/${slug}"
 	   :head "#+title: ${title}\n"
 	   :unnarrowed t)
-          ("p" "paper" plain (function org-roam--capture-get-point)
-           "%?"
-           :file-name "science/${slug}"
-           :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
-           :unnarrowed t)
+	  ("p" "paper" plain (function org-roam--capture-get-point)
+	   "%?"
+	   :file-name "science/${slug}"
+	   :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
+	   :unnarrowed t)
 	  ;; ("t" "tag" plain (function org-roam--capture-get-point)
 	  ;;  "%?"
 	  ;;  :file-name "tag/${slug}"
@@ -120,12 +120,12 @@
   :commands (deft)
   :custom (deft-directory org-roam-directory)
   :config (setq deft-extensions '("md" "org")
-                deft-auto-save-interval 0
+		deft-auto-save-interval 0
 		deft-recursive t
 		deft-use-filename-as-title t
-                deft-use-filter-string-for-filename t
-                deft-default-extension "org"
-                deft-org-mode-title-prefix t))
+		deft-use-filter-string-for-filename t
+		deft-default-extension "org"
+		deft-org-mode-title-prefix t))
 
 ;; org-ref
 (use-package org-ref
@@ -138,43 +138,43 @@
   :ensure t
   :config
   (setq org-agenda-custom-commands
-        '(("z" "Firslov view"
-           ((agenda "" ((org-agenda-span 'day)
-                        (org-super-agenda-groups
-                         '((:name "Today"  ; Optionally specify section name
-		                  :time-grid t  ; Items that appear on the time grid
-		                  :todo "TODAY")  ; Items that have this TODO keyword
-	                   (:name "Habits"
-		                  :habit t)))))
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-super-agenda-groups
-                          '((:name "Next to do"
-                                   :todo "NEXT"
-                                   :order 1)
-                            (:name "Urgent"
-                                   :deadline today
-                                   :order 2)
-                            (:name "Important"
-                                   :tag "Important"
-                                   :priority>= "B"
-                                   :order 3)
-                            (:name "Due Soon"
-                                   :deadline future
-                                   :order 8)
-                            (:name "Overdue"
-                                   :deadline past
-                                   :order 7)
-                            (:name "Phd"
-                                   :tag "phd"
-                                   :order 15)
-                            (:name "Habits"
-		                   :habit t
-                                   :order 80)
-                            (:name "Unimportant"
-                                   :priority<= "C"
-                                   :todo ("SOMEDAY")
-                                   :order 90)
-                            (:discard (:tag ("Routine" "Daily")))))))))))
+	'(("z" "Firslov view"
+	   ((agenda "" ((org-agenda-span 'day)
+			(org-super-agenda-groups
+			 '((:name "Today"  ; Optionally specify section name
+				  :time-grid t  ; Items that appear on the time grid
+				  :todo "TODAY")  ; Items that have this TODO keyword
+			   (:name "Habits"
+				  :habit t)))))
+	    (alltodo "" ((org-agenda-overriding-header "")
+			 (org-super-agenda-groups
+			  '((:name "Next to do"
+				   :todo "NEXT"
+				   :order 1)
+			    (:name "Urgent"
+				   :deadline today
+				   :order 2)
+			    (:name "Important"
+				   :tag "Important"
+				   :priority>= "B"
+				   :order 3)
+			    (:name "Due Soon"
+				   :deadline future
+				   :order 8)
+			    (:name "Overdue"
+				   :deadline past
+				   :order 7)
+			    (:name "Phd"
+				   :tag "phd"
+				   :order 15)
+			    (:name "Habits"
+				   :habit t
+				   :order 80)
+			    (:name "Unimportant"
+				   :priority<= "C"
+				   :todo ("SOMEDAY")
+				   :order 90)
+			    (:discard (:tag ("Routine" "Daily")))))))))))
   (org-super-agenda-mode))
 
 ;; misc

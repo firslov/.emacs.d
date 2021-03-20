@@ -23,7 +23,32 @@
 (require 'package)
 (package-initialize)
 (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+			 ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+;; Add Packages
+(defvar my/packages '(
+		      helm-swoop
+		      htmlize
+		      atom-one-dark-theme
+		      org2ctex
+		      org-roam-bibtex
+		      org-ref
+		      f
+		      all-the-icons
+		      ) "Default packages")
+
+(setq package-selected-packages my/packages)
+
+(defun my/packages-installed-p ()
+  (cl-loop for pkg in my/packages
+	   when (not (package-installed-p pkg)) return nil
+	   finally return t))
+
+(unless (my/packages-installed-p)
+  (message "%s" "Refreshing package database...")
+  (package-refresh-contents)
+  (dolist (pkg my/packages)
+    (when (not (package-installed-p pkg))
+      (package-install pkg))))
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
@@ -52,5 +77,4 @@
 (require 'init-org)
 
 (provide 'init)
-
 ;;; init.el ends here
