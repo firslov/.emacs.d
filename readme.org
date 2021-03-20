@@ -18,8 +18,8 @@
 ** windiows
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'windows-nt)
-       (setq conf_dir "e:/emacs/.emacs.d/"
-	     org-directory "e:/org/"))
+       (setq org-directory "e:/org/"
+	     org-roam-directory org-directory))
    #+END_SRC
 ** macos
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
@@ -30,8 +30,8 @@
 ** linux
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'gnu/linux)
-       (setq conf_dir "~/.emacs.d/"
-	     org-directory "~/org/"))
+       (setq org-directory "~/org/"
+	     org-roam-directory org-directory))
    #+END_SRC
 ** provide
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
@@ -48,6 +48,7 @@
 			   org2ctex
 			   org-roam-bibtex
 			   org-ref
+			   f
 			   all-the-icons
 			   ) "Default packages")
 
@@ -236,11 +237,6 @@
        (setq TeX-command-default "XeLaTeX")
        ;; revert pdf-view after compilation
        (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-   #+END_SRC
-** f
-   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
-     (use-package f
-       :ensure t)
    #+END_SRC
 ** which-key
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el

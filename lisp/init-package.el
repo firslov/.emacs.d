@@ -6,6 +6,7 @@
 		      org2ctex
 		      org-roam-bibtex
 		      org-ref
+		      f
 		      all-the-icons
 		      ) "Default packages")
 
@@ -176,9 +177,6 @@
   (setq TeX-command-default "XeLaTeX")
   ;; revert pdf-view after compilation
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-
-(use-package f
-  :ensure t)
 
 (use-package which-key
   :ensure t
