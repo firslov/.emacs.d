@@ -43,10 +43,6 @@
 
 ;; ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-;; 将 rebuild config 绑定到 <f1> 9 键上
-(global-set-key (kbd "<f1> 9") (lambda ()
-				 (interactive)
-				 (org-babel-tangle-file "~/.emacs.d/readme.org")))
 ;; 将函数 load-init-file 绑定到 <f1> 0 键上
 (global-set-key (kbd "<f1> 0") 'load-init)
 ;; 将函数 open-init-file 绑定到 <f1> 1 键上
@@ -70,6 +66,7 @@
 ;; 快速加载配置文件
 (defun load-init()
   (interactive)
+  (org-babel-tangle-file "~/.emacs.d/readme.org")
   (load-file (concat user-emacs-directory "init.el")))
 ;; format the buffer
 (defun indent-buffer()

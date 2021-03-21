@@ -48,9 +48,9 @@
 	   :file-name "base/${slug}"
 	   :head "#+title: ${title}\n"
 	   :unnarrowed t)
-	  ("p" "paper" plain (function org-roam--capture-get-point)
+	  ("p" "phd" plain (function org-roam--capture-get-point)
 	   "%?"
-	   :file-name "science/${slug}"
+	   :file-name "phd/${slug}"
 	   :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
 	   :unnarrowed t)
 	  ;; ("t" "tag" plain (function org-roam--capture-get-point)

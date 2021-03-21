@@ -232,6 +232,12 @@
   :ensure t
   :diminish (ivy-mode eldoc-mode which-key-mode))
 
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode)
+  :config
+  (setq org-bullets-bullet-list '(" ")))
+
 (require 'auto-save)
 (auto-save-enable)              ;; 开启自动保存功能
 (setq auto-save-slient t)       ;; 自动保存的时候静悄悄的， 不要打扰我

@@ -180,9 +180,9 @@
 	       :file-name "base/${slug}"
 	       :head "#+title: ${title}\n"
 	       :unnarrowed t)
-	      ("p" "paper" plain (function org-roam--capture-get-point)
+	      ("p" "phd" plain (function org-roam--capture-get-point)
 	       "%?"
-	       :file-name "science/${slug}"
+	       :file-name "phd/${slug}"
 	       :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
 	       :unnarrowed t)
 	      ;; ("t" "tag" plain (function org-roam--capture-get-point)
@@ -606,6 +606,14 @@
        :ensure t
        :diminish (ivy-mode eldoc-mode which-key-mode))
    #+END_SRC
+** org-bullets
+   #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
+     (use-package org-bullets
+       :ensure t
+       :hook (org-mode . org-bullets-mode)
+       :config
+       (setq org-bullets-bullet-list '(" ")))
+   #+END_SRC
 ** misc packages
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-package.el
      (require 'auto-save)
@@ -687,10 +695,6 @@
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
      ;; ibuffer
      (global-set-key (kbd "C-x C-b") 'ibuffer)
-     ;; 将 rebuild config 绑定到 <f1> 9 键上
-     (global-set-key (kbd "<f1> 9") (lambda ()
-				      (interactive)
-				      (org-babel-tangle-file "~/.emacs.d/readme.org")))
      ;; 将函数 load-init-file 绑定到 <f1> 0 键上
      (global-set-key (kbd "<f1> 0") 'load-init)
      ;; 将函数 open-init-file 绑定到 <f1> 1 键上
@@ -716,6 +720,7 @@
      ;; 快速加载配置文件
      (defun load-init()
        (interactive)
+       (org-babel-tangle-file "~/.emacs.d/readme.org")
        (load-file (concat user-emacs-directory "init.el")))
      ;; format the buffer
      (defun indent-buffer()
