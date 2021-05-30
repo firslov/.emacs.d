@@ -28,13 +28,11 @@
 (setq org-capture-templates
       `(("i" "Inbox" entry (file+headline ,(concat org-directory "/inbox.org") "Inbox:")
 	 "* %?" :unnarrowed t)
-	("b" "Bibtex")
-	("br" "references" plain (file ,(concat org-roam-directory "/references.bib")))
-	("bo" "phd" plain (file ,(concat org-roam-directory "/phd.bib")))
 	("j" "Journal" entry (file+datetree ,(concat org-directory "/journal.org"))
 	 "* %U\n%?" :unnarrowed t)
-	("w" "Writing" entry (file+datetree ,(concat org-directory "/write.org"))
-	 "* %U\n%?" )
+	("p" "Passwords" entry (file ,(concat org-directory "/passwords.org"))
+	 "* %U - %^{title}\n  - 用户名: %^{用户名}\n  - 密码: %^{密码}"
+	 :kill-buffer t)
 	("t" "Todo")
 	("tt" "Todo without time" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
 	 "* SOMEDAY %?")

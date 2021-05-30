@@ -14,7 +14,7 @@
   The structure of config files:
   - [[file:./init.el][init.el]]
     - init-sys.el
-    - init-roam.el
+    - init-filesys.el
     - init-package.el
     - init-user.el
     - init-org.el
@@ -49,14 +49,11 @@
 			     ("melpa" . "http://elpa.emacs-china.org/melpa/")))
     ;; Add Packages
     (defvar my/packages '(
-			  helm-swoop
 			  htmlize
-			  atom-one-dark-theme
-			  solarized-theme
+			  ;; atom-one-dark-theme
+			  ;; solarized-theme
 			  org2ctex
-			  org-roam-bibtex
-			  org-ref
-			  f
+			  ;; f
 			  all-the-icons
 			  ) "Default packages")
 
@@ -88,14 +85,14 @@
       (require 'use-package))
 
 
-    (setq debug-on-error t)
+    ;; (setq debug-on-error t)
     (setq-default lexical-binding t)
 
     (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
     (require 'init-sys)
-    (require 'init-roam)
+    (require 'init-filesys)
     (require 'init-package)
     (require 'init-user)
     (require 'init-org)
@@ -108,28 +105,25 @@
 ** windiows
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'windows-nt)
-       (setq org-directory "e:/org/"
-	     org-roam-directory org-directory))
+       (setq org-directory "e:/org/"))
    #+END_SRC
 ** macos
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'darwin)
-       (setq org-directory "~/firslov"
-	     org-roam-directory org-directory))
+       (setq org-directory "~/firslov"))
    #+END_SRC
 ** linux
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (when (eq system-type 'gnu/linux)
-       (setq org-directory "~/org/"
-	     org-roam-directory org-directory))
+       (setq org-directory "~/org/"))
    #+END_SRC
 ** provide
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-sys.el
      (provide 'init-sys)
    #+END_SRC
-* 4 roam
-  The roam config:
-  #+BEGIN_SRC emacs-lisp :tangle lisp/init-roam.el
+* 4 filesys
+  The filesys config:
+  #+BEGIN_SRC emacs-lisp :tangle lisp/init-filesys.el
     ;; org
     (use-package org
       :ensure t)
@@ -143,87 +137,31 @@
     ;; variable
     (setq org-habit-show-all-today t)
 
-    ;; writing
-    (defun writing ()
+    ;; journal
+    (defun journal ()
       (interactive)
-      (org-capture nil "w"))
+      (org-capture nil "j"))
 
-    ;; org-roam
-    (use-package org-roam
-      :ensure t
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory org-directory)
-      :bind (("C-c n c" . org-capture)
-	     ("C-c n s" . roam-global-search)
-	     ("C-c n w" . writing)
-	     :map org-roam-mode-map
-	     (("C-c n l" . org-roam)
-	      ("C-c n f" . org-roam-find-file)
-	      ("C-c n g" . org-roam-graph))
-	     :map org-mode-map
-	     (("C-c n i" . org-roam-insert))
-	     (("C-c n I" . org-roam-insert-immediate)))
-      :config
-      (setq org-roam-tag-sources '(prop last-directory)
-	    org-roam-title-sources '(title alias)
-	    org-roam-rename-file-on-title-change nil
-	    org-roam-capture-templates
-	    '(("d" "default" plain (function org-roam--capture-get-point)
-	       "%?"
-	       :file-name "${slug}"
-	       :head "#+title: ${title}\n"
-	       :unnarrowed t)
-	      ("b" "base" plain (function org-roam--capture-get-point)
-	       "%?"
-	       :file-name "base/${slug}"
-	       :head "#+title: ${title}\n"
-	       :unnarrowed t)
-	      ("p" "phd" plain (function org-roam--capture-get-point)
-	       "%?"
-	       :file-name "phd/${slug}"
-	       :head "#+title: ${title}\n#+author: \n#+year: \n#+journal: \n#+date: %<%Y-%m-%d>\n#+roam_key: \n#+setupfile: config.setup\n\nbibliography:phd.bib"
-	       :unnarrowed t)
-	      ;; ("t" "tag" plain (function org-roam--capture-get-point)
-	      ;;  "%?"
-	      ;;  :file-name "tag/${slug}"
-	      ;;  :head "#+title: ${title}\n"
-	      ;;  :unnarrowed t)
-	      ;; ("j" "journal" plain (function org-roam--capture-get-point)
-	      ;;  "%?"
-	      ;;  :file-name "journal/${title}"
-	      ;;  :head "#+title: ${title}\n"
-	      ;;  :unnarrowed t)
-	      ))
-      (use-package org-roam-bibtex
-	:ensure ivy-bibtex
-	:hook (org-roam-mode . org-roam-bibtex-mode)))
+    ;; key-bindings
+    (global-set-key (kbd "C-c n c") 'org-capture)
+    (global-set-key (kbd "C-c n j") 'journal)
+    (global-set-key (kbd "C-c n s") 'my/global-search)
 
-    ;; org-journal
-    ;; (use-package org-journal
-    ;;   :ensure t
-    ;;   :bind ("C-c n j" . org-journal-new-entry)
-    ;;   :config
-    ;;   (setq org-journal-dir "~/firslov"
-    ;; 	org-journal-file-type 'yearly
-    ;; 	org-journal-date-format "%Y-%m-%d %A"
-    ;; 	org-journal-file-format "journal_%Y.org"))
 
-    (defun roam-global-search (arg)
+    (defun my/global-search (arg)
       (interactive "sRgrep search for: ")
       (grep-compute-defaults)
-      (rgrep arg "*.org" org-roam-directory nil))
+      (rgrep arg "*.org" org-directory nil))
 
     ;; helm-org-rifle
     (use-package helm-org-rifle
       :ensure t
-      :bind (("C-c n r" . org-roam-rifle))
+      :bind (("C-c n r" . my/org-rifle))
       :config
-      (defun org-roam-rifle ()
-	"Use roam directory rifle"
+      (defun my/org-rifle ()
+	"Use org directory rifle"
 	(interactive)
-	(helm-org-rifle-directories org-roam-directory))
+	(helm-org-rifle-directories org-directory))
 
       (defun my/helm-org-rifle--store-link (candidate)
 	"Store link into CANDIDATE."
@@ -250,20 +188,15 @@
       :ensure t
       :bind ("C-c n d" . deft)
       :commands (deft)
-      :custom (deft-directory org-roam-directory)
+      :custom (deft-directory org-directory)
       :config (setq deft-extensions '("md" "org")
 		    deft-auto-save-interval 0
-		    deft-recursive t
+		    deft-recursive nil
 		    deft-use-filename-as-title t
 		    deft-use-filter-string-for-filename t
 		    deft-default-extension "org"
 		    deft-org-mode-title-prefix t))
 
-    ;; org-ref
-    (use-package org-ref
-      :init (require 'helm-swoop)
-      :config
-      (setq org-latex-prefer-user-labels t))
 
     ;; super-agenda
     (use-package org-super-agenda
@@ -325,14 +258,14 @@
 	(file-name-base (buffer-file-name)))
       ;; Drag-and-drop to `dired`
       (add-hook 'dired-mode-hook 'org-download-enable)
-      (setq-default org-download-image-dir (concat org-roam-directory "/src"))
+      (setq-default org-download-image-dir (concat org-directory "/src"))
       (setq org-download-display-inline-images nil))
     (use-package valign
       :load-path "~/.emacs.d/git-repo/valign"
       :config
       (add-hook 'org-mode-hook #'valign-mode))
 
-    (provide 'init-roam)
+    (provide 'init-filesys)
   #+END_SRC
 * 5 package
   The package config:
@@ -530,9 +463,9 @@
        :if (< (length command-line-args) 2)
        :config
        (dashboard-setup-startup-hook)
-       (setq dashboard-items '((recents  . 5)
+       (setq dashboard-items '((recents  . 10)
 			       ;; (bookmarks . 5)
-			       (projects . 5)
+			       ;; (projects . 5)
 			       (agenda . 5)
 			       ;; (registers . 5)
 			       ))
@@ -540,7 +473,7 @@
 					 (bookmarks . "book")))
        ;; 设置标题
        (setq dashboard-banner-logo-title
-	     "人生苦短，我用Emacs")
+	     "Life is short, i use Emacs")
        ;; 设置banner
        (setq dashboard-startup-banner "~/.emacs.d/var/banner.png")
        (setq dashboard-center-content t) 
@@ -653,13 +586,17 @@
      (setq inhibit-splash-screen t)
      (fset 'yes-or-no-p 'y-or-n-p)
      (setq ns-pop-up-frames nil)
+     ;; 关闭自动备份
+     (setq make-backup-files nil)
      ;; desktop-save
      ;; (desktop-save-mode t)
      ;; (setq desktop-restore-in-current-display t)
      ;; (setq desktop-restore-frames t)
      ;; atom-one-dark theme
      ;; (load-theme 'atom-one-dark t)
-     (load-theme 'solarized-light-high-contrast t)
+     (load-theme 'srcery t)
+     (setq srcery-transparent-background t)
+     ;; (load-theme 'solarized-light t)
      ;; hide icon in titlebar
      (setq ns-use-proxy-icon nil)
      ;; dashboard message
@@ -690,6 +627,11 @@
 		    )))
      ;; 置于default-frame-alist后，否则被覆盖
      (awesome-tray-mode 1)
+     ;; hide *
+     (setq org-hide-emphasis-markers t)
+     ;; envs
+     ;; (setenv "LANG" "en_US.UTF-8")
+     ;; (setenv "LC_CALL" "en_US.UTF-8")
    #+END_SRC
 ** key-bind
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
@@ -710,6 +652,8 @@
      ;; 上下翻半页
      (global-set-key "\M-n" 'scroll-half-page-up)
      (global-set-key "\M-p" 'scroll-half-page-down)
+     ;; toggle org-sidebar-tree
+     (global-set-key (kbd "<f5>") 'org-sidebar-tree-toggle)
    #+END_SRC
 ** function
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-user.el
@@ -819,13 +763,11 @@
      (setq org-capture-templates
 	   `(("i" "Inbox" entry (file+headline ,(concat org-directory "/inbox.org") "Inbox:")
 	      "* %?" :unnarrowed t)
-	     ("b" "Bibtex")
-	     ("br" "references" plain (file ,(concat org-roam-directory "/references.bib")))
-	     ("bo" "phd" plain (file ,(concat org-roam-directory "/phd.bib")))
 	     ("j" "Journal" entry (file+datetree ,(concat org-directory "/journal.org"))
 	      "* %U\n%?" :unnarrowed t)
-	     ("w" "Writing" entry (file+datetree ,(concat org-directory "/write.org"))
-	      "* %U\n%?" )
+	     ("p" "Passwords" entry (file ,(concat org-directory "/passwords.org"))
+	      "* %U - %^{title}\n  - 用户名: %^{用户名}\n  - 密码: %^{密码}"
+	      :kill-buffer t)
 	     ("t" "Todo")
 	     ("tt" "Todo without time" entry (file+headline ,(concat org-directory "/inbox.org") "Todo:")
 	      "* SOMEDAY %?")
@@ -867,3 +809,4 @@
    #+BEGIN_SRC emacs-lisp :tangle lisp/init-org.el
      (provide 'init-org)
    #+END_SRC
+   

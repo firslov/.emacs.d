@@ -26,14 +26,11 @@
 			 ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 ;; Add Packages
 (defvar my/packages '(
-		      helm-swoop
 		      htmlize
-		      atom-one-dark-theme
-		      solarized-theme
+		      ;; atom-one-dark-theme
+		      ;; solarized-theme
 		      org2ctex
-		      org-roam-bibtex
-		      org-ref
-		      f
+		      ;; f
 		      all-the-icons
 		      ) "Default packages")
 
@@ -65,14 +62,14 @@
   (require 'use-package))
 
 
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 (setq-default lexical-binding t)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (require 'init-sys)
-(require 'init-roam)
+(require 'init-filesys)
 (require 'init-package)
 (require 'init-user)
 (require 'init-org)

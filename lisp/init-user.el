@@ -3,13 +3,17 @@
 (setq inhibit-splash-screen t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq ns-pop-up-frames nil)
+;; 关闭自动备份
+(setq make-backup-files nil)
 ;; desktop-save
 ;; (desktop-save-mode t)
 ;; (setq desktop-restore-in-current-display t)
 ;; (setq desktop-restore-frames t)
 ;; atom-one-dark theme
 ;; (load-theme 'atom-one-dark t)
-(load-theme 'solarized-light-high-contrast t)
+(load-theme 'srcery t)
+(setq srcery-transparent-background t)
+;; (load-theme 'solarized-light t)
 ;; hide icon in titlebar
 (setq ns-use-proxy-icon nil)
 ;; dashboard message
@@ -40,6 +44,11 @@
 	       )))
 ;; 置于default-frame-alist后，否则被覆盖
 (awesome-tray-mode 1)
+;; hide *
+(setq org-hide-emphasis-markers t)
+;; envs
+;; (setenv "LANG" "en_US.UTF-8")
+;; (setenv "LC_CALL" "en_US.UTF-8")
 
 ;; ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -58,6 +67,8 @@
 ;; 上下翻半页
 (global-set-key "\M-n" 'scroll-half-page-up)
 (global-set-key "\M-p" 'scroll-half-page-down)
+;; toggle org-sidebar-tree
+(global-set-key (kbd "<f5>") 'org-sidebar-tree-toggle)
 
 ;; 快速打开配置文件
 (defun open-init-file()

@@ -168,9 +168,9 @@
   :if (< (length command-line-args) 2)
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-items '((recents  . 5)
+  (setq dashboard-items '((recents  . 10)
 			  ;; (bookmarks . 5)
-			  (projects . 5)
+			  ;; (projects . 5)
 			  (agenda . 5)
 			  ;; (registers . 5)
 			  ))
@@ -178,7 +178,7 @@
 				    (bookmarks . "book")))
   ;; 设置标题
   (setq dashboard-banner-logo-title
-	"人生苦短，我用Emacs")
+	"Life is short, i use Emacs")
   ;; 设置banner
   (setq dashboard-startup-banner "~/.emacs.d/var/banner.png")
   (setq dashboard-center-content t) 
